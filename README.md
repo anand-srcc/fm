@@ -58,4 +58,4 @@ Then navigate to `http://localhost:8000`.
 To make this live online for students and learners:
 1. Go to repository **Settings** > **Pages**.
 2. Select `Deploy from a branch` and choose the `main` branch with folder `/ (root)`.
-3. Save and your FM Portal will be live at `https://<username>.github.io/<repo-name>/`.
+3. Save and your FM Portal will be live at `https://anand-srcc.github.io/fm/`.
