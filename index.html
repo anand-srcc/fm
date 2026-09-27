@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Management (FM) Portal — Chapters, Subparts & Excel Practical Labs</title>
+  <meta name="description" content="Comprehensive Financial Management learning portal connecting Time Value of Money, Capital Budgeting, Cost of Capital, and hands-on MS Excel practical finance labs.">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+  <div id="app-root">
+
+    <!-- ===================================================================
+         GLOBAL PORTAL HEADER (Clean White & Slate Bar)
+         =================================================================== -->
+    <header class="portal-header">
+      <div class="brand-section" id="brandLogo">
+        <div class="brand-icon">📈</div>
+        <div class="brand-text">
+          <h1>FM Portal <span class="brand-tag">v2.0 Universal</span></h1>
+          <p>Financial Management Theory & Applied MS Excel Suite</p>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu" id="topNavMenu">
+        <a href="#dashboard" class="nav-link active" data-target="dashboard">
+          <span>🏠</span> Overview
+        </a>
+        <a href="#ch1" class="nav-link" data-target="ch1">
+          <span>⏱️</span> Ch 1: TVM
+        </a>
+        <a href="#ch2" class="nav-link" data-target="ch2">
+          <span>🏢</span> Ch 2: Capital Budgeting
+        </a>
+        <a href="#ch3" class="nav-link" data-target="ch3">
+          <span>⚖️</span> Ch 3: Cost of Capital
+        </a>
+        <a href="#excel_labs" class="nav-link excel-nav-pill" data-target="excel_labs">
+          <span>🧪</span> Excel Finance Labs <span class="nav-badge">Practical</span>
+        </a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Switch to Mobile Mode Toggle -->
+        <button class="btn-mobile-toggle" id="mobileModeToggleBtn" title="Switch between Mobile View & Desktop View">
+          <span class="btn-icon">📱</span>
+          <span class="btn-label" id="mobileModeLabel">Switch to Mobile Mode</span>
+        </button>
+
+        <button class="search-trigger-btn" id="searchTriggerBtn" title="Search all topics (Ctrl+K)">
+          <span>🔍</span>
+          <span>Search topics...</span>
+          <span class="search-shortcut">Ctrl K</span>
+        </button>
+        <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">🌙</button>
+        <button class="fullscreen-toggle-btn" id="fullscreenToggleBtn" title="Toggle Fullscreen">⛶</button>
+      </div>
+    </header>
+
+    <!-- ===================================================================
+         VIEW 1: PORTAL DASHBOARD (HOME HUB)
+         =================================================================== -->
+    <main class="view-container">
+      <div class="view-section active" id="dashboardView">
+        
+        <!-- Hero Section (Matches course files gradient) -->
+        <section class="portal-hero">
+          <div class="hero-content">
+            <div class="hero-pill-badge">
+              <span>⚡ Financial Management Interactive Suite</span>
+              <span style="opacity:0.6;">•</span>
+              <span>Theory + Live Calculators + Excel Labs</span>
+            </div>
+
+            <h2 class="hero-title">
+              Financial Management <span class="highlight">Master Learning Portal</span>
+            </h2>
+
+            <p class="hero-subtitle">
+              Interactive syllabus chapters, comprehensive derivations, live financial calculators, and Wall Street-grade MS Excel practical modeling laboratories.
+            </p>
+
+            <!-- Master Search Bar -->
+            <div class="hero-search-wrapper">
+              <div class="hero-search-input-box">
+                <span class="hero-search-icon">🔍</span>
+                <input type="text" id="heroSearchInput" placeholder="Search topics, formulas, or Excel functions (e.g. NPV, IRR, WACC, =RATE)..." readonly>
+                <span class="search-shortcut">Ctrl + K</span>
+              </div>
+            </div>
+
+            <!-- Stats Ribbon -->
+            <div class="hero-stats-row">
+              <div class="hero-stat-card">
+                <span style="font-size:1.3rem;">📚</span>
+                <div>
+                  <div class="stat-val">3</div>
+                  <div class="stat-label">Core Chapters</div>
+                </div>
+              </div>
+
+              <div class="hero-stat-card">
+                <span style="font-size:1.3rem;">🧪</span>
+                <div>
+                  <div class="stat-val">11</div>
+                  <div class="stat-label">Excel Practical Labs</div>
+                </div>
+              </div>
+
+              <div class="hero-stat-card">
+                <span style="font-size:1.3rem;">🧮</span>
+                <div>
+                  <div class="stat-val">385+</div>
+                  <div class="stat-label">Interactive Modules</div>
+                </div>
+              </div>
+
+              <div class="hero-stat-card">
+                <span style="font-size:1.3rem;">💼</span>
+                <div>
+                  <div class="stat-val">500+</div>
+                  <div class="stat-label">Solved Project Cases</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Dashboard Content Container -->
+        <div class="dashboard-content">
+
+          <!-- Section 1: Core Syllabus Chapters -->
+          <div class="section-header-row" id="chaptersSection">
+            <div class="section-title-group">
+              <h2><span>📖</span> Core Syllabus Chapters</h2>
+              <p>Click any chapter to launch its full learning workspace, detailed theory, and subpart navigation.</p>
+            </div>
+          </div>
+
+          <div class="chapters-grid" id="chaptersGrid">
+            <!-- Dynamically populated by portal.js -->
+          </div>
+
+          <!-- Section 2: Dedicated MS Excel Finance Labs & Practical Suite -->
+          <div class="excel-labs-section-banner" id="excelLabsSection">
+            <div class="excel-banner-text">
+              <h3><span>🧪</span> Dedicated MS Excel Finance Labs & Practical Suite</h3>
+              <p>
+                Specialized section for hands-on spreadsheet modeling, discounted cash flow schedules, sensitivity data tables, and Excel functions (<code>=NPV()</code>, <code>=IRR()</code>, <code>=MIRR()</code>, <code>=XNPV()</code>, <code>=XIRR()</code>, <code>=RATE()</code>).
+              </p>
+            </div>
+            <div class="excel-filter-pills">
+              <button class="excel-filter-btn active" data-filter="all">All Practical Labs (11)</button>
+              <button class="excel-filter-btn" data-filter="capital_budgeting">Capital Budgeting Suite</button>
+              <button class="excel-filter-btn" data-filter="cost_of_capital">Cost of Capital Suite</button>
+              <button class="excel-filter-btn" data-filter="tvm">Time Value Suite</button>
+            </div>
+          </div>
+
+          <div class="excel-labs-grid" id="excelLabsGrid">
+            <!-- Dynamically populated by portal.js -->
+          </div>
+
+          <!-- Section 3: Financial Management Formula Bank & Quick Reference -->
+          <div class="section-header-row">
+            <div class="section-title-group">
+              <h2><span>📐</span> Essential Corporate Finance Formulas</h2>
+              <p>Quick lookup reference for examinations and financial modeling.</p>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:18px; margin-bottom:50px;">
+            <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm);">
+              <h4 style="color:var(--green); margin-bottom:10px; font-size:1rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+                <span>⏱️</span> Time Value of Money Formulas
+              </h4>
+              <ul style="list-style:none; display:flex; flex-direction:column; gap:7px; font-size:0.83rem; color:var(--text-secondary);">
+                <li>• <strong>Single Sum FV:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">FV = PV × (1 + r)^n</code></li>
+                <li>• <strong>Single Sum PV:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">PV = FV / (1 + r)^n</code></li>
+                <li>• <strong>Ordinary Annuity PV:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">PVA = PMT × [(1 - (1+r)^-n) / r]</code></li>
+                <li>• <strong>Growing Perpetuity PV:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">PV = C1 / (r - g)</code></li>
+                <li>• <strong>Effective Annual Rate:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">EAR = (1 + r_nom/m)^m - 1</code></li>
+              </ul>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm);">
+              <h4 style="color:var(--blue); margin-bottom:10px; font-size:1rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+                <span>🏢</span> Capital Budgeting Formulas
+              </h4>
+              <ul style="list-style:none; display:flex; flex-direction:column; gap:7px; font-size:0.83rem; color:var(--text-secondary);">
+                <li>• <strong>Net Present Value (NPV):</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">NPV = Σ [CF_t / (1+k)^t] - CF_0</code></li>
+                <li>• <strong>Internal Rate of Return (IRR):</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">Discount rate where NPV = 0</code></li>
+                <li>• <strong>Profitability Index (PI):</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">PI = PV of Inflows / Initial Outlay</code></li>
+                <li>• <strong>Accounting Rate of Return:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">ARR = Avg PAT / Avg Investment</code></li>
+                <li>• <strong>Equivalent Annual Annuity:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">EAA = NPV / PVIFA_{k, n}</code></li>
+              </ul>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm);">
+              <h4 style="color:var(--gold); margin-bottom:10px; font-size:1rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+                <span>⚖️</span> Cost of Capital Formulas
+              </h4>
+              <ul style="list-style:none; display:flex; flex-direction:column; gap:7px; font-size:0.83rem; color:var(--text-secondary);">
+                <li>• <strong>WACC:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">WACC = w_d·K_d(1-T) + w_p·K_p + w_e·K_e</code></li>
+                <li>• <strong>Cost of Debt (Redeemable):</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">Kd ≈ [I(1-T) + (RV-NP)/n] / [(RV+NP)/2]</code></li>
+                <li>• <strong>Cost of Equity (Gordon):</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">Ke = D1/P0 + g</code></li>
+                <li>• <strong>Cost of Equity (CAPM):</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">Ke = Rf + β × (Rm - Rf)</code></li>
+                <li>• <strong>Cost of Preference:</strong> <code style="color:var(--text-primary); font-family:var(--font-mono); font-weight:600;">Kp = [Dp + (RV-NP)/n] / [(RV+NP)/2]</code></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 2: WORKSPACE / VIEWER (WHITE FRAME MATCHING HTML FILES)
+           =================================================================== -->
+      <div class="view-section" id="workspaceView">
+        <div class="workspace-wrapper">
+
+          <!-- Left Collapsible Navigation Sidebar -->
+          <aside class="workspace-sidebar" id="workspaceSidebar">
+            <div class="sidebar-header">
+              <div class="sidebar-title-group">
+                <h3 id="sidebarHeaderTitle">Chapter Navigator</h3>
+                <p id="sidebarHeaderSubtitle">Select a topic or subpart</p>
+              </div>
+            </div>
+
+            <div class="sidebar-filter-box">
+              <input type="text" id="sidebarFilterInput" class="sidebar-filter-input" placeholder="Filter subparts...">
+            </div>
+
+            <div class="sidebar-scroll-area" id="sidebarNavContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </aside>
+
+          <!-- Main Viewport -->
+          <div class="workspace-main">
+            <!-- Control Topbar -->
+            <div class="workspace-topbar">
+              <div class="workspace-breadcrumbs">
+                <button class="ws-action-btn" id="sidebarToggleBtn" title="Toggle Navigation Sidebar">
+                  <span>☰</span> <span>Topics</span>
+                </button>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-home" id="breadcrumbHome">🏠 Home</span>
+                <span class="breadcrumb-separator">/</span>
+                <span id="breadcrumbType" style="color:var(--text-muted);">Chapters</span>
+                <span class="breadcrumb-separator">/</span>
+                <span id="breadcrumbItem" style="color:var(--text-secondary); font-weight:700;">Chapter 1</span>
+                <span class="breadcrumb-separator">/</span>
+                <span id="breadcrumbSubpart" class="breadcrumb-current">Learn TVM</span>
+              </div>
+
+              <div class="workspace-actions">
+                <button class="ws-action-btn" id="btnBackDashboard" title="Return to main dashboard">
+                  <span>←</span> <span>Dashboard</span>
+                </button>
+                <button class="ws-action-btn" id="btnOpenNewTab" title="Open this module in a separate tab">
+                  <span>🗗</span> <span>New Tab</span>
+                </button>
+                <button class="ws-action-btn" id="btnWsFullscreen" title="Maximize Workspace">
+                  <span>⛶</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Subparts Quick Horizontal Ribbon -->
+            <div class="subparts-horizontal-ribbon" id="subpartsRibbon">
+              <!-- Dynamically populated quick tabs -->
+            </div>
+
+            <!-- Embedded Iframe Viewport -->
+            <div class="iframe-container">
+              <div class="iframe-loader" id="iframeLoader">
+                <div class="spinner-ring"></div>
+                <div style="color:var(--text-secondary); font-size:0.88rem; font-weight:600;">
+                  Loading Interactive Finance Module...
+                </div>
+              </div>
+              <iframe id="contentIframe" class="content-iframe" src="about:blank" title="Financial Management Interactive Workspace"></iframe>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- ===================================================================
+         📱 MOBILE BOTTOM NAVIGATION BAR
+         =================================================================== -->
+    <nav class="mobile-bottom-bar" id="mobileBottomBar">
+      <button class="mobile-bottom-item active" data-target="dashboard">
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </button>
+      <button class="mobile-bottom-item" data-target="ch1">
+        <span class="icon">⏱️</span>
+        <span>Ch 1</span>
+      </button>
+      <button class="mobile-bottom-item" data-target="ch2">
+        <span class="icon">🏢</span>
+        <span>Ch 2</span>
+      </button>
+      <button class="mobile-bottom-item" data-target="ch3">
+        <span class="icon">⚖️</span>
+        <span>Ch 3</span>
+      </button>
+      <button class="mobile-bottom-item" data-target="excel_labs">
+        <span class="icon">🧪</span>
+        <span>Labs</span>
+      </button>
+      <button class="mobile-bottom-item" id="mobileDrawerBtn">
+        <span class="icon">☰</span>
+        <span>Topics</span>
+      </button>
+    </nav>
+
+    <!-- ===================================================================
+         📱 MOBILE DRAWER SHEET (For Subparts Navigation on Phone)
+         =================================================================== -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay">
+      <div class="mobile-drawer-sheet">
+        <div class="mobile-drawer-handle"></div>
+        <div class="mobile-drawer-header">
+          <h3 id="mobileDrawerTitle">Chapter Subparts</h3>
+          <button class="mobile-drawer-close" id="mobileDrawerClose">✕</button>
+        </div>
+        <div class="mobile-drawer-body" id="mobileDrawerBody">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         GLOBAL SEARCH SPOTLIGHT MODAL (Ctrl + K)
+         =================================================================== -->
+    <div class="modal-overlay" id="searchModal">
+      <div class="search-modal-card">
+        <div class="modal-search-header">
+          <span style="font-size:1.15rem; color:var(--text-muted);">🔍</span>
+          <input type="text" id="modalSearchInput" class="modal-search-input" placeholder="Type to search topics, formulas, or Excel labs (e.g., NPV, WACC, Annuity, =IRR)...">
+          <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+        </div>
+
+        <div class="modal-search-results" id="modalSearchResults">
+          <!-- Dynamically populated results -->
+        </div>
+
+        <div class="modal-search-footer">
+          <div class="modal-keys-hint">
+            <span><span class="key-badge">↑</span> <span class="key-badge">↓</span> to navigate</span>
+            <span><span class="key-badge">↵</span> to select</span>
+            <span><span class="key-badge">esc</span> to close</span>
+          </div>
+          <span>FM Portal Search</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/portal.js"></script>
+</body>
+</html>

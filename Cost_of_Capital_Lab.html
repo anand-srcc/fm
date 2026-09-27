@@ -1,0 +1,2663 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cost of Capital — Interactive Lab</title>
+<style>
+:root{--bg:#eef2f7;--card:#fff;--ink:#141c2e;--muted:#5a6478;--line:#d4dbe8;--blue:#1a4f8a;--blue-d:#0c2445;--blue-m:#2563b0;--gold:#b8860b;--gold-l:#f2e9d0;--green:#1a7a52;--red:#c0392b;--nav:#e2e8f2;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1420px;margin:auto;padding:18px}
+.hero{padding:32px;border-radius:20px;background:linear-gradient(135deg,#0c2445 0%,#1a4f8a 70%,#2563b0 100%);color:#fff;box-shadow:0 14px 34px #0c244530;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;top:0;right:0;bottom:0;width:5px;background:var(--gold)}
+.hero h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(28px,3.8vw,46px);margin:0 0 8px;letter-spacing:-.01em;line-height:1.1}
+.hero p{margin:0;max-width:1060px;opacity:.94;font-size:1.03rem}
+.hero .chapref{display:inline-block;margin-bottom:12px;background:#ffffff1f;border:1px solid #ffffff30;padding:5px 14px;border-radius:999px;font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.hero .modewrap{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .modewrap button{background:#ffffff1c;border:1px solid #ffffff3d;color:#fff}
+.hero .modewrap button.on{background:#fff;color:var(--blue-d)}
+.nav{display:flex;flex-wrap:nowrap;gap:8px;padding:12px;margin:14px 0;background:var(--nav);border:1px solid var(--line);border-radius:14px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scroll-behavior:smooth;position:sticky;top:0;z-index:5}
+.tab{border:1px solid #bfcfe0;background:#fff;color:#1e3a5f;padding:10px 14px;border-radius:9px;font-weight:700;font-size:.92rem;white-space:nowrap;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-1px);border-color:#7aa0c8}
+.tab.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 5px 14px #1a4f8a40}
+.navsep{align-self:center;padding:0 4px;font-size:.66rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#7a92b0;white-space:nowrap;user-select:none}
+.page{display:none}.page.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:.3}to{opacity:1}}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 3px 12px #141c2e0a}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s9{grid-column:span 9}.s12{grid-column:span 12}
+h2,h3{margin-top:0}h2{font-family:Georgia,serif;letter-spacing:-.01em}.muted{color:var(--muted)}
+label{display:block;font-weight:700;margin:11px 0 5px;font-size:.95rem}
+input,select,button,textarea{font:inherit}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font-size:1rem}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:var(--blue)}
+button{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer;font-size:1rem}
+button:hover{filter:brightness(1.07)}button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.secondary{background:#e2e8f2;color:var(--ink)}.danger{background:#f8e6e3;color:var(--red)}
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:11px}
+.metric{padding:14px;border-radius:12px;background:#eef3fa;border:1px solid #ccdae8}
+.metric small{color:var(--muted);font-size:.8rem}.metric strong{display:block;font-size:1.3rem;margin-top:3px}
+.formula{background:var(--blue-d);color:#ddeaf8;border-radius:12px;padding:16px;font:1rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto;white-space:pre-wrap}
+.callout{padding:15px;border-left:4px solid var(--blue);background:#eef3fa;border-radius:9px;font-size:1rem}
+.good{color:var(--green);font-weight:800}.bad{color:var(--red);font-weight:800}.warn{color:var(--gold);font-weight:800}
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:.97rem}
+th:first-child,td:first-child{text-align:left}th{background:#eef2f9}
+.scroll{overflow:auto;max-height:420px}
+.badge{display:inline-block;padding:5px 10px;border-radius:999px;background:#dbeafe;color:var(--blue);font-size:.85rem;font-weight:800}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.quiz-card{padding:16px;border:1px solid var(--line);border-radius:13px;margin:10px 0}
+.answer{margin-top:8px;padding:10px;border-radius:9px;background:#eef3fa}
+.mcq-option{display:block;width:100%;text-align:left;padding:10px 13px;margin:5px 0;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:1rem}
+.mcq-option:hover{background:#eef3fa}.mcq-option.correct{background:#e3f3ea;border-color:var(--green)}.mcq-option.wrong{background:#f8e6e3;border-color:var(--red)}
+.pillrow{display:flex;flex-wrap:wrap;gap:6px}
+.stepflow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.step{background:#dbeafe;border:1px solid #bfcfe0;color:#1a3a6a;padding:8px 14px;border-radius:9px;font-weight:700;font-size:.92rem}.arrow{color:var(--muted)}
+ul,ol{padding-left:20px}
+.adv{border-left:4px solid var(--blue);background:#eaf2fc;padding:12px 14px;border-radius:9px}
+.lim{border-left:4px solid var(--red);background:#fbeae7;padding:12px 14px;border-radius:9px}
+canvas{display:block;width:100%;height:270px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.note{font-size:.93rem;color:var(--muted)}
+.alert{padding:12px 14px;border-radius:10px;background:var(--gold-l);border-left:4px solid var(--gold)}
+.section-kicker{font-size:.84rem;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:var(--gold);margin-bottom:5px}
+.teacher-note{display:none;border-left:4px solid var(--gold);background:var(--gold-l);padding:12px 14px;border-radius:9px;margin-top:10px}
+body.teacher .teacher-note{display:block}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:#dbeafe;color:var(--blue);font-weight:800;font-size:.85rem;margin:2px 4px 2px 0}
+.small-btn{padding:8px 11px;font-size:.9rem}
+.tag{display:inline-block;padding:3px 9px;border-radius:6px;background:#eef3fa;border:1px solid #bfcfe0;font-size:.82rem;font-weight:700;margin:2px}
+.verdict{display:inline-block;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.9rem}
+.verdict.accept{background:#e3f3ea;color:var(--green)}.verdict.reject{background:#f8e6e3;color:var(--red)}
+.dash-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}
+.dash-cell{padding:14px;border-radius:12px;background:#fff;border:1px solid var(--line);text-align:center}
+.dash-cell small{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.dash-cell .val{font-size:1.35rem;font-weight:800;margin:5px 0}
+.comp-table td{font-size:.94rem}
+.deriv{background:#f5f9ff;border:1px solid #bfcfe0;border-radius:12px;padding:16px;margin:12px 0}
+.deriv h4{margin:0 0 8px;color:var(--blue-d);font-size:1rem}
+.excel-box{background:#1d6f42;color:#fff;border-radius:10px;padding:12px 16px;font:1rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;margin:8px 0}
+.project-box{background:linear-gradient(135deg,#f0f6ff,#e8f2fc);border:1px solid #bfcfe0;border-radius:14px;padding:20px;margin:10px 0}
+.project-box h4{color:var(--blue-d);margin-top:0}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(3,1fr)}.s3,.s4,.s5,.s6,.s7,.s8,.s9{grid-column:span 6}.dash-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.s3,.s4,.s5,.s6,.s7,.s8,.s9,.s12{grid-column:span 12}.two,.three{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:10px}}
+@media print{.nav,.hero .modewrap,button,input,textarea,select{display:none!important}.page{display:block!important}.card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}body{background:#fff}.wrap{max-width:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <span class="chapref">Financial Management · Cost of Capital</span>
+  <h1>Cost of Capital — Interactive Lab</h1>
+  <p>A comprehensive, fully offline lab covering every dimension of cost of capital. Start from the concept of required return and opportunity cost, then work through cost of debt, preference shares, equity (dividend growth, CAPM, earnings-yield), retained earnings, WACC derivation, book vs market weights, marginal vs historical cost, adjustments for flotation and taxes, the capital structure link, and advanced topics — with live calculators, derivations, Excel formulas, worked examples, unsolved problems, MCQ bank and an exam generator. Every number is computed live in your browser, in Indian ₹.</p>
+  <div class="modewrap">
+    <button id="modeStudent" class="on" onclick="setMode('student')">Student Mode</button>
+    <button id="modeTeacher" onclick="setMode('teacher')">Teacher Mode (show notes)</button>
+    <button onclick="window.print()">Print / Save PDF</button>
+  </div>
+</header>
+
+<nav class="nav" id="nav">
+  <span class="navsep">Start</span>
+  <button class="tab active" data-page="dashboard">Dashboard &amp; Search</button>
+  <button class="tab" data-page="intro">Introduction</button>
+  <button class="tab" data-page="concept">Core Concept</button>
+  <span class="navsep">Components</span>
+  <button class="tab" data-page="cost_debt">Cost of Debt (Kd)</button>
+  <button class="tab" data-page="cost_pref">Cost of Preference (Kp)</button>
+  <button class="tab" data-page="cost_equity">Cost of Equity (Ke)</button>
+  <button class="tab" data-page="cost_retained">Cost of Retained Earnings (Kr)</button>
+  <button class="tab" data-page="flotation">Flotation Costs</button>
+  <span class="navsep">WACC</span>
+  <button class="tab" data-page="wacc">WACC — Core</button>
+  <button class="tab" data-page="weights">Book vs Market Weights</button>
+  <button class="tab" data-page="marginal">Marginal Cost of Capital</button>
+  <button class="tab" data-page="break_point">Break Points &amp; MCC Schedule</button>
+  <span class="navsep">Models</span>
+  <button class="tab" data-page="capm">CAPM &amp; Beta</button>
+  <button class="tab" data-page="dividend_growth">Dividend Growth Model</button>
+  <button class="tab" data-page="bond_yield_plus">Bond-Yield-Plus</button>
+  <button class="tab" data-page="capital_structure">Capital Structure Link</button>
+  <span class="navsep">Calculators</span>
+  <button class="tab" data-page="calc_kd">Kd Calculator</button>
+  <button class="tab" data-page="calc_ke">Ke Calculator</button>
+  <button class="tab" data-page="calc_wacc">WACC Calculator</button>
+  <button class="tab" data-page="calc_capm">CAPM Calculator</button>
+  <button class="tab" data-page="mcc_lab">MCC Lab</button>
+  <span class="navsep">Practice</span>
+  <button class="tab" data-page="worked">Worked Examples</button>
+  <button class="tab" data-page="unsolved">Unsolved Problems</button>
+  <button class="tab" data-page="mcq">MCQ Bank</button>
+  <button class="tab" data-page="exam_gen">Exam Generator</button>
+  <span class="navsep">Reference</span>
+  <button class="tab" data-page="formula_bank">Formula Bank</button>
+  <button class="tab" data-page="excel_guide">Excel Guide</button>
+  <button class="tab" data-page="glossary">Glossary</button>
+</nav>
+
+<!-- ==================== DASHBOARD ==================== -->
+<section id="dashboard" class="page active">
+<div class="grid">
+<div class="card s12" style="background:linear-gradient(135deg,#f0f6ff,#e8f0f9);border-color:#bfcfe0">
+  <div class="section-kicker">Signature Tool</div>
+  <h2>WACC Master Dashboard</h2>
+  <p class="muted" style="margin-top:0">Enter your capital structure below. Every component cost and the overall WACC are computed at once. This is the entire lab in one panel.</p>
+  <div class="grid" style="margin-top:6px">
+    <div class="s5">
+      <div class="three">
+        <div><label>Equity (₹ cr)</label><input id="dEq" type="number" value="500" step="10"></div>
+        <div><label>Ke (%)</label><input id="dKe" type="number" value="15" step="0.5"></div>
+        <div><label>Tax rate (%)</label><input id="dTax" type="number" value="30" step="1"></div>
+      </div>
+      <div class="three">
+        <div><label>Debt (₹ cr)</label><input id="dDe" type="number" value="300" step="10"></div>
+        <div><label>Pre-tax Kd (%)</label><input id="dKd" type="number" value="10" step="0.5"></div>
+        <div><label>Pref. shares (₹ cr)</label><input id="dPs" type="number" value="100" step="10"></div>
+      </div>
+      <div class="two">
+        <div><label>Kp (%)</label><input id="dKp" type="number" value="12" step="0.5"></div>
+        <div><label>Retained earnings (₹ cr)</label><input id="dRe" type="number" value="100" step="10"></div>
+      </div>
+      <div><label>Kr (%)</label><input id="dKr" type="number" value="14" step="0.5"></div>
+    </div>
+    <div class="s7">
+      <div class="dash-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="dash-cell"><small>Total Capital</small><div class="val" id="dTotal">—</div></div>
+        <div class="dash-cell"><small>After-tax Kd</small><div class="val" id="dKdAt">—</div></div>
+        <div class="dash-cell"><small>WACC</small><div class="val" id="dWACC" style="color:var(--blue);font-size:1.6rem">—</div></div>
+        <div class="dash-cell"><small>Equity Weight</small><div class="val" id="dWe">—</div></div>
+      </div>
+      <canvas id="dashChart" style="margin-top:14px;height:230px"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card s5">
+  <div class="section-kicker">Find anything</div>
+  <h3>Master Search</h3>
+  <input id="masterSearch" type="text" placeholder="Search: WACC, CAPM, beta, flotation, MCC…">
+  <div id="masterSearchResults" style="margin-top:12px"></div>
+</div>
+<div class="card s7">
+  <div class="section-kicker">Learning Flow</div>
+  <h3>Suggested path</h3>
+  <div class="stepflow">
+    <span class="step">1 · Concept</span><span class="arrow">→</span>
+    <span class="step">2 · Kd</span><span class="arrow">→</span>
+    <span class="step">3 · Kp</span><span class="arrow">→</span>
+    <span class="step">4 · Ke &amp; Kr</span><span class="arrow">→</span>
+    <span class="step">5 · WACC</span><span class="arrow">→</span>
+    <span class="step">6 · Weights</span><span class="arrow">→</span>
+    <span class="step">7 · MCC / Break Points</span><span class="arrow">→</span>
+    <span class="step">8 · CAPM</span><span class="arrow">→</span>
+    <span class="step">9 · Capital Structure</span>
+  </div>
+  <h3 style="margin-top:16px">Jump to a calculator</h3>
+  <div class="pillrow">
+    <button class="small-btn secondary" onclick="activatePage('calc_wacc')">WACC Calc</button>
+    <button class="small-btn secondary" onclick="activatePage('calc_ke')">Ke Calc</button>
+    <button class="small-btn secondary" onclick="activatePage('calc_capm')">CAPM Calc</button>
+    <button class="small-btn secondary" onclick="activatePage('mcc_lab')">MCC Lab</button>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== INTRODUCTION ==================== -->
+<section id="intro" class="page">
+<div class="grid">
+<div class="card s8">
+  <div class="section-kicker">Foundations</div>
+  <h2>What is the Cost of Capital?</h2>
+  <p>The <b>cost of capital</b> is the minimum rate of return a firm must earn on its investments to satisfy the expectations of its fund providers — debt holders, preference shareholders, and equity shareholders. It is simultaneously:</p>
+  <ul>
+    <li><b>The required rate of return</b> that capital suppliers demand as compensation for the time value of money and the risk they bear.</li>
+    <li><b>The cut-off rate</b> (hurdle rate) for capital budgeting — accept projects only if their return exceeds the cost of capital.</li>
+    <li><b>The discount rate</b> used to find the present value of future cash flows in NPV analysis.</li>
+    <li><b>The opportunity cost</b> of funds — money invested here cannot earn elsewhere; investors must be compensated at least at the market rate for equivalent risk.</li>
+  </ul>
+  <div class="callout"><b>Why it matters.</b> An incorrect cost of capital leads to wrong investment decisions. Overestimating it rejects value-creating projects; underestimating it accepts value-destroying ones. Getting WACC right is therefore central to corporate value creation.</div>
+  <h3>Overview of components</h3>
+  <table>
+    <tr><th>Source of Capital</th><th>Symbol</th><th>Key Driver</th><th>Tax Deductible?</th></tr>
+    <tr><td>Long-term debt (bonds, debentures)</td><td>Kd</td><td>Interest rate, credit risk</td><td>Yes — tax shield reduces cost</td></tr>
+    <tr><td>Preference shares</td><td>Kp</td><td>Preference dividend, redemption premium</td><td>No</td></tr>
+    <tr><td>Equity (new issue)</td><td>Ke</td><td>Dividend/earnings growth, market risk, flotation</td><td>No</td></tr>
+    <tr><td>Retained earnings</td><td>Kr</td><td>Same as Ke minus flotation cost</td><td>No</td></tr>
+  </table>
+  <div class="teacher-note"><b>Teaching note:</b> Ask students: "If a firm uses only retained earnings to fund a project, is there a cost?" Yes — the opportunity cost is what shareholders could earn elsewhere on that same money (Kr ≈ Ke).</div>
+</div>
+<div class="card s4">
+  <h3>Determinants of cost of capital</h3>
+  <div class="quiz-card"><b>Risk-free rate of return</b><div class="note">The foundation. Usually approximated by Government of India T-bill or G-sec yield.</div></div>
+  <div class="quiz-card"><b>Business risk</b><div class="note">Variability in operating income; influences Ke and WACC through beta and credit spread.</div></div>
+  <div class="quiz-card"><b>Financial risk</b><div class="note">Additional risk from using debt; raises Ke (shareholders demand more) and may raise Kd.</div></div>
+  <div class="quiz-card"><b>Tax rate</b><div class="note">Debt interest is tax-deductible, so after-tax Kd = Kd × (1 − T). Higher tax → lower effective debt cost.</div></div>
+  <div class="quiz-card"><b>Capital market conditions</b><div class="note">Tight credit raises Kd; bull markets may lower Ke by raising P₀.</div></div>
+  <div class="quiz-card"><b>Dividend &amp; earnings policy</b><div class="note">Influences the DGM estimate of Ke through g (growth rate).</div></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CORE CONCEPT ==================== -->
+<section id="concept" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Conceptual Foundation</div>
+  <h2>The Concept of Required Return &amp; Opportunity Cost</h2>
+  <div class="two">
+    <div>
+      <h3>Required rate of return</h3>
+      <p>Capital providers are risk-averse. They will supply funds only if their <i>expected return</i> at least matches what they could earn elsewhere for the same risk level. This is the required rate of return — it is market-determined, not decided by the firm.</p>
+      <div class="formula">Required Return = Risk-free Rate + Risk Premium
+Kᵢ = Rƒ + β × (Rm − Rƒ)    [CAPM form]
+   = Rƒ + Business-risk premium + Financial-risk premium</div>
+      <h3>Opportunity cost</h3>
+      <p>From the firm's perspective, funds already raised have an opportunity cost: they could be returned to investors who would reinvest elsewhere. Even retained earnings cost the firm, because those rupees belong to shareholders who forgo returns on alternative investments.</p>
+      <div class="callout">Using retained earnings ≠ "free money." The opportunity cost of equity = what shareholders could earn on an investment of equivalent risk. Ignoring this systematically underestimates cost of capital.</div>
+    </div>
+    <div>
+      <h3>Three perspectives on cost of capital</h3>
+      <div class="quiz-card"><b>Investor perspective</b> — Minimum return needed to justify the investment given its risk. Below this, investors sell, driving down the stock price.</div>
+      <div class="quiz-card"><b>Firm perspective</b> — Hurdle rate for new investments. Projects earning above WACC add value; below WACC destroy value.</div>
+      <div class="quiz-card"><b>Market equilibrium</b> — In efficient markets, price adjusts so actual return = required return. A firm can raise capital at its WACC because the market prices the securities fairly.</div>
+      <h3>Explicit vs Implicit cost</h3>
+      <table>
+        <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+        <tr><td>Explicit</td><td>Cash outflow promised to capital provider</td><td>Interest on debentures, preference dividend</td></tr>
+        <tr><td>Implicit</td><td>Opportunity cost — no contractual cash flow</td><td>Cost of retained earnings</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Specific cost vs composite cost</h3>
+  <p><b>Specific (component) cost</b> is the cost of a single source of finance — Kd, Kp, Ke or Kr — computed individually. <b>Composite cost</b> (WACC) is the weighted average of all specific costs, reflecting the firm's overall capital structure. For investment decisions the WACC is the correct discount rate unless the project changes the firm's risk or leverage.</p>
+</div>
+<div class="card s6">
+  <h3>Historical vs Marginal cost</h3>
+  <div class="two">
+    <div class="adv"><b>Historical (embedded) cost</b><br>Cost of funds already raised. Useful for evaluating past financing decisions. <b>Not</b> the right rate for new investment decisions.</div>
+    <div class="lim"><b>Marginal cost</b><br>Cost of the next rupee raised. Relevant for new investments. Rises as cheaper sources exhaust (see MCC Schedule). <b>Always use marginal cost for capital budgeting.</b></div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== COST OF DEBT ==================== -->
+<section id="cost_debt" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">Component Cost</div>
+  <h2>Cost of Debt (Kd)</h2>
+  <p>Debt (debentures, bonds, term loans) carries contractual interest. Because interest is tax-deductible, the firm's effective (after-tax) cost of debt is lower than the coupon rate. This tax shield makes debt attractive up to a point.</p>
+
+  <h3>1. Perpetual / irredeemable debt</h3>
+  <div class="formula">Kd (before tax) = Annual interest / Net proceeds
+Kd (after tax)  = Kd (before tax) × (1 − Tax rate)
+                = [I / NP] × (1 − T)</div>
+
+  <h3>2. Redeemable debt</h3>
+  <div class="formula">Kd (approx.) = [I(1−T) + (RV − NP)/n] / [(RV + NP)/2]
+
+where:
+  I   = Annual interest = Face value × Coupon rate
+  T   = Corporate tax rate
+  RV  = Redemption value (par or at premium/discount)
+  NP  = Net proceeds (issue price less flotation costs)
+  n   = Years to maturity</div>
+
+  <div class="deriv">
+    <h4>Derivation — why approximate formula works</h4>
+    <p>Exact Kd is the YTM (after-tax) solving: NP = Σ[I(1−T)/(1+r)ᵗ] + RV/(1+r)ⁿ iteratively. The approximate formula linearises the capital gain/loss over n years and averages book value — it gives Kd within ±30–50 bps for typical maturities. Always use the exact (IRR) method when precision matters.</p>
+  </div>
+
+  <h3>3. Zero-coupon bonds</h3>
+  <div class="formula">Kd (before tax) = (RV / Issue price)^(1/n) − 1
+After-tax Kd applies only if amortised discount is tax-deductible (check jurisdiction).</div>
+
+  <h3>4. Floating-rate debt</h3>
+  <p>Use expected future short-term rate (e.g. MCLR + spread) or the forward rate implied by the yield curve. Then apply (1−T).</p>
+
+  <div class="two">
+    <div class="adv"><b>Advantages of using debt</b><br>Tax shield on interest lowers effective cost. Fixed obligations — shareholders retain upside. Generally cheapest explicit source of funds (less risky to holder).</div>
+    <div class="lim"><b>Risks of debt</b><br>Increases financial risk (interest coverage ratio falls). Too much debt raises both Kd (credit spread widens) and Ke (shareholders demand higher return). Beyond optimal D/E, WACC rises.</div>
+  </div>
+  <div class="teacher-note"><b>Teaching note:</b> Contrast pre-tax Kd vs after-tax Kd numerically. A 10% coupon at 30% tax → after-tax cost = 7%. The ₹3 per ₹100 saved by the government makes debt appear cheaper — the real cost is lower, but so is the firm's interest cover.</div>
+</div>
+<div class="card s5">
+  <h3>Cost of Debt Calculator</h3>
+  <label>Face value (₹)</label><input id="kdFV" type="number" value="1000">
+  <label>Coupon rate (%)</label><input id="kdCoupon" type="number" value="10" step="0.25">
+  <label>Net proceeds / market price (₹)</label><input id="kdNP" type="number" value="970">
+  <label>Redemption value (₹)</label><input id="kdRV" type="number" value="1000">
+  <label>Years to maturity</label><input id="kdN" type="number" value="7">
+  <label>Tax rate (%)</label><input id="kdTax" type="number" value="30" step="1">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>Annual Interest (₹)</small><strong id="kdInterest">—</strong></div>
+    <div class="metric"><small>Pre-tax Kd (approx)</small><strong id="kdPre">—</strong></div>
+    <div class="metric" style="background:#dbeafe;border-color:#93b4d8"><small>After-tax Kd</small><strong id="kdPost">—</strong></div>
+    <div class="metric"><small>After-tax Kd (YTM method)</small><strong id="kdYTM">—</strong></div>
+  </div>
+  <canvas id="kdChart" style="margin-top:12px;height:200px"></canvas>
+  <p class="note" id="kdNote" style="margin-top:8px"></p>
+  <div class="excel-box">Excel:  =RATE(n, -I*(1-T), NP, -RV)
+e.g. =RATE(7,-70,970,-1000)
+→ gives after-tax Kd directly</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== COST OF PREFERENCE ==================== -->
+<section id="cost_pref" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">Component Cost</div>
+  <h2>Cost of Preference Shares (Kp)</h2>
+  <p>Preference shareholders receive a fixed dividend before equity holders. Unlike debt interest, preference dividends are <b>not tax-deductible</b> — they are paid from post-tax profits. This makes preference capital more expensive than debt on an after-tax basis for the same coupon level.</p>
+
+  <h3>1. Irredeemable preference shares</h3>
+  <div class="formula">Kp = Preference dividend per share / Net proceeds per share
+   = D / NP</div>
+
+  <h3>2. Redeemable preference shares</h3>
+  <div class="formula">Kp (approx.) = [D + (RV − NP)/n] / [(RV + NP)/2]
+
+where:
+  D  = Annual preference dividend (fixed)
+  RV = Redemption value
+  NP = Net proceeds (issue price − flotation cost)
+  n  = Years to redemption</div>
+
+  <div class="deriv">
+    <h4>Why no tax adjustment for Kp?</h4>
+    <p>Interest expense reduces taxable income → government shares part of debt cost via tax saving. Dividends (preference or equity) are paid from profit after tax — no deduction allowed. Hence Kp formula has no (1−T) factor. Numerically: 10% preference shares vs 10% debentures at 30% tax → Kp = 10%, Kd (AT) = 7%. Preference is 43% more expensive after tax.</p>
+  </div>
+
+  <h3>3. Cumulative vs non-cumulative</h3>
+  <p>For cost estimation, cumulative arrear dividends are treated as certain (must be paid before equity). Non-cumulative missed dividends are lost, so cost calculation may need probability-weighted dividends — rare in practice, use stated rate as base.</p>
+
+  <div class="two">
+    <div class="adv"><b>Advantages</b><br>Fixed cost — below equity in uncertainty; no dilution of EPS. Provides financial leverage (like debt) without formal bankruptcy risk.</div>
+    <div class="lim"><b>Limitations</b><br>No tax shield → expensive relative to debt. Missed dividends accumulate (cumulative type) and restrict equity dividends. Treated as quasi-debt by rating agencies, constraining further borrowing.</div>
+  </div>
+  <div class="teacher-note"><b>Teaching note:</b> Compare Kp and Kd numerically — students often forget the tax adjustment. Ask: "What coupon on debt equals a 12% preference share cost?" Answer: 12%/(1−T). At T=30%, need 17.14% coupon on debt.</div>
+</div>
+<div class="card s5">
+  <h3>Cost of Preference Calculator</h3>
+  <label>Annual dividend per share (₹)</label><input id="kpDiv" type="number" value="12" step="0.5">
+  <label>Net proceeds / market price (₹)</label><input id="kpNP" type="number" value="95" step="1">
+  <label>Redemption value (₹)</label><input id="kpRV" type="number" value="100" step="1">
+  <label>Years to redemption (0 = irredeemable)</label><input id="kpN" type="number" value="8">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>Kp (approx.)</small><strong id="kpResult">—</strong></div>
+    <div class="metric"><small>Kp (YTM / exact)</small><strong id="kpYTM">—</strong></div>
+  </div>
+  <p class="note" id="kpNote" style="margin-top:8px"></p>
+  <div class="excel-box">Excel (exact Kp):
+=RATE(n, -Div, NP, -RV)
+e.g. =RATE(8,-12,95,-100)</div>
+  <div class="alert" style="margin-top:12px"><b>No (1−T) factor</b> — preference dividends are not tax-deductible. Always enter dividend as the face amount with no tax adjustment.</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== COST OF EQUITY ==================== -->
+<section id="cost_equity" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Component Cost · Most Debated</div>
+  <h2>Cost of Equity (Ke) — New Issue</h2>
+  <p>Equity is the most difficult component to estimate because there is no contractual return — shareholders expect a <i>risk-appropriate</i> return that is unobservable. Three main models are used:</p>
+</div>
+
+<div class="card s4">
+  <h3>Model 1 — Dividend Growth Model (Gordon)</h3>
+  <div class="formula">Ke = D₁/P₀ + g
+   = D₀(1+g)/[P₀(1−f)] + g
+
+D₁ = next expected dividend
+P₀ = current market price
+f  = flotation cost (%)
+g  = constant growth rate in dividends
+  = RoE × retention ratio (b)
+  = ROE × (1−payout ratio)</div>
+  <div class="deriv">
+    <h4>Derivation</h4>
+    <p>From Gordon's price model: P₀ = D₁/(Ke − g) → solving for Ke gives D₁/P₀ + g. For new equity, proceeds = P₀(1−f), so Ke = D₁/[P₀(1−f)] + g. This is the dividend-yield plus growth approach.</p>
+  </div>
+  <div class="adv"><b>When to use:</b> Firm pays stable dividends with predictable growth. Works well for mature, dividend-paying companies (e.g. FMCG, utilities).</div>
+  <div class="lim"><b>Limitation:</b> Circular (g depends on future ROE). Fails for zero-dividend or high-growth firms. Sensitive to g estimate.</div>
+</div>
+
+<div class="card s4">
+  <h3>Model 2 — Capital Asset Pricing Model (CAPM)</h3>
+  <div class="formula">Ke = Rƒ + β × (Rm − Rƒ)
+
+Rƒ  = risk-free rate (G-sec yield)
+β   = systematic risk (beta) of the stock
+Rm  = expected market return
+(Rm−Rƒ) = equity risk premium (ERP)
+
+For levered β:
+βL = βU × [1 + (1−T)(D/E)]</div>
+  <div class="deriv">
+    <h4>Derivation</h4>
+    <p>CAPM equilibrium: in a diversified portfolio, only systematic (market) risk is priced. Beta measures sensitivity of stock return to market return (covariance with market / market variance). Required return is linear in beta: every additional unit of beta demands (Rm−Rƒ) in extra return.</p>
+  </div>
+  <div class="adv"><b>When to use:</b> Market data available; beta estimable from historical returns. Preferred for listed companies with traded equity.</div>
+  <div class="lim"><b>Limitation:</b> Beta is backward-looking; ERP estimation is subjective; single-factor model (Fama-French adds size, value).</div>
+</div>
+
+<div class="card s4">
+  <h3>Model 3 — Earnings / Price (E/P) Approach</h3>
+  <div class="formula">Ke = EPS / Market price per share
+   = E₁ / P₀
+
+Or with growth:
+Ke = E₁ / P₀ + g
+
+Or earnings-yield on book value:
+Ke = Return on equity (ROE)</div>
+  <div class="deriv">
+    <h4>Rationale</h4>
+    <p>If the firm retains all earnings and reinvests at ROE, the stock's required return must equal ROE for the price to be fair. This model ignores dividend policy but captures total return to shareholders including retained profits. Best used as a cross-check against DGM and CAPM.</p>
+  </div>
+  <div class="adv"><b>When to use:</b> Zero-dividend firms; as a quick cross-check. Related to justified P/E ratio.</div>
+  <div class="lim"><b>Limitation:</b> EPS is accounting-based, not cash-based. Does not separate dividends from capital gains.</div>
+</div>
+
+<div class="card s6">
+  <h3>Ke — Live Calculator (DGM)</h3>
+  <label>Last dividend D₀ (₹)</label><input id="keD0" type="number" value="8" step="0.5">
+  <label>Growth rate g (%)</label><input id="keG" type="number" value="6" step="0.5">
+  <label>Market / issue price P₀ (₹)</label><input id="keP0" type="number" value="110" step="1">
+  <label>Flotation cost f (%)</label><input id="keF" type="number" value="4" step="0.5">
+  <div class="metrics" style="grid-template-columns:repeat(4,1fr);margin-top:12px">
+    <div class="metric"><small>D₁ (₹)</small><strong id="keD1">—</strong></div>
+    <div class="metric"><small>Ke (no flotation)</small><strong id="keNoF">—</strong></div>
+    <div class="metric" style="background:#dbeafe;border-color:#93b4d8"><small>Ke (with flotation)</small><strong id="keWithF">—</strong></div>
+    <div class="metric"><small>Dividend yield</small><strong id="keDY">—</strong></div>
+  </div>
+  <canvas id="keChart" style="margin-top:12px;height:180px"></canvas>
+  <div class="excel-box" style="margin-top:10px">Excel (DGM):
+=(D0*(1+g%/100))/(P0*(1-f%/100))+g%/100
+No built-in Excel function — use formula directly.</div>
+</div>
+<div class="card s6">
+  <h3>Ke — CAPM Calculator (quick)</h3>
+  <label>Risk-free rate Rƒ (%)</label><input id="cRf" type="number" value="6.5" step="0.25">
+  <label>Beta (β)</label><input id="cBeta" type="number" value="1.2" step="0.05">
+  <label>Market return Rm (%)</label><input id="cRm" type="number" value="13" step="0.5">
+  <div class="metrics" style="grid-template-columns:1fr 1fr 1fr;margin-top:12px">
+    <div class="metric"><small>ERP = Rm − Rƒ</small><strong id="cERP">—</strong></div>
+    <div class="metric" style="background:#dbeafe;border-color:#93b4d8"><small>Ke (CAPM)</small><strong id="cKe">—</strong></div>
+    <div class="metric"><small>Risk premium β×ERP</small><strong id="cRP">—</strong></div>
+  </div>
+  <canvas id="capmChart" style="margin-top:12px;height:180px"></canvas>
+  <div class="excel-box" style="margin-top:10px">Excel (CAPM):
+=Rf% + Beta*(Rm%-Rf%)
+e.g. =6.5%+1.2*(13%-6.5%) = 14.3%</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== COST OF RETAINED EARNINGS ==================== -->
+<section id="cost_retained" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">Component Cost</div>
+  <h2>Cost of Retained Earnings (Kr)</h2>
+  <p>Retained earnings belong to existing shareholders. If the firm retains profits instead of paying them out, shareholders forgo dividends. The cost of retained earnings is therefore the <b>opportunity cost</b> — what shareholders could earn on an investment of equivalent risk. It equals the cost of new equity <i>minus</i> flotation costs (since retained earnings need not be raised externally).</p>
+
+  <h3>Three approaches</h3>
+  <div class="three">
+    <div class="quiz-card">
+      <b>Opportunity cost / DGM approach</b>
+      <div class="formula" style="font-size:.88rem;margin-top:8px">Kr = D₁/P₀ + g
+(no flotation cost deduction)</div>
+      <div class="note" style="margin-top:6px">Shareholders can reinvest dividends in the market at this rate — so the firm must match it.</div>
+    </div>
+    <div class="quiz-card">
+      <b>CAPM approach</b>
+      <div class="formula" style="font-size:.88rem;margin-top:8px">Kr = Rƒ + β × (Rm − Rƒ)</div>
+      <div class="note" style="margin-top:6px">Beta captures systematic risk. No difference from Ke (CAPM) — CAPM gives no flotation cost distinction.</div>
+    </div>
+    <div class="quiz-card">
+      <b>Bond-yield-plus-risk-premium</b>
+      <div class="formula" style="font-size:.88rem;margin-top:8px">Kr = Kd (pre-tax) + Equity risk premium</div>
+      <div class="note" style="margin-top:6px">Quick estimate. Risk premium is typically 3–5% added to the firm's own bond yield.</div>
+    </div>
+  </div>
+
+  <h3>Kr vs Ke — key difference</h3>
+  <table>
+    <tr><th></th><th>Kr (Retained earnings)</th><th>Ke (New equity issue)</th></tr>
+    <tr><td>Source</td><td>Internal (no new issue)</td><td>External (fresh equity issue)</td></tr>
+    <tr><td>Flotation cost</td><td>None — no transaction</td><td>Yes — underwriting, brokerage</td></tr>
+    <tr><td>Formula (DGM)</td><td>D₁/P₀ + g</td><td>D₁/[P₀(1−f)] + g</td></tr>
+    <tr><td>Magnitude</td><td>Lower (or equal) than Ke</td><td>Higher than Kr</td></tr>
+  </table>
+
+  <div class="callout">When flotation costs are zero, Kr = Ke. In practice Ke &gt; Kr because flotation costs inflate the denominator of the DGM formula for new issues.</div>
+
+  <h3>The shareholder preference argument</h3>
+  <p>Some argue Kr should be adjusted for personal taxes shareholders pay on dividends. If shareholders face a higher marginal tax rate on dividends than on capital gains, the opportunity cost of retained earnings (keeping funds inside the firm to generate capital gains) may actually be <i>lower</i> than Ke. This is the basis of Litzenberger–Ramaswamy's tax-adjusted cost of equity. In Indian context, dividends now taxed at slab rates (post FY21), making this particularly relevant.</p>
+
+  <div class="teacher-note"><b>Teaching note:</b> Pose this question: "A firm has ₹50 Cr of retained earnings this year. Should it treat these as free funds?" Discussion should surface the opportunity cost concept — retained earnings are the shareholders' money, placed in the firm's hands as trustees. Misuse leads to value destruction.</div>
+</div>
+<div class="card s5">
+  <h3>Kr vs Ke Calculator</h3>
+  <label>Last dividend D₀ (₹)</label><input id="krD0" type="number" value="8" step="0.5">
+  <label>Growth rate g (%)</label><input id="krG" type="number" value="6" step="0.5">
+  <label>Market price P₀ (₹)</label><input id="krP0" type="number" value="110">
+  <label>Flotation cost on new issue f (%)</label><input id="krF" type="number" value="5" step="0.5">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>D₁ = D₀(1+g)</small><strong id="krD1">—</strong></div>
+    <div class="metric"><small>Kr (retained earnings)</small><strong id="krResult">—</strong></div>
+    <div class="metric" style="background:#fbeae7;border-color:#e8b8b0"><small>Ke (new issue)</small><strong id="krKe">—</strong></div>
+    <div class="metric"><small>Flotation cost impact</small><strong id="krDiff">—</strong></div>
+  </div>
+  <p class="note" style="margin-top:8px" id="krNote"></p>
+  <canvas id="krChart" style="margin-top:12px;height:190px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== FLOTATION COSTS ==================== -->
+<section id="flotation" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">Issue Costs</div>
+  <h2>Flotation Costs — Impact on Component Costs</h2>
+  <p>Flotation costs are the expenses of issuing new securities: underwriting commission, brokerage, legal fees, SEBI filing charges, printing, and advertising. They reduce the <b>net proceeds</b> received by the firm, raising the effective cost of capital.</p>
+
+  <h3>Two treatment approaches</h3>
+  <div class="two">
+    <div>
+      <h4>Approach 1 — Adjust net proceeds (textbook method)</h4>
+      <div class="formula">Ke = D₁ / [P₀ × (1−f)] + g
+Kp = [Div + (RV−NP)/n] / [(RV+NP)/2]
+  where NP = Issue price × (1−f)
+Kd = [I(1−T) + (RV−NP)/n] / [(RV+NP)/2]</div>
+      <p>Flotation cost is spread over the life of the security via the denominator. Simplest, most widely used in Indian financial management courses.</p>
+    </div>
+    <div>
+      <h4>Approach 2 — Flotation-adjusted NPV (Brealey-Myers)</h4>
+      <div class="formula">Adjusted NPV = Base NPV − PV of flotation costs
+
+Or: raise the hurdle rate so that:
+Cost per rupee raised = 1/(1−f)
+
+Effective Ke = Ke/(1−f)
+[Conservative — over-adjusts for long-lived projects]</div>
+      <p>More theoretically correct but less commonly tested in Indian university exams. Approach 1 is standard for most problems.</p>
+    </div>
+  </div>
+
+  <h3>Typical flotation rates in India</h3>
+  <table>
+    <tr><th>Security Type</th><th>Flotation Cost Range</th></tr>
+    <tr><td>Equity (IPO / FPO)</td><td>3% – 8% of issue price</td></tr>
+    <tr><td>Rights issue</td><td>1% – 3%</td></tr>
+    <tr><td>Preference shares</td><td>2% – 5%</td></tr>
+    <tr><td>Debentures (public issue)</td><td>1% – 3%</td></tr>
+    <tr><td>Private placement</td><td>0.5% – 1%</td></tr>
+  </table>
+
+  <h3>Worked illustration</h3>
+  <div class="project-box">
+    <h4>Example — Effect of flotation on Ke</h4>
+    <p>D₀ = ₹10, g = 8%, P₀ = ₹150, f = 5%</p>
+    <p>D₁ = 10 × 1.08 = ₹10.80</p>
+    <p>Without flotation: Ke = 10.80/150 + 0.08 = 7.2% + 8% = <b>15.2%</b></p>
+    <p>With flotation (net proceeds = 150 × 0.95 = ₹142.50):<br>
+    Ke = 10.80/142.50 + 0.08 = 7.58% + 8% = <b>15.58%</b></p>
+    <p>Flotation increases Ke by <b>38 basis points</b> — seemingly small but significant at scale.</p>
+  </div>
+</div>
+<div class="card s5">
+  <h3>Flotation Cost Impact Calculator</h3>
+  <label>D₀ (₹)</label><input id="flD0" type="number" value="10" step="0.5">
+  <label>Growth g (%)</label><input id="flG" type="number" value="8" step="0.25">
+  <label>P₀ (₹)</label><input id="flP0" type="number" value="150">
+  <label>Flotation cost f (%)</label><input id="flF" type="number" value="5" step="0.5">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>Ke (no flotation)</small><strong id="flKe0">—</strong></div>
+    <div class="metric" style="background:#dbeafe"><small>Ke (with flotation)</small><strong id="flKef">—</strong></div>
+    <div class="metric"><small>Net proceeds (₹)</small><strong id="flNP">—</strong></div>
+    <div class="metric"><small>Increase in Ke (bps)</small><strong id="flDiff">—</strong></div>
+  </div>
+  <canvas id="flChart" style="margin-top:12px;height:200px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== WACC ==================== -->
+<section id="wacc" class="page">
+<div class="grid">
+<div class="card s8">
+  <div class="section-kicker">Core Composite Measure</div>
+  <h2>Weighted Average Cost of Capital (WACC)</h2>
+  <p>WACC is the overall cost of capital, calculated as the weighted average of the costs of each component of the capital structure. Weights reflect the proportion of each source in total financing.</p>
+
+  <div class="formula">WACC = Wₑ×Kₑ + W_p×K_p + W_d×K_d(1−T) + W_r×K_r
+
+where:
+  Wₑ = Weight of equity (new issue)     Kₑ = Cost of new equity
+  W_p = Weight of preference shares     K_p = Cost of preference
+  W_d = Weight of debt                  K_d = Pre-tax cost of debt
+  W_r = Weight of retained earnings     K_r = Cost of retained earnings
+  T   = Corporate tax rate
+  All weights sum to 1.0</div>
+
+  <div class="deriv">
+    <h4>Derivation of WACC from asset valuation</h4>
+    <p>The firm's total market value V = D + E. The firm's assets generate operating cash flows (EBIT). Equity holders receive EBIT − I(1−T) as after-tax earnings; debt holders receive I(1−T) in after-tax equivalent terms adjusted for the tax shield. In a Modigliani-Miller world, WACC = r_A (unlevered cost of assets) when ignoring taxes. With corporate tax: WACC = r_U × (1 − T×D/V). This confirms WACC falls with leverage (up to a point) due to the tax shield — the foundation of optimal capital structure.</p>
+  </div>
+
+  <h3>Decision rule</h3>
+  <div class="callout">Accept a project if its expected IRR (or risk-adjusted return) <b>exceeds WACC</b>. WACC is the minimum required return on assets funded by the firm's capital structure mix. If IRR &gt; WACC, the project adds value; if IRR &lt; WACC, it destroys value.</div>
+
+  <h3>Conditions for WACC to be the correct discount rate</h3>
+  <ul>
+    <li>The new project has <b>the same business risk</b> as the firm's existing assets (if not, adjust β).</li>
+    <li>The new project is financed in the <b>same proportions</b> as the current capital structure.</li>
+    <li>The capital structure is assumed to be <b>optimal</b> (or at its target).</li>
+    <li>The project does not affect the <b>firm's overall risk perception</b> in the market.</li>
+  </ul>
+
+  <h3>Common errors</h3>
+  <table>
+    <tr><th>Error</th><th>Consequence</th></tr>
+    <tr><td>Using book weights instead of market weights</td><td>Underweights equity (usually), biases WACC</td></tr>
+    <tr><td>Not applying tax shield on debt</td><td>Overstates WACC; rejects good projects</td></tr>
+    <tr><td>Using pre-tax Ke or Kr</td><td>Already pre-tax — double-adjustment is wrong</td></tr>
+    <tr><td>Using historical cost of debt (old coupon)</td><td>Ignores true marginal cost — should use YTM</td></tr>
+    <tr><td>Mixing book and market weights</td><td>Inconsistency; arbitrary result</td></tr>
+  </table>
+</div>
+<div class="card s4">
+  <h3>WACC Breakdown — Live</h3>
+  <label>Equity weight Wₑ (%)</label><input id="wWe" type="number" value="50" step="1">
+  <label>Ke (%)</label><input id="wKe" type="number" value="15" step="0.5">
+  <label>Preference weight Wp (%)</label><input id="wWp" type="number" value="10" step="1">
+  <label>Kp (%)</label><input id="wKp" type="number" value="12" step="0.5">
+  <label>Debt weight Wd (%)</label><input id="wWd" type="number" value="30" step="1">
+  <label>Pre-tax Kd (%)</label><input id="wKd" type="number" value="10" step="0.5">
+  <label>Tax rate (%)</label><input id="wTax" type="number" value="30" step="1">
+  <label>Retained earnings weight Wr (%)</label><input id="wWr" type="number" value="10" step="1">
+  <label>Kr (%)</label><input id="wKr" type="number" value="14" step="0.5">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>Σ Weights</small><strong id="wTotal">—</strong></div>
+    <div class="metric" style="background:#dbeafe;border-color:#93b4d8;font-size:1.1rem"><small>WACC</small><strong id="wWACC">—</strong></div>
+  </div>
+  <canvas id="waccChart" style="margin-top:12px;height:200px"></canvas>
+  <p class="note" id="waccNote" style="margin-top:8px"></p>
+  <div class="excel-box" style="margin-top:10px">Excel:
+=SUMPRODUCT(weights, costs)
+=SUMPRODUCT({We,Wp,Wd,Wr},
+  {Ke,Kp,Kd*(1-T),Kr})</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== BOOK VS MARKET WEIGHTS ==================== -->
+<section id="weights" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">WACC Weights</div>
+  <h2>Book Weights vs Market Weights vs Target Weights</h2>
+
+  <div class="three">
+    <div class="quiz-card">
+      <b>Book (accounting) weights</b>
+      <p class="note">Based on balance sheet values — paid-up share capital, reserves, debenture book value. <b>Readily available</b> but can differ significantly from market values, especially for equity. Equity book value rarely reflects market price. Understates equity weight in most bull markets.</p>
+    </div>
+    <div class="quiz-card">
+      <b>Market value weights</b>
+      <p class="note">Market capitalisation for equity (shares × CMP), market value of bonds (YTM-based), face value for preference if illiquid. <b>Theoretically preferred</b> — captures today's opportunity costs. But fluctuates daily with stock prices, making WACC volatile.</p>
+    </div>
+    <div class="quiz-card">
+      <b>Target (optimal) weights</b>
+      <p class="note">The proportions the firm plans to maintain at its optimal capital structure. <b>Most appropriate for long-run investment decisions</b> — stable, forward-looking, reflects the firm's financing intent. Used by CFOs for strategic planning. Difficult to estimate if no explicit target exists.</p>
+    </div>
+  </div>
+
+  <h3>Numerical comparison</h3>
+  <div class="project-box">
+    <h4>Illustration — Lakshmi Textiles Ltd.</h4>
+    <table>
+      <tr><th>Source</th><th>Book (₹ Cr)</th><th>Market (₹ Cr)</th><th>Cost</th></tr>
+      <tr><td>Equity (2 Cr shares × ₹10 FV; CMP ₹120)</td><td>20</td><td>240</td><td>Ke = 16%</td></tr>
+      <tr><td>10% Debentures (₹ 100 Cr)</td><td>100</td><td>90 (at discount)</td><td>Kd (AT) = 7%</td></tr>
+      <tr><td>12% Preference (₹ 30 Cr)</td><td>30</td><td>28</td><td>Kp = 12.5%</td></tr>
+      <tr><th>Total</th><th>150</th><th>358</th><th></th></tr>
+    </table>
+    <div class="two" style="margin-top:10px">
+      <div>
+        <b>WACC (book weights)</b>
+        <p>We = 20/150 = 13.3%, Wd = 66.7%, Wp = 20%<br>
+        WACC = 0.133×16 + 0.667×7 + 0.20×12.5<br>
+        = 2.13 + 4.67 + 2.50 = <b>9.30%</b></p>
+      </div>
+      <div>
+        <b>WACC (market weights)</b>
+        <p>We = 240/358 = 67%, Wd = 25.1%, Wp = 7.8%<br>
+        WACC = 0.67×16 + 0.251×7 + 0.078×12.5<br>
+        = 10.72 + 1.76 + 0.98 = <b>13.46%</b></p>
+      </div>
+    </div>
+    <div class="alert">Book WACC (9.3%) vs Market WACC (13.5%) — a <b>420 bps difference</b> that can completely reverse an investment decision. Market weights are preferred for corporate finance.</div>
+  </div>
+  <div class="teacher-note"><b>Teaching note:</b> Walk through the Lakshmi Textiles example on the board. Ask students to accept or reject a project with 11% IRR under each approach. Book WACC says accept; market WACC says reject. Real-world consequences matter.</div>
+</div>
+<div class="card s5">
+  <h3>Book vs Market WACC Calculator</h3>
+  <div class="two">
+    <div>
+      <h4>Book values (₹ Cr)</h4>
+      <label>Equity</label><input id="bkEq" type="number" value="200" step="10">
+      <label>Debt</label><input id="bkDe" type="number" value="300" step="10">
+      <label>Preference</label><input id="bkPr" type="number" value="100" step="10">
+    </div>
+    <div>
+      <h4>Market values (₹ Cr)</h4>
+      <label>Equity MV</label><input id="mvEq" type="number" value="600" step="10">
+      <label>Debt MV</label><input id="mvDe" type="number" value="280" step="10">
+      <label>Preference MV</label><input id="mvPr" type="number" value="95" step="10">
+    </div>
+  </div>
+  <div class="three">
+    <div><label>Ke (%)</label><input id="bmKe" type="number" value="16" step="0.5"></div>
+    <div><label>Kd AT (%)</label><input id="bmKd" type="number" value="7" step="0.5"></div>
+    <div><label>Kp (%)</label><input id="bmKp" type="number" value="12" step="0.5"></div>
+  </div>
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>WACC (book)</small><strong id="bmWaccBk">—</strong></div>
+    <div class="metric" style="background:#dbeafe"><small>WACC (market)</small><strong id="bmWaccMv">—</strong></div>
+  </div>
+  <canvas id="bmChart" style="margin-top:12px;height:200px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== MARGINAL COST OF CAPITAL ==================== -->
+<section id="marginal" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Dynamic Cost of Capital</div>
+  <h2>Marginal Cost of Capital (MCC)</h2>
+  <p>The <b>marginal cost of capital</b> (also called the <i>incremental</i> cost of capital) is the cost of obtaining an additional rupee of new capital. As a firm raises more funds, it exhausts cheaper sources first — retained earnings before new equity, lower-cost debt tranches before high-yield ones. Beyond each <b>break point</b>, the WACC rises.</p>
+
+  <div class="two">
+    <div>
+      <h3>Why MCC rises</h3>
+      <ul>
+        <li><b>Retained earnings are limited</b> — once exhausted, the firm must issue new equity (higher Ke due to flotation costs).</li>
+        <li><b>Debt capacity limits</b> — lenders demand higher interest rates as leverage rises (credit spread widens).</li>
+        <li><b>Signalling</b> — large equity issues may signal overvaluation, depressing price and raising effective Ke.</li>
+        <li><b>Agency costs</b> — more debt increases monitoring costs, raising effective Kd.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Break point formula</h3>
+      <div class="formula">Break Point = Limit of cheaper source / Weight of that source
+
+BP_equity = Available retained earnings / Wₑ
+BP_debt   = Maximum low-cost debt / W_d
+
+Beyond a break point, the WACC schedule steps up.</div>
+      <h3>Investment opportunity schedule (IOS)</h3>
+      <p>Projects ranked by return (IRR) from highest to lowest, plotted against cumulative investment. Where MCC intersects IOS is the optimal capital budget — accept all projects whose IRR exceeds the MCC applicable at that funding level.</p>
+    </div>
+  </div>
+</div>
+<div class="card s7">
+  <h3>Worked Example — MCC Schedule</h3>
+  <div class="project-box">
+    <h4>Bharat Infra Ltd — MCC computation</h4>
+    <p>Capital structure: Equity 50%, Debt 50%. Kr = 14%, Ke (new issue) = 16%, Kd₁ (up to ₹200 Cr) = 8% AT, Kd₂ (above ₹200 Cr) = 9.5% AT. Available retained earnings = ₹150 Cr.</p>
+    <table>
+      <tr><th>Range of new funds</th><th>Source</th><th>Cost</th><th>WACC</th></tr>
+      <tr><td>₹0 – ₹300 Cr</td><td>RE (50%) + Low-cost debt (50%)</td><td>Kr=14%, Kd₁=8%</td><td>0.5×14+0.5×8 = <b>11.0%</b></td></tr>
+      <tr><td>₹300 – ₹400 Cr</td><td>New equity (50%) + Low-cost debt (50%)</td><td>Ke=16%, Kd₁=8%</td><td>0.5×16+0.5×8 = <b>12.0%</b></td></tr>
+      <tr><td>Above ₹400 Cr</td><td>New equity (50%) + High-cost debt (50%)</td><td>Ke=16%, Kd₂=9.5%</td><td>0.5×16+0.5×9.5 = <b>12.75%</b></td></tr>
+    </table>
+    <p class="note" style="margin-top:8px">Break point 1 (RE exhausted) = 150/0.5 = ₹300 Cr. Break point 2 (low Kd exhausted) = 200/0.5 = ₹400 Cr.</p>
+  </div>
+</div>
+<div class="card s5">
+  <h3>IOS vs MCC — Decision</h3>
+  <table>
+    <tr><th>Project</th><th>IRR</th><th>Cost (₹ Cr)</th><th>Cumulative</th><th>MCC at level</th><th>Decision</th></tr>
+    <tr><td>A</td><td>18%</td><td>100</td><td>100</td><td>11.0%</td><td class="good">Accept</td></tr>
+    <tr><td>B</td><td>15%</td><td>200</td><td>300</td><td>11.0%</td><td class="good">Accept</td></tr>
+    <tr><td>C</td><td>13%</td><td>100</td><td>400</td><td>12.0%</td><td class="good">Accept</td></tr>
+    <tr><td>D</td><td>12.5%</td><td>100</td><td>500</td><td>12.75%</td><td class="bad">Reject</td></tr>
+    <tr><td>E</td><td>11%</td><td>150</td><td>650</td><td>12.75%</td><td class="bad">Reject</td></tr>
+  </table>
+  <div class="callout" style="margin-top:10px">Optimal capital budget = ₹400 Cr. Projects A, B, C accepted; D and E rejected because IRR &lt; MCC at that funding level.</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== BREAK POINTS ==================== -->
+<section id="break_point" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">MCC Schedule</div>
+  <h2>Break Points &amp; MCC Schedule — Step-by-Step</h2>
+
+  <h3>How to draw the MCC schedule</h3>
+  <div class="stepflow">
+    <span class="step">1. List all capital sources with costs at each tranche</span><span class="arrow">→</span>
+    <span class="step">2. Identify limits of cheaper tranches</span><span class="arrow">→</span>
+    <span class="step">3. Compute break point = Limit / Weight</span><span class="arrow">→</span>
+    <span class="step">4. Compute WACC for each segment</span><span class="arrow">→</span>
+    <span class="step">5. Plot horizontal steps against cumulative capital</span>
+  </div>
+
+  <h3>Break point formula expanded</h3>
+  <div class="formula">BP_source = (Amount of lower-cost component) / (Weight of that component)
+
+Multiple sources can have break points.
+Rank all break points in ascending order.
+Each break point creates a new WACC step (usually higher).
+
+Example: if 12% bonds available up to ₹120 Cr and Wd = 0.4:
+BP_debt = 120/0.4 = ₹300 Cr total fund raised</div>
+
+  <h3>Full derivation — 3 source, 2 break-point example</h3>
+  <div class="project-box">
+    <h4>Deepak Fertilisers Ltd</h4>
+    <p>Target structure: Equity 40%, Debt 40%, Preference 20%</p>
+    <p>Costs: Kr=13%, Ke=15.5%, Kd₁=7%AT (up to ₹80Cr), Kd₂=9%AT, Kp=11%</p>
+    <p>Retained earnings available: ₹60 Cr</p>
+    <p><b>Break points:</b><br>
+    BP₁ (RE) = 60/0.4 = ₹<b>150 Cr</b><br>
+    BP₂ (Kd₁) = 80/0.4 = ₹<b>200 Cr</b></p>
+    <table style="margin-top:10px">
+      <tr><th>Range</th><th>Equity cost</th><th>Debt cost</th><th>Kp</th><th>WACC</th></tr>
+      <tr><td>₹0–₹150 Cr</td><td>Kr=13%</td><td>Kd₁=7%</td><td>11%</td><td>0.4×13+0.4×7+0.2×11=10.4%</td></tr>
+      <tr><td>₹150–₹200 Cr</td><td>Ke=15.5%</td><td>Kd₁=7%</td><td>11%</td><td>0.4×15.5+0.4×7+0.2×11=11.0%</td></tr>
+      <tr><td>Above ₹200 Cr</td><td>Ke=15.5%</td><td>Kd₂=9%</td><td>11%</td><td>0.4×15.5+0.4×9+0.2×11=11.8%</td></tr>
+    </table>
+  </div>
+</div>
+<div class="card s5">
+  <h3>MCC Lab (Interactive)</h3>
+  <label>Equity weight Wₑ (%)</label><input id="mccWe" type="number" value="40" step="5">
+  <label>Debt weight Wd (%)</label><input id="mccWd" type="number" value="40" step="5">
+  <label>Pref weight Wp (%)</label><input id="mccWp" type="number" value="20" step="5">
+  <label>Kr (%)</label><input id="mccKr" type="number" value="13" step="0.5">
+  <label>Ke (%)</label><input id="mccKe" type="number" value="15.5" step="0.5">
+  <label>Kd tranche 1 AT (%)</label><input id="mccKd1" type="number" value="7" step="0.5">
+  <label>Kd tranche 2 AT (%)</label><input id="mccKd2" type="number" value="9" step="0.5">
+  <label>Kp (%)</label><input id="mccKp" type="number" value="11" step="0.5">
+  <label>RE available (₹ Cr)</label><input id="mccRE" type="number" value="60" step="10">
+  <label>Kd₁ limit (₹ Cr)</label><input id="mccKd1Lim" type="number" value="80" step="10">
+  <button style="margin-top:12px" onclick="computeMCC()">Compute MCC Schedule</button>
+  <div id="mccOutput" style="margin-top:12px"></div>
+  <canvas id="mccChart" style="margin-top:12px;height:200px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== CAPM ==================== -->
+<section id="capm" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">Equity Cost Model</div>
+  <h2>Capital Asset Pricing Model (CAPM)</h2>
+  <p>CAPM establishes a linear relationship between systematic risk (beta) and required return. It is the dominant model for estimating the cost of equity for listed companies with reliable price history.</p>
+
+  <div class="formula">Ke = Rƒ + β × (Rm − Rƒ)
+
+Security Market Line (SML):
+  E(Ri) = Rƒ + [E(Rm) − Rƒ] × βᵢ
+
+Decomposition:
+  Rƒ         = Time value (compensation for waiting)
+  β × (Rm−Rƒ) = Risk premium (compensation for systematic risk)
+
+Capital Market Line (for portfolios):
+  E(Rp) = Rƒ + [(E(Rm)−Rƒ)/σm] × σp</div>
+
+  <h3>Beta (β) — understanding and estimation</h3>
+  <div class="two">
+    <div>
+      <h4>What beta measures</h4>
+      <ul>
+        <li>β = 1.0 → moves exactly with market</li>
+        <li>β &gt; 1.0 → more volatile than market (aggressive stock)</li>
+        <li>β &lt; 1.0 → less volatile (defensive stock)</li>
+        <li>β = 0 → uncorrelated with market (e.g. T-bill)</li>
+        <li>β &lt; 0 → inverse to market (e.g. gold in some periods)</li>
+      </ul>
+    </div>
+    <div>
+      <h4>How to estimate beta</h4>
+      <div class="formula" style="font-size:.88rem">β = Cov(Ri, Rm) / Var(Rm)
+  = [Σ(Ri−R̄i)(Rm−R̄m)] / Σ(Rm−R̄m)²
+
+Excel: =SLOPE(stock_returns, market_returns)
+Or: =COVAR(stock,mkt)/VAR(mkt)
+Regression: Ri = α + β×Rm + ε</div>
+    </div>
+  </div>
+
+  <h3>Levered vs Unlevered Beta</h3>
+  <div class="formula">Hamada equation:
+βL = βU × [1 + (1−T) × (D/E)]
+
+Unlever:   βU = βL / [1 + (1−T)(D/E)]
+Re-lever:  βL = βU × [1 + (1−T)(D/E)]
+
+Use case: Estimate βU from a comparable listed firm,
+then re-lever to your target D/E to get Ke for a
+private firm or new capital structure.</div>
+
+  <div class="project-box">
+    <h4>Worked example — Pure-play method for private firm</h4>
+    <p>You are estimating Ke for an unlisted FMCG company with D/E = 0.6. Find a listed pure-play comparable: Hindustan Unilever (HUL), βL = 0.55, D/E = 0.05, T = 30%.</p>
+    <p>Step 1 — Unlever HUL: βU = 0.55/[1 + 0.7×0.05] = 0.55/1.035 = <b>0.531</b></p>
+    <p>Step 2 — Re-lever to target D/E: βL = 0.531×[1 + 0.7×0.6] = 0.531×1.42 = <b>0.754</b></p>
+    <p>Step 3 — CAPM: Ke = 6.5 + 0.754×(13−6.5) = 6.5 + 4.9 = <b>11.4%</b></p>
+  </div>
+
+  <div class="teacher-note"><b>Teaching note:</b> Draw the SML on the board. Plot WACC, then plot two projects — one above SML (accept) and one below (reject). This visual immediately clarifies why beta-risk matters for project acceptance, not just accounting return.</div>
+</div>
+<div class="card s5">
+  <h3>CAPM — Full Calculator</h3>
+  <label>Risk-free rate Rƒ (%)</label><input id="capmRf" type="number" value="6.5" step="0.25">
+  <label>Market return Rm (%)</label><input id="capmRm" type="number" value="13" step="0.5">
+  <label>Observed beta βL</label><input id="capmBL" type="number" value="1.2" step="0.05">
+  <label>Firm's D/E ratio</label><input id="capmDE" type="number" value="0.5" step="0.05">
+  <label>Comparable firm βL</label><input id="capmCompBL" type="number" value="0.9" step="0.05">
+  <label>Comparable firm D/E</label><input id="capmCompDE" type="number" value="0.3" step="0.05">
+  <label>Tax rate (%)</label><input id="capmTax" type="number" value="30" step="1">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>ERP (Rm−Rƒ)</small><strong id="capmERP">—</strong></div>
+    <div class="metric"><small>Ke (direct β)</small><strong id="capmKeDirect">—</strong></div>
+    <div class="metric"><small>βU (unlevered)</small><strong id="capmBU">—</strong></div>
+    <div class="metric"><small>βL (re-levered)</small><strong id="capmBRL">—</strong></div>
+    <div class="metric" style="background:#dbeafe;border-color:#93b4d8;grid-column:span 2"><small>Ke (Hamada-adjusted)</small><strong id="capmKeAdj">—</strong></div>
+  </div>
+  <canvas id="capmSML" style="margin-top:12px;height:200px"></canvas>
+  <div class="excel-box" style="margin-top:10px">Beta from data:
+=SLOPE(stock_range, mkt_range)
+Ke: =Rf + Beta*(Rm-Rf)
+βU: =BL/(1+(1-T)*DE_comp)
+βL re-levered: =BU*(1+(1-T)*DE_firm)</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== DIVIDEND GROWTH MODEL ==================== -->
+<section id="dividend_growth" class="page">
+<div class="grid">
+<div class="card s7">
+  <div class="section-kicker">Equity Cost Model</div>
+  <h2>Dividend Growth Model (DGM) — Deep Dive</h2>
+
+  <h3>Gordon's Constant Growth Model</h3>
+  <div class="formula">P₀ = D₁/(Ke − g)   →   Ke = D₁/P₀ + g
+
+where g is constant forever (stable-growth firm)</div>
+
+  <h3>Two-stage DGM (supernormal + stable growth)</h3>
+  <div class="formula">P₀ = Σ[Dₜ/(1+Ke)ᵗ] + Pn/(1+Ke)ⁿ    for t=1 to n
+
+Pn = Dn+1/(Ke−g₂)   [terminal value at year n]
+g₁ = high growth rate for years 1–n
+g₂ = stable growth rate thereafter
+
+Ke solved iteratively (trial-and-error or Excel IRR)</div>
+
+  <div class="deriv">
+    <h4>Derivation — Gordon growth model</h4>
+    <p>If dividends grow at constant rate g, then Dₜ = D₀(1+g)ᵗ. Stock price is PV of infinite dividend stream: P₀ = Σ D₀(1+g)ᵗ/(1+Ke)ᵗ = D₁/(Ke−g) [geometric series, converges when Ke &gt; g]. Rearranging gives Ke = D₁/P₀ + g. The first term is the "dividend yield component" and g is the "capital gain component."</p>
+  </div>
+
+  <h3>Estimating the growth rate g</h3>
+  <table>
+    <tr><th>Method</th><th>Formula</th><th>Notes</th></tr>
+    <tr><td>Historical dividend growth</td><td>g = (Dₙ/D₀)^(1/n) − 1</td><td>Geometric average. Backward-looking.</td></tr>
+    <tr><td>Sustainable growth rate</td><td>g = ROE × b = ROE × (1−payout)</td><td>Forward-looking; links to firm's reinvestment. Most theoretically grounded.</td></tr>
+    <tr><td>Analyst consensus</td><td>Survey of forecasts</td><td>Market-based; useful for cross-check.</td></tr>
+    <tr><td>GDP growth proxy</td><td>g ≈ nominal GDP growth</td><td>Long-run ceiling; no firm can grow faster than economy forever.</td></tr>
+  </table>
+
+  <div class="two">
+    <div class="adv"><b>DGM strengths</b><br>Simple, intuitive. Links Ke directly to observable market price and dividend. Widely taught in Indian university curricula (BBA, MBA, CA, CMA).</div>
+    <div class="lim"><b>DGM weaknesses</b><br>Circular — g depends on future ROE, which depends on Ke. Cannot be used for zero-dividend or buyback-only firms. Extremely sensitive to g: ±1% in g can shift Ke by 1–2%. Assumes constant growth — unrealistic for cyclical or high-growth firms.</div>
+  </div>
+
+  <h3>Worked Example — Two-stage DGM</h3>
+  <div class="project-box">
+    <h4>Infosys-type scenario</h4>
+    <p>D₀ = ₹40, high growth g₁ = 15% for 3 years, then stable g₂ = 7%. P₀ = ₹1,600. Find Ke.</p>
+    <p>Try Ke = 12%:</p>
+    <table>
+      <tr><th>Year</th><th>Dividend</th><th>PV @ 12%</th></tr>
+      <tr><td>1</td><td>46.0</td><td>41.07</td></tr>
+      <tr><td>2</td><td>52.9</td><td>42.14</td></tr>
+      <tr><td>3</td><td>60.8</td><td>43.29</td></tr>
+      <tr><td>Terminal P₃ = 60.8×1.07/(0.12−0.07)</td><td>= ₹1,301.1</td><td>926.0</td></tr>
+      <tr><th colspan="2">Total PV</th><th>₹1,052.5 ← too low</th></tr>
+    </table>
+    <p>Try Ke = 10%: PV ≈ ₹1,612 → close. By interpolation, Ke ≈ <b>10.1%</b></p>
+  </div>
+</div>
+<div class="card s5">
+  <h3>DGM Calculator — Constant &amp; Two-Stage</h3>
+  <label>D₀ — last paid dividend (₹)</label><input id="dgmD0" type="number" value="40" step="1">
+  <label>High-growth rate g₁ (%)</label><input id="dgmG1" type="number" value="15" step="0.5">
+  <label>High-growth years n</label><input id="dgmN" type="number" value="3" step="1">
+  <label>Stable growth rate g₂ (%)</label><input id="dgmG2" type="number" value="7" step="0.5">
+  <label>Market price P₀ (₹)</label><input id="dgmP0" type="number" value="1600" step="10">
+  <label>Flotation cost f (%)</label><input id="dgmF" type="number" value="0" step="0.5">
+  <button onclick="computeDGM()">Compute Ke (two-stage)</button>
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>Ke constant-growth</small><strong id="dgmKe1">—</strong></div>
+    <div class="metric" style="background:#dbeafe"><small>Ke two-stage (IRR)</small><strong id="dgmKe2">—</strong></div>
+  </div>
+  <div id="dgmTable" style="margin-top:10px"></div>
+  <canvas id="dgmChart" style="margin-top:12px;height:190px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== BOND YIELD PLUS ==================== -->
+<section id="bond_yield_plus" class="page">
+<div class="grid">
+<div class="card s6">
+  <div class="section-kicker">Equity Cost Model</div>
+  <h2>Bond-Yield-Plus-Risk-Premium Approach</h2>
+  <p>This approach estimates the cost of equity by adding a subjective equity risk premium (ERP) to the firm's own long-term pre-tax cost of debt. It is fast, intuitive, and requires no dividend or beta data — useful when those are unavailable or unreliable.</p>
+  <div class="formula">Ke = Pre-tax cost of debt (Kd) + Equity risk premium
+   = YTM of firm's bonds + RP
+
+Typical RP range: 3% – 5% in India
+(Reflects additional risk equity bears vs debt holders)</div>
+
+  <h3>Rationale</h3>
+  <ul>
+    <li>Equity holders bear more risk than bondholders — they rank last in liquidation and their return is residual.</li>
+    <li>Higher risk → higher required return → Ke &gt; Kd always.</li>
+    <li>The premium (3–5%) reflects additional business and financial risk borne by equity.</li>
+    <li>This method is commonly used by practitioners and investment bankers as a sanity check.</li>
+  </ul>
+
+  <h3>Comparison of Ke estimation methods</h3>
+  <table class="comp-table">
+    <tr><th>Method</th><th>Data needed</th><th>Best for</th><th>Weakness</th></tr>
+    <tr><td>DGM (constant)</td><td>D₀, P₀, g</td><td>Mature, dividend-paying</td><td>Sensitive to g; fails for no-dividend firms</td></tr>
+    <tr><td>CAPM</td><td>Rƒ, β, Rm</td><td>Listed firms with price data</td><td>Beta estimation; single-factor</td></tr>
+    <tr><td>E/P approach</td><td>EPS, P₀</td><td>Zero-dividend; check</td><td>Accounting EPS vs cash earnings</td></tr>
+    <tr><td>Bond-yield-plus</td><td>Kd (YTM)</td><td>All firms with rated debt</td><td>Risk premium is subjective</td></tr>
+    <tr><td>Two-stage DGM</td><td>Dividends, P₀, g₁, g₂</td><td>High-growth transitioning firms</td><td>Complex; g₂ assumption critical</td></tr>
+  </table>
+
+  <div class="callout">Best practice: compute Ke using at least two methods and triangulate. Significant divergence (e.g. DGM = 12%, CAPM = 16%) signals model sensitivity — investigate why and weight appropriately.</div>
+</div>
+<div class="card s6">
+  <h3>Multi-Method Ke Comparison</h3>
+  <div class="three">
+    <div><label>D₁ (₹)</label><input id="mmD1" type="number" value="10" step="0.5"></div>
+    <div><label>P₀ (₹)</label><input id="mmP0" type="number" value="120" step="1"></div>
+    <div><label>g (%)</label><input id="mmG" type="number" value="7" step="0.5"></div>
+  </div>
+  <div class="three">
+    <div><label>Rƒ (%)</label><input id="mmRf" type="number" value="6.5" step="0.25"></div>
+    <div><label>β</label><input id="mmBeta" type="number" value="1.15" step="0.05"></div>
+    <div><label>Rm (%)</label><input id="mmRm" type="number" value="13" step="0.5"></div>
+  </div>
+  <div class="two">
+    <div><label>Kd pre-tax (%)</label><input id="mmKd" type="number" value="10" step="0.25"></div>
+    <div><label>Equity risk premium (%)</label><input id="mmERP" type="number" value="4" step="0.25"></div>
+  </div>
+  <label>EPS (₹)</label><input id="mmEPS" type="number" value="15" step="0.5">
+  <div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="metric"><small>Ke — DGM</small><strong id="mmKeDGM">—</strong></div>
+    <div class="metric"><small>Ke — CAPM</small><strong id="mmKeCAPM">—</strong></div>
+    <div class="metric"><small>Ke — E/P</small><strong id="mmKeEP">—</strong></div>
+    <div class="metric"><small>Ke — Bond+RP</small><strong id="mmKeBond">—</strong></div>
+    <div class="metric" style="background:#dbeafe;border-color:#93b4d8;grid-column:span 2"><small>Average Ke</small><strong id="mmKeAvg">—</strong></div>
+  </div>
+  <canvas id="mmChart" style="margin-top:12px;height:190px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== CAPITAL STRUCTURE LINK ==================== -->
+<section id="capital_structure" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Advanced Topic</div>
+  <h2>Capital Structure &amp; Its Effect on WACC</h2>
+  <p>The relationship between capital structure (D/E mix) and WACC is the central question of capital structure theory. Does an optimal capital structure exist? If so, where?</p>
+</div>
+<div class="card s4">
+  <h3>Modigliani-Miller (MM) — No taxes</h3>
+  <div class="formula">WACC = r_A (constant)
+V_L = V_U (firm value unchanged)</div>
+  <p>With perfect capital markets and no taxes, how you slice the financing pie doesn't affect its total size. WACC is constant regardless of leverage. Ke rises with D/E to exactly offset the cheaper debt, leaving WACC unchanged.</p>
+  <div class="adv"><b>Proposition I:</b> V_L = V_U — leverage is irrelevant to firm value in perfect markets.</div>
+  <div class="lim"><b>Proposition II:</b> Ke = r_A + (r_A − Kd)×(D/E) — Ke rises linearly with leverage.</div>
+</div>
+<div class="card s4">
+  <h3>MM — With corporate tax</h3>
+  <div class="formula">V_L = V_U + T×D
+WACC_L = r_A × (1 − T×D/V)
+PV(tax shield) = T × D (perpetual debt)</div>
+  <p>Corporate tax creates a debt tax shield — interest is deductible, so the government effectively subsidises debt. Each rupee of debt adds T rupees of value. This implies 100% debt is optimal — clearly unrealistic, pointing to missing costs (distress, agency).</p>
+</div>
+<div class="card s4">
+  <h3>Trade-off Theory (optimal structure)</h3>
+  <div class="formula">V_L = V_U + PV(tax shield) − PV(distress costs)
+Optimal D/E: marginal tax shield = marginal distress cost</div>
+  <p>Real-world optimal capital structure balances the tax shield benefit of debt against the rising costs of financial distress and agency conflicts. WACC has a minimum (U-shape) at the optimal D/E. Beyond that point, distress risk raises both Kd and Ke faster than the tax shield saves.</p>
+</div>
+<div class="card s7">
+  <h3>WACC vs Leverage — Interactive Visualiser</h3>
+  <div class="three">
+    <div><label>Unlevered cost rA (%)</label><input id="csRA" type="number" value="12" step="0.5"></div>
+    <div><label>Tax rate T (%)</label><input id="csT" type="number" value="30" step="1"></div>
+    <div><label>Distress cost coefficient k</label><input id="csK" type="number" value="0.05" step="0.01"></div>
+  </div>
+  <canvas id="csChart" style="margin-top:12px;height:240px"></canvas>
+  <p class="note" id="csNote" style="margin-top:8px"></p>
+</div>
+<div class="card s5">
+  <h3>Pecking Order Theory</h3>
+  <div class="quiz-card"><b>Myers &amp; Majluf (1984)</b><p class="note">Due to information asymmetry, managers prefer internal funds first, then debt, then equity (last resort). No target D/E — structure is a residual of financing decisions over time. Explains why profitable firms use less debt (more RE available).</p></div>
+  <h3>Market Timing Theory</h3>
+  <div class="quiz-card"><b>Baker &amp; Wurgler (2002)</b><p class="note">Firms issue equity when market-to-book is high (overvalued) and buy back when undervalued. Capital structure reflects accumulated timing decisions — no target.</p></div>
+  <h3>Agency Cost Theory</h3>
+  <div class="quiz-card"><b>Jensen &amp; Meckling (1976)</b><p class="note">Debt disciplines managers (free cash flow hypothesis). But excessive debt creates underinvestment and asset substitution problems. Optimal D/E trades off these agency costs.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CALC KD ==================== -->
+<section id="calc_kd" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Calculator</div>
+  <h2>Cost of Debt — Full Calculator</h2>
+  <div class="grid" style="margin-top:0">
+    <div class="s4">
+      <label>Face value (₹)</label><input id="ckdFV" type="number" value="1000">
+      <label>Coupon rate (%)</label><input id="ckdCR" type="number" value="10" step="0.25">
+      <label>Issue price / market price (₹)</label><input id="ckdIP" type="number" value="980">
+      <label>Flotation cost (%)</label><input id="ckdFC" type="number" value="2" step="0.5">
+      <label>Redemption value (₹)</label><input id="ckdRV" type="number" value="1000">
+      <label>Maturity (years)</label><input id="ckdN" type="number" value="8">
+      <label>Tax rate (%)</label><input id="ckdT" type="number" value="30">
+      <label>Type</label>
+      <select id="ckdType">
+        <option value="redeemable">Redeemable debenture</option>
+        <option value="perpetual">Perpetual / irredeemable</option>
+        <option value="zerocoupon">Zero-coupon bond</option>
+      </select>
+    </div>
+    <div class="s8">
+      <div class="metrics" style="grid-template-columns:repeat(3,1fr)">
+        <div class="metric"><small>Annual interest (₹)</small><strong id="ckdI">—</strong></div>
+        <div class="metric"><small>Net proceeds (₹)</small><strong id="ckdNP">—</strong></div>
+        <div class="metric"><small>Pre-tax Kd (approx)</small><strong id="ckdPreApx">—</strong></div>
+        <div class="metric" style="background:#dbeafe"><small>After-tax Kd (approx)</small><strong id="ckdPostApx">—</strong></div>
+        <div class="metric" style="background:#dbeafe"><small>After-tax Kd (YTM/exact)</small><strong id="ckdYTM">—</strong></div>
+        <div class="metric"><small>Difference (approx vs exact)</small><strong id="ckdDiff">—</strong></div>
+      </div>
+      <canvas id="ckdChart" style="margin-top:14px;height:230px"></canvas>
+      <div class="callout" id="ckdNote" style="margin-top:10px"></div>
+      <div class="excel-box" style="margin-top:10px">Excel (exact after-tax Kd):
+=RATE(n, -(coupon*(1-T)), NP, -RV)
+e.g. =RATE(8,-70,960,-1000)
+Pre-tax: =RATE(n,-coupon,NP,-RV)</div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CALC KE ==================== -->
+<section id="calc_ke" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Calculator</div>
+  <h2>Cost of Equity — All Models</h2>
+  <div class="grid" style="margin-top:0">
+    <div class="s4">
+      <h3>DGM inputs</h3>
+      <label>D₀ (₹)</label><input id="ckeD0" type="number" value="12" step="0.5">
+      <label>g (%)</label><input id="ckeG" type="number" value="7" step="0.25">
+      <label>P₀ (₹)</label><input id="ckeP0" type="number" value="160" step="1">
+      <label>Flotation f (%)</label><input id="ckeF" type="number" value="4" step="0.5">
+      <h3 style="margin-top:14px">CAPM inputs</h3>
+      <label>Rƒ (%)</label><input id="ckeRf" type="number" value="6.5" step="0.25">
+      <label>β</label><input id="ckeBeta" type="number" value="1.2" step="0.05">
+      <label>Rm (%)</label><input id="ckeRm" type="number" value="13" step="0.5">
+      <h3 style="margin-top:14px">Other inputs</h3>
+      <label>EPS (₹)</label><input id="ckeEPS" type="number" value="20" step="0.5">
+      <label>Bond-yield risk premium (%)</label><input id="ckeRP" type="number" value="4" step="0.25">
+      <label>Pre-tax Kd (%)</label><input id="ckeKd" type="number" value="10" step="0.25">
+    </div>
+    <div class="s8">
+      <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
+        <div class="metric"><small>Ke — DGM (no flotation)</small><strong id="ckeKeDGM0">—</strong></div>
+        <div class="metric" style="background:#dbeafe"><small>Ke — DGM (with flotation)</small><strong id="ckeKeDGMf">—</strong></div>
+        <div class="metric" style="background:#dbeafe"><small>Ke — CAPM</small><strong id="ckeKeCAPM">—</strong></div>
+        <div class="metric"><small>Ke — E/P</small><strong id="ckeKeEP">—</strong></div>
+        <div class="metric"><small>Ke — Bond+RP</small><strong id="ckeKeBond">—</strong></div>
+        <div class="metric"><small>Average (all)</small><strong id="ckeAvg">—</strong></div>
+      </div>
+      <canvas id="ckeChart" style="margin-top:14px;height:230px"></canvas>
+      <div class="callout" id="ckeNote" style="margin-top:10px">Enter values on the left — all four Ke estimates update live.</div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CALC WACC ==================== -->
+<section id="calc_wacc" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Calculator</div>
+  <h2>WACC — Step-by-Step Calculator</h2>
+  <p class="muted">Add up to 6 capital sources. Enter book value, market value, cost, and the calculator computes WACC on both bases.</p>
+  <div class="scroll">
+  <table id="waccTable">
+    <tr><th>Source</th><th>Book value (₹ Cr)</th><th>Market value (₹ Cr)</th><th>Cost (%)</th><th>Tax shield?</th><th>Tax rate (%)</th><th>After-tax cost</th><th>Bk weight</th><th>Bk weighted cost</th><th>Mkt weight</th><th>Mkt weighted cost</th></tr>
+    <tr><td><input value="Equity" style="width:120px"></td><td><input class="wBk" type="number" value="500"></td><td><input class="wMv" type="number" value="1200"></td><td><input class="wCost" type="number" value="15" step="0.5"></td><td><select class="wTaxable"><option value="no">No</option><option value="yes">Yes</option></select></td><td><input class="wTaxRate" type="number" value="0"></td><td class="wATC">—</td><td class="wBkWt">—</td><td class="wBkWC">—</td><td class="wMvWt">—</td><td class="wMvWC">—</td></tr>
+    <tr><td><input value="Preference" style="width:120px"></td><td><input class="wBk" type="number" value="200"></td><td><input class="wMv" type="number" value="190"></td><td><input class="wCost" type="number" value="12" step="0.5"></td><td><select class="wTaxable"><option value="no">No</option><option value="yes">Yes</option></select></td><td><input class="wTaxRate" type="number" value="0"></td><td class="wATC">—</td><td class="wBkWt">—</td><td class="wBkWC">—</td><td class="wMvWt">—</td><td class="wMvWC">—</td></tr>
+    <tr><td><input value="12% Debentures" style="width:120px"></td><td><input class="wBk" type="number" value="300"></td><td><input class="wMv" type="number" value="285"></td><td><input class="wCost" type="number" value="12" step="0.5"></td><td><select class="wTaxable"><option value="no">No</option><option value="yes" selected>Yes</option></select></td><td><input class="wTaxRate" type="number" value="30"></td><td class="wATC">—</td><td class="wBkWt">—</td><td class="wBkWC">—</td><td class="wMvWt">—</td><td class="wMvWC">—</td></tr>
+    <tr><td><input value="Retained Earnings" style="width:120px"></td><td><input class="wBk" type="number" value="150"></td><td><input class="wMv" type="number" value="150"></td><td><input class="wCost" type="number" value="14" step="0.5"></td><td><select class="wTaxable"><option value="no">No</option><option value="yes">Yes</option></select></td><td><input class="wTaxRate" type="number" value="0"></td><td class="wATC">—</td><td class="wBkWt">—</td><td class="wBkWC">—</td><td class="wMvWt">—</td><td class="wMvWC">—</td></tr>
+  </table>
+  </div>
+  <div class="metrics" style="grid-template-columns:repeat(4,1fr);margin-top:14px">
+    <div class="metric"><small>Total book capital (₹ Cr)</small><strong id="waccTotalBk">—</strong></div>
+    <div class="metric"><small>Total market capital (₹ Cr)</small><strong id="waccTotalMv">—</strong></div>
+    <div class="metric" style="background:#dbeafe"><small>WACC (book weights)</small><strong id="waccResultBk">—</strong></div>
+    <div class="metric" style="background:#dbeafe"><small>WACC (market weights)</small><strong id="waccResultMv">—</strong></div>
+  </div>
+  <canvas id="waccCalcChart" style="margin-top:14px;height:240px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- ==================== CALC CAPM ==================== -->
+<section id="calc_capm" class="page">
+<div class="grid">
+<div class="card s6">
+  <div class="section-kicker">Calculator</div>
+  <h2>CAPM — Full Analysis</h2>
+  <label>Risk-free rate Rƒ (%)</label><input id="fcRf" type="number" value="6.5" step="0.25">
+  <label>Expected market return Rm (%)</label><input id="fcRm" type="number" value="13" step="0.5">
+  <div class="two">
+    <div><label>Beta 1 (your firm)</label><input id="fcB1" type="number" value="1.2" step="0.05"></div>
+    <div><label>Beta 2 (comparable)</label><input id="fcB2" type="number" value="0.8" step="0.05"></div>
+  </div>
+  <div class="two">
+    <div><label>Beta 3</label><input id="fcB3" type="number" value="1.5" step="0.05"></div>
+    <div><label>Beta 4</label><input id="fcB4" type="number" value="0.6" step="0.05"></div>
+  </div>
+  <div class="metrics" style="grid-template-columns:repeat(2,1fr);margin-top:12px">
+    <div class="metric"><small>ERP</small><strong id="fcERP">—</strong></div>
+    <div class="metric"><small>Ke (β1)</small><strong id="fcKe1">—</strong></div>
+    <div class="metric"><small>Ke (β2)</small><strong id="fcKe2">—</strong></div>
+    <div class="metric"><small>Ke (β3)</small><strong id="fcKe3">—</strong></div>
+    <div class="metric"><small>Ke (β4)</small><strong id="fcKe4">—</strong></div>
+  </div>
+  <canvas id="fcSML" style="margin-top:14px;height:230px"></canvas>
+  <div class="excel-box" style="margin-top:10px">SML in Excel:
+Beta range A1:A20, then:
+=Rf + A1*(Rm-Rf) in B1, fill down.
+Chart: scatter plot of A:B gives SML.</div>
+</div>
+<div class="card s6">
+  <h3>Beta calculator from returns</h3>
+  <label>Stock returns (%, comma-separated, ≥5 observations)</label>
+  <textarea id="fcStockR" rows="3" placeholder="e.g. 5, -3, 8, 12, -2, 7, 15, -5, 3, 9">5, -3, 8, 12, -2, 7, 15, -5, 3, 9</textarea>
+  <label>Market returns (same order)</label>
+  <textarea id="fcMktR" rows="3" placeholder="e.g. 4, -2, 6, 10, -1, 5, 12, -4, 2, 8">4, -2, 6, 10, -1, 5, 12, -4, 2, 8</textarea>
+  <button onclick="computeBeta()">Compute Beta</button>
+  <div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
+    <div class="metric"><small>Beta (β)</small><strong id="fcBeta">—</strong></div>
+    <div class="metric"><small>Alpha (α)</small><strong id="fcAlpha">—</strong></div>
+    <div class="metric"><small>R² (fit)</small><strong id="fcR2">—</strong></div>
+  </div>
+  <canvas id="fcRegChart" style="margin-top:12px;height:200px"></canvas>
+  <div class="excel-box" style="margin-top:10px">Beta: =SLOPE(stock_returns, mkt_returns)
+Alpha: =INTERCEPT(stock_returns, mkt_returns)
+R²: =RSQ(stock_returns, mkt_returns)</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== MCC LAB ==================== -->
+<section id="mcc_lab" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Interactive Lab</div>
+  <h2>MCC Schedule + IOS — Decision Lab</h2>
+  <div class="grid" style="margin-top:0">
+    <div class="s5">
+      <h3>MCC inputs</h3>
+      <div class="three">
+        <div><label>We (%)</label><input id="labWe" type="number" value="50" step="5"></div>
+        <div><label>Wd (%)</label><input id="labWd" type="number" value="50" step="5"></div>
+        <div><label>Tax (%)</label><input id="labTax" type="number" value="30" step="1"></div>
+      </div>
+      <div class="two">
+        <div><label>Kr (%)</label><input id="labKr" type="number" value="13" step="0.5"></div>
+        <div><label>Ke (%)</label><input id="labKe" type="number" value="15.5" step="0.5"></div>
+      </div>
+      <div class="two">
+        <div><label>Kd₁ pre-tax (%)</label><input id="labKd1" type="number" value="10" step="0.5"></div>
+        <div><label>Kd₂ pre-tax (%)</label><input id="labKd2" type="number" value="12" step="0.5"></div>
+      </div>
+      <div class="two">
+        <div><label>RE available (₹ Cr)</label><input id="labRE" type="number" value="150" step="10"></div>
+        <div><label>Kd₁ limit (₹ Cr)</label><input id="labKd1L" type="number" value="200" step="10"></div>
+      </div>
+      <h3 style="margin-top:16px">Investment Opportunities (IOS)</h3>
+      <table id="iosTable">
+        <tr><th>Project</th><th>IRR (%)</th><th>Cost (₹ Cr)</th></tr>
+        <tr><td>A</td><td><input class="iosIRR" type="number" value="18" step="0.5" style="width:80px"></td><td><input class="iosCost" type="number" value="80" step="10" style="width:90px"></td></tr>
+        <tr><td>B</td><td><input class="iosIRR" type="number" value="15" step="0.5" style="width:80px"></td><td><input class="iosCost" type="number" value="120" step="10" style="width:90px"></td></tr>
+        <tr><td>C</td><td><input class="iosIRR" type="number" value="13" step="0.5" style="width:80px"></td><td><input class="iosCost" type="number" value="150" step="10" style="width:90px"></td></tr>
+        <tr><td>D</td><td><input class="iosIRR" type="number" value="11.5" step="0.5" style="width:80px"></td><td><input class="iosCost" type="number" value="100" step="10" style="width:90px"></td></tr>
+        <tr><td>E</td><td><input class="iosIRR" type="number" value="10" step="0.5" style="width:80px"></td><td><input class="iosCost" type="number" value="80" step="10" style="width:90px"></td></tr>
+      </table>
+      <button onclick="computeMCCLab()" style="margin-top:12px">Compute &amp; Plot</button>
+    </div>
+    <div class="s7">
+      <canvas id="mccLabChart" style="height:320px"></canvas>
+      <div id="mccLabOutput" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== WORKED EXAMPLES ==================== -->
+<section id="worked" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Textbook Examples</div>
+  <h2>Worked Examples — Full Solutions</h2>
+</div>
+
+<div class="card s6">
+  <h3>Example 1 — WACC with all four sources</h3>
+  <div class="project-box">
+    <h4>Navratna Chemicals Ltd — Capital structure</h4>
+    <table>
+      <tr><th>Source</th><th>Book (₹ Cr)</th><th>Cost</th></tr>
+      <tr><td>14% Debentures</td><td>400</td><td>Pre-tax Kd = 14%</td></tr>
+      <tr><td>12% Preference shares</td><td>200</td><td>Kp = 12%</td></tr>
+      <tr><td>Equity (₹ 10 FV, 1Cr shares)</td><td>100</td><td></td></tr>
+      <tr><td>Reserves &amp; Surplus</td><td>300</td><td></td></tr>
+    </table>
+    <p>D₀ = ₹6, g = 10%, P₀ = ₹80, flotation = 5%, T = 30%</p>
+    <h4>Solution</h4>
+    <p><b>Kd (AT)</b> = 14% × (1−0.3) = <b>9.8%</b></p>
+    <p><b>Kp</b> = 12% (no tax adjustment)</p>
+    <p><b>Ke</b> = D₁/[P₀(1−f)] + g = [6×1.1/(80×0.95)] + 0.10 = 6.6/76 + 0.10 = 8.68% + 10% = <b>18.68%</b></p>
+    <p><b>Kr</b> = D₁/P₀ + g = 6.6/80 + 0.10 = 8.25% + 10% = <b>18.25%</b></p>
+    <table style="margin-top:10px">
+      <tr><th>Source</th><th>Book (₹ Cr)</th><th>Weight</th><th>Cost</th><th>Weighted cost</th></tr>
+      <tr><td>Debentures</td><td>400</td><td>0.40</td><td>9.8%</td><td>3.92%</td></tr>
+      <tr><td>Preference</td><td>200</td><td>0.20</td><td>12.0%</td><td>2.40%</td></tr>
+      <tr><td>Equity</td><td>100</td><td>0.10</td><td>18.68%</td><td>1.87%</td></tr>
+      <tr><td>Retained earnings</td><td>300</td><td>0.30</td><td>18.25%</td><td>5.48%</td></tr>
+      <tr><th>Total</th><th>1,000</th><th>1.00</th><th></th><th class="good">WACC = 13.67%</th></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Example 2 — MCC &amp; Optimal capital budget</h3>
+  <div class="project-box">
+    <h4>Sunrise Power Ltd</h4>
+    <p>Target structure: Equity 60%, Debt 40%. Kr = 12%, Ke = 14.5%, Kd₁ AT = 7% (up to ₹ 120 Cr), Kd₂ AT = 9%. RE available = ₹150 Cr. Projects available:</p>
+    <table>
+      <tr><th>Project</th><th>IRR</th><th>Cost</th></tr>
+      <tr><td>P</td><td>16%</td><td>₹100 Cr</td></tr>
+      <tr><td>Q</td><td>13.5%</td><td>₹150 Cr</td></tr>
+      <tr><td>R</td><td>12%</td><td>₹100 Cr</td></tr>
+      <tr><td>S</td><td>10%</td><td>₹120 Cr</td></tr>
+    </table>
+    <p><b>Break points:</b> BP₁ = 150/0.6 = ₹250 Cr; BP₂ = 120/0.4 = ₹300 Cr</p>
+    <table style="margin-top:8px">
+      <tr><th>Range</th><th>WACC</th></tr>
+      <tr><td>₹0–₹250 Cr</td><td>0.6×12 + 0.4×7 = 10.0%</td></tr>
+      <tr><td>₹250–₹300 Cr</td><td>0.6×14.5 + 0.4×7 = 11.5%</td></tr>
+      <tr><td>Above ₹300 Cr</td><td>0.6×14.5 + 0.4×9 = 12.3%</td></tr>
+    </table>
+    <p><b>Decisions:</b> P (IRR 16% &gt; 10%) ✓ | Q (IRR 13.5% &gt; 11.5% at ₹250 Cr level) ✓ | R (IRR 12% &lt; 12.3% at ₹300+ Cr level) ✗ | S ✗</p>
+    <p>Optimal capital budget = ₹250 Cr (Projects P + Q)</p>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Example 3 — Redeemable debenture Kd</h3>
+  <div class="project-box">
+    <h4>10% Debentures, ₹1,000 FV, issued at ₹960, redeemable at par after 6 years, flotation 2%, T = 35%</h4>
+    <p>Net proceeds NP = 960 × (1−0.02) = <b>₹940.80</b></p>
+    <p>Annual interest I = 1000 × 10% = <b>₹100</b></p>
+    <p>After-tax interest = 100 × (1−0.35) = <b>₹65</b></p>
+    <p>Capital gain (amortised) = (1000−940.80)/6 = <b>₹9.87</b></p>
+    <p>Average investment = (1000+940.80)/2 = <b>₹970.40</b></p>
+    <p><b>Kd (approx, AT)</b> = (65 + 9.87)/970.40 = 74.87/970.40 = <b>7.71%</b></p>
+    <p><b>Kd (YTM, AT)</b> = RATE(6, −65, 940.80, −1000) = <b>7.85%</b></p>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Example 4 — CAPM &amp; Hamada (unlisted firm)</h3>
+  <div class="project-box">
+    <h4>Estimate Ke for unlisted Rajan Pharma (D/E = 1.0, T = 30%)</h4>
+    <p>Comparable listed firm: Sun Pharma — βL = 0.70, D/E = 0.20, T = 30%</p>
+    <p>Rƒ = 6.5%, Rm = 14%</p>
+    <p><b>Step 1 — Unlever Sun Pharma:</b><br>βU = 0.70 / [1 + 0.7×0.20] = 0.70/1.14 = <b>0.614</b></p>
+    <p><b>Step 2 — Re-lever to Rajan Pharma D/E=1.0:</b><br>βL = 0.614 × [1 + 0.7×1.0] = 0.614×1.7 = <b>1.044</b></p>
+    <p><b>Step 3 — CAPM:</b><br>Ke = 6.5 + 1.044×(14−6.5) = 6.5 + 7.83 = <b>14.33%</b></p>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== UNSOLVED PROBLEMS ==================== -->
+<section id="unsolved" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Practice Problems</div>
+  <h2>Unsolved Problems — with Hints &amp; Answers</h2>
+  <p class="muted">Attempt each problem fully before revealing the hint or answer. Problems increase in difficulty.</p>
+</div>
+
+<div class="card s6">
+  <h3>Problem 1 — Kd (redeemable, basic)</h3>
+  <div class="quiz-card">
+    <b>Prakash Steels issues 12% debentures of ₹100 face value at ₹95, redeemable at par after 5 years. Flotation cost 2%. Tax rate 40%. Calculate after-tax cost of debt using (a) approximate method and (b) IRR method.</b>
+    <button class="small-btn secondary" style="margin-top:8px" onclick="toggleAns('u1')">Show Hint &amp; Answer</button>
+    <div id="u1" class="answer" style="display:none">
+      <b>Hint:</b> NP = 95×(1−0.02) = ₹93.10. AT interest = 12×(1−0.4) = ₹7.20<br>
+      <b>Approximate:</b> Kd = [7.2 + (100−93.1)/5] / [(100+93.1)/2] = (7.2+1.38)/96.55 = 8.58/96.55 = <b>8.89%</b><br>
+      <b>IRR (Excel RATE):</b> =RATE(5,−7.2,93.1,−100) ≈ <b>9.10%</b>
+    </div>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Problem 2 — Ke (DGM, two-stage)</h3>
+  <div class="quiz-card">
+    <b>Reliant Foods Ltd pays a dividend of ₹5 per share. Dividends are expected to grow at 20% for 3 years, then stabilise at 8% forever. Current market price = ₹200. Flotation cost on new issue = 6%. Find Ke for (a) existing shares and (b) new issue of equity.</b>
+    <button class="small-btn secondary" style="margin-top:8px" onclick="toggleAns('u2')">Show Hint &amp; Answer</button>
+    <div id="u2" class="answer" style="display:none">
+      <b>Hint:</b> For existing shares use P₀=200 directly; for new issue use P₀(1−f)=188.<br>
+      Year 1 D = 6.00, Y2 = 7.20, Y3 = 8.64, Y4+ grows at 8%. Terminal P₃ = D₄/(Ke−0.08).<br>
+      Solve iteratively (try Ke = 12%): PV of divs + PV of terminal P₃ ≈ ₹200.<br>
+      <b>Answer (existing):</b> Ke ≈ <b>11.5%</b>. <b>Answer (new issue):</b> Ke ≈ <b>12.1%</b>
+    </div>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Problem 3 — WACC (book and market)</h3>
+  <div class="quiz-card">
+    <b>Megastar Ltd has: 15% Debentures ₹300 Cr (market ₹285 Cr); 12% Preference ₹100 Cr (market ₹92 Cr); Equity 1 Cr shares, ₹10 FV (CMP ₹340); Retained earnings ₹80 Cr. D₀ = ₹18, g = 9%, f = 4%, T = 30%. Calculate WACC on (a) book and (b) market value weights.</b>
+    <button class="small-btn secondary" style="margin-top:8px" onclick="toggleAns('u3')">Show Hint &amp; Answer</button>
+    <div id="u3" class="answer" style="display:none">
+      <b>Hint:</b> Kd AT = 15×0.7 = 10.5%. Ke = [18×1.09/(340×0.96)]+0.09 = 19.62/326.4+0.09 ≈ 6.01+9 = 15.01%. Kr = 18×1.09/340+0.09 ≈ 14.77%. Book total = 490, market equity = 1Cr×340 = ₹340 Cr, mkt total = 285+92+340+80 = ₹797 Cr.<br>
+      <b>WACC (book) ≈ 12.5%. WACC (market) ≈ 13.8%.</b>
+    </div>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Problem 4 — MCC &amp; IOS</h3>
+  <div class="quiz-card">
+    <b>Arun Industries: target structure 55% equity, 45% debt. Kr = 13%, Ke = 16%, Kd₁ AT = 7.5% (up to ₹90 Cr), Kd₂ AT = 10%. RE = ₹110 Cr. Projects: X — 19% IRR, ₹80 Cr; Y — 14% IRR, ₹100 Cr; Z — 12% IRR, ₹120 Cr; W — 9.5% IRR, ₹60 Cr. Find optimal capital budget.</b>
+    <button class="small-btn secondary" style="margin-top:8px" onclick="toggleAns('u4')">Show Hint &amp; Answer</button>
+    <div id="u4" class="answer" style="display:none">
+      <b>Hint:</b> BP₁ (RE) = 110/0.55 = ₹200 Cr. BP₂ (Kd₁) = 90/0.45 = ₹200 Cr — same! One step-up.<br>
+      WACC ₹0–200: 0.55×13 + 0.45×7.5 = 7.15+3.375 = <b>10.53%</b><br>
+      WACC above ₹200: 0.55×16 + 0.45×10 = 8.8+4.5 = <b>13.3%</b><br>
+      X: IRR 19% &gt; 10.53% ✓ (cum ₹80 Cr) | Y: 14% &gt; 10.53% ✓ (cum ₹180 Cr) | Z: 12% &lt; 13.3% ✗ | W: 9.5% ✗<br>
+      <b>Optimal budget = ₹180 Cr (Projects X + Y)</b>
+    </div>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Problem 5 — CAPM &amp; WACC integration</h3>
+  <div class="quiz-card">
+    <b>Coastal Cement: D/E = 0.8, T = 30%, Rƒ = 7%, Rm = 14%. Comparable pure-play firm has βL = 1.0, D/E = 0.4. Pre-tax Kd = 11%. Pref shares: 13% dividend, market value = face value. Capital structure: Equity 50%, Debt 30%, Preference 20% (market weights). Compute Ke via Hamada-CAPM and WACC.</b>
+    <button class="small-btn secondary" style="margin-top:8px" onclick="toggleAns('u5')">Show Hint &amp; Answer</button>
+    <div id="u5" class="answer" style="display:none">
+      <b>Hint:</b> βU = 1.0/[1+0.7×0.4] = 1.0/1.28 = 0.781. βL (Coastal, D/E=0.8) = 0.781×[1+0.7×0.8] = 0.781×1.56 = 1.218.<br>
+      Ke = 7 + 1.218×7 = 7 + 8.53 = <b>15.53%</b><br>
+      Kd AT = 11×0.7 = 7.7%. Kp = 13%.<br>
+      WACC = 0.5×15.53 + 0.3×7.7 + 0.2×13 = 7.765+2.31+2.6 = <b>12.67%</b>
+    </div>
+  </div>
+</div>
+
+<div class="card s6">
+  <h3>Problem 6 — Preference shares Kp</h3>
+  <div class="quiz-card">
+    <b>Bombay Textiles issues 11% redeemable preference shares of ₹100 face value at ₹96, redeemable at 5% premium after 7 years. Flotation cost 3%. Compute Kp using approximate method. Also state: why is there no tax adjustment?</b>
+    <button class="small-btn secondary" style="margin-top:8px" onclick="toggleAns('u6')">Show Hint &amp; Answer</button>
+    <div id="u6" class="answer" style="display:none">
+      <b>Hint:</b> NP = 96×(1−0.03) = ₹93.12. RV = 100×1.05 = ₹105. Dividend = ₹11.<br>
+      Kp = [11 + (105−93.12)/7] / [(105+93.12)/2] = (11+1.697)/99.06 = 12.697/99.06 = <b>12.82%</b><br>
+      <b>No tax adjustment:</b> Preference dividends are paid from post-tax profits. Unlike interest, they are NOT an allowable deduction for corporate tax purposes, so the government provides no tax subsidy.
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ==================== MCQ BANK ==================== -->
+<section id="mcq" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Practice</div>
+  <h2>MCQ Bank</h2>
+  <div class="two" style="margin-bottom:12px">
+    <div><label>Number of questions</label><select id="mcqCount"><option value="5">5</option><option value="8" selected>8</option><option value="12">12</option><option value="20">20</option></select></div>
+    <div style="display:flex;align-items:flex-end"><button onclick="renderMCQs(+document.getElementById('mcqCount').value)">Refresh set</button></div>
+  </div>
+  <div id="mcqContainer"></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== EXAM GENERATOR ==================== -->
+<section id="exam_gen" class="page">
+<div class="grid">
+<div class="card s5">
+  <div class="section-kicker">Assessment</div>
+  <h2>Exam Generator</h2>
+  <label>Total marks</label><input id="egMarks" type="number" value="100">
+  <label>Include MCQs?</label><select id="egMCQ"><option value="yes">Yes</option><option value="no">No</option></select>
+  <label>Include numerical problems?</label><select id="egNum"><option value="yes">Yes</option><option value="no">No</option></select>
+  <label>Include theory questions?</label><select id="egTheo"><option value="yes">Yes</option><option value="no">No</option></select>
+  <label>Difficulty</label>
+  <select id="egDiff">
+    <option value="mixed">Mixed (recommended)</option>
+    <option value="easy">Easy (undergraduate basics)</option>
+    <option value="hard">Hard (MBA/CA level)</option>
+  </select>
+  <button onclick="generateExam()" style="margin-top:12px">Generate paper</button>
+</div>
+<div class="card s7">
+  <h3>Generated question paper</h3>
+  <div id="egPaper"><p class="muted">Click "Generate paper" to create a randomised question set.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== FORMULA BANK ==================== -->
+<section id="formula_bank" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Quick Reference</div>
+  <h2>Formula Bank — Cost of Capital</h2>
+</div>
+<div class="card s6">
+  <h3>Cost of Debt</h3>
+  <div class="formula">Perpetual:    Kd = I / NP                (before tax)
+              Kd(AT) = [I/NP] × (1−T)
+
+Redeemable (approx):
+  Kd(AT) = [I(1−T) + (RV−NP)/n] / [(RV+NP)/2]
+
+Exact (YTM):  solve  NP = Σ I(1−T)/(1+r)ᵗ + RV/(1+r)ⁿ
+              Excel: =RATE(n, −I*(1−T), NP, −RV)
+
+Zero-coupon:  Kd = (RV/Issue price)^(1/n) − 1</div>
+
+  <h3>Cost of Preference</h3>
+  <div class="formula">Irredeemable: Kp = D / NP
+Redeemable:   Kp = [D + (RV−NP)/n] / [(RV+NP)/2]
+Exact:        Excel: =RATE(n, −D, NP, −RV)
+              [No tax adjustment — dividends not deductible]</div>
+</div>
+<div class="card s6">
+  <h3>Cost of Equity</h3>
+  <div class="formula">DGM (constant):    Ke = D₁/P₀ + g = D₀(1+g)/P₀ + g
+DGM (new issue):   Ke = D₁/[P₀(1−f)] + g
+CAPM:              Ke = Rƒ + β(Rm−Rƒ)
+Earnings-price:    Ke = EPS/P₀  [or + g]
+Bond-yield-plus:   Ke = Kd(pre-tax) + risk premium
+Sustainable g:     g = ROE × b = ROE × (1−payout ratio)
+Hamada (lever):    βL = βU × [1+(1−T)(D/E)]
+Hamada (unlever):  βU = βL / [1+(1−T)(D/E)]</div>
+
+  <h3>Cost of Retained Earnings</h3>
+  <div class="formula">Kr = D₁/P₀ + g         [DGM — no flotation cost]
+Kr = Rƒ + β(Rm−Rƒ)   [CAPM — same as Ke via CAPM]
+Kr = Kd + risk premium [Bond-yield-plus]
+Note: Kr ≤ Ke (no flotation on retained earnings)</div>
+</div>
+<div class="card s6">
+  <h3>WACC</h3>
+  <div class="formula">WACC = Σ Wᵢ × Kᵢ(AT)
+
+= Wₑ×Kₑ + Wp×Kp + Wd×Kd(1−T) + Wr×Kr
+
+Weights: Book value or Market value (preferred)
+         Must sum to 1.0
+
+MM (no tax):   WACC = rA  (constant)
+MM (with tax): WACC = rA × [1 − T×(D/V)]
+               V_L = V_U + T×D</div>
+
+  <h3>MCC Break Points</h3>
+  <div class="formula">Break Point = Limit of cheaper source / Weight of source
+
+BP_equity = Available retained earnings / Wₑ
+BP_debt   = Limit of lower-cost debt / Wd
+
+Each break point creates a new (higher) WACC step.
+Optimal budget: where MCC = IOS (IRR of marginal project)</div>
+</div>
+<div class="card s6">
+  <h3>Capital Structure (MM)</h3>
+  <div class="formula">Without tax:  V_L = V_U; WACC constant
+               Ke = rA + (rA−Kd)×(D/E)
+
+With tax:     V_L = V_U + T×D
+               WACC = rA(1−T×D/V)
+               Ke = rA + (rA−Kd)(1−T)(D/E)
+
+Trade-off:    V* maximises [V_U + PV(tax shield) − PV(distress)]
+Optimal D/E: marginal tax benefit = marginal distress cost
+
+Pecking order: RE → Debt → New equity</div>
+
+  <h3>Excel Quick Reference</h3>
+  <div class="excel-box">Kd (after-tax YTM):  =RATE(n, −I*(1−T), NP, −RV)
+Kp (exact):          =RATE(n, −Div, NP, −RV)
+Beta from returns:   =SLOPE(stock_range, mkt_range)
+CAPM Ke:             =Rf + Beta*(Rm−Rf)
+WACC (SUMPRODUCT):   =SUMPRODUCT(weight_array, cost_array)
+Sustainable g:       =ROE * (1 − payout_ratio)
+PV of dividends:     =NPV(Ke, div_range)</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== EXCEL GUIDE ==================== -->
+<section id="excel_guide" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Spreadsheet Mastery</div>
+  <h2>Excel Guide — Cost of Capital Computations</h2>
+</div>
+<div class="card s6">
+  <h3>1. Computing Kd with RATE()</h3>
+  <div class="excel-box">Setup:
+  A1: Face value         = 1000
+  A2: Coupon rate (%)    = 10%
+  A3: Issue price        = 960
+  A4: Flotation (%)      = 2%
+  A5: Redemption value   = 1000
+  A6: Years to maturity  = 7
+  A7: Tax rate           = 30%
+
+Derived:
+  B1: Annual coupon       = A1*A2         → 100
+  B2: Net proceeds        = A3*(1-A4)     → 940.80
+  B3: After-tax coupon    = B1*(1-A7)     → 70
+
+After-tax Kd (YTM):
+  =RATE(A6, -B3, B2, -A5)              → 7.56%
+
+Pre-tax Kd (for reference):
+  =RATE(A6, -B1, B2, -A5)             → 10.79%</div>
+</div>
+<div class="card s6">
+  <h3>2. Computing Ke via CAPM</h3>
+  <div class="excel-box">Setup:
+  A1: Risk-free rate Rf  = 6.5%
+  A2: Market return Rm   = 13%
+  A3: Beta (observed)    = 1.2
+  A4: Comp. beta βL      = 0.9
+  A5: Comp. D/E          = 0.4
+  A6: Firm D/E           = 0.7
+  A7: Tax rate           = 30%
+
+Beta calculations:
+  B1: βU = A4/(1+(1-A7)*A5)           → 0.714
+  B2: βL re-levered = B1*(1+(1-A7)*A6) → 1.214
+
+CAPM Ke:
+  =A1 + A3*(A2-A1)                    → 14.3% (direct)
+  =A1 + B2*(A2-A1)                    → 14.6% (Hamada)</div>
+</div>
+<div class="card s6">
+  <h3>3. WACC via SUMPRODUCT</h3>
+  <div class="excel-box">Capital structure table (A:E):
+  Source   | BV  | MV  | Cost  | AT Cost
+  Equity   | 500 | 900 | 15%   | 15%
+  Pref     | 200 | 190 | 12%   | 12%
+  Debt     | 300 | 280 | 10%   | 7%  (=10*(1-30%))
+  RE       | 100 | 100 | 14%   | 14%
+
+WACC (book weights):
+  =SUMPRODUCT(B2:B5, E2:E5)/SUM(B2:B5)
+
+WACC (market weights):
+  =SUMPRODUCT(C2:C5, E2:E5)/SUM(C2:C5)
+
+Or with explicit weight column F:
+  =F2: =C2/SUM(C$2:C$5)  ... fill down
+  WACC: =SUMPRODUCT(F2:F5, E2:E5)</div>
+</div>
+<div class="card s6">
+  <h3>4. MCC Schedule &amp; Break Points</h3>
+  <div class="excel-box">RE = 150, Ke weight We = 0.5 → BP₁ = 150/0.5 = 300
+Kd₁ limit = 200, Wd = 0.5  → BP₂ = 200/0.5 = 400
+
+Table for MCC step chart:
+  Range (start) | Range (end) | Kr  | Ke  | Kd  | WACC
+  0             | 300         | 13% |  -  | 7%  | =We*13%+Wd*7%
+  300           | 400         |  -  | 16% | 7%  | =We*16%+Wd*7%
+  400           | 600         |  -  | 16% | 9%  | =We*16%+Wd*9%
+
+Chart type: Step chart (line chart, no interpolation).
+IOS: Sort projects by IRR descending; cumulative cost on X-axis.</div>
+</div>
+<div class="card s6">
+  <h3>5. Beta from historical data</h3>
+  <div class="excel-box">Monthly returns in A1:A60 (stock), B1:B60 (market):
+
+Beta:  =SLOPE(A1:A60, B1:B60)
+Alpha: =INTERCEPT(A1:A60, B1:B60)
+R²:    =RSQ(A1:A60, B1:B60)
+
+Or full regression output:
+  Data → Data Analysis → Regression
+  Y range: A1:A60, X range: B1:B60
+  → Output gives β, α, R², p-values
+
+Annualise monthly data:
+  If returns are monthly %, SLOPE gives monthly β.
+  Annual β ≈ monthly β (beta is dimensionless).
+  Annualise Rƒ and Rm if using monthly returns.</div>
+</div>
+<div class="card s6">
+  <h3>6. DGM two-stage Ke via IRR</h3>
+  <div class="excel-box">D0=5, g1=20%, n=3 years, g2=8%, P0=200:
+
+  Row:   Year | Dividend | PV factor | Notes
+  A1:    0    | -200     |           | = -P0 (investment)
+  A2:    1    | =5*1.2   |           | D1
+  A3:    2    | =A2*1.2  |           | D2
+  A4:    3    | =A3*1.2  |           | D3
+  A5:    3    | =A4*1.08/(Ke-0.08)  | Terminal P3
+
+Combine year-3: A4+A5 in one cell.
+
+Cash flow column (for IRR): [-200, D1, D2, D3+P3]
+Ke = IRR of this cash flow series:
+  =IRR(cashflow_range)
+
+Note: This IRR is the internal rate of return
+representing the effective cost of equity.</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== GLOSSARY ==================== -->
+<section id="glossary" class="page">
+<div class="grid">
+<div class="card s12">
+  <div class="section-kicker">Reference</div>
+  <h2>Glossary</h2>
+  <input id="glSearch" type="text" placeholder="Search terms…" oninput="filterGlossary()" style="max-width:400px">
+  <div id="glList" style="margin-top:14px"></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+/* ========== UTILITIES ========== */
+const $=id=>document.getElementById(id);
+const fmt=(n,d=2)=>typeof n==="number"&&isFinite(n)?n.toFixed(d):"—";
+const pct=(n,d=2)=>typeof n==="number"&&isFinite(n)?n.toFixed(d)+"%":"—";
+const cr=(n)=>typeof n==="number"&&isFinite(n)?"₹"+n.toFixed(2):"—";
+function parseList(s){return s.split(",").map(v=>parseFloat(v.trim())).filter(v=>!isNaN(v));}
+function toggleAns(id){const el=$(id);el.style.display=el.style.display==="none"?"block":"none";}
+window.toggleAns=toggleAns;
+
+/* ========== MODE ========== */
+function setMode(m){
+  document.body.classList.toggle("teacher",m==="teacher");
+  $("modeStudent").classList.toggle("on",m==="student");
+  $("modeTeacher").classList.toggle("on",m==="teacher");
+}
+window.setMode=setMode;
+
+/* ========== TAB NAVIGATION ========== */
+function activatePage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  const pg=$(id); if(pg)pg.classList.add("active");
+  const tb=document.querySelector(`.tab[data-page="${id}"]`);
+  if(tb){tb.classList.add("active");tb.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});}
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(window.RUN_ALL)window.RUN_ALL.forEach(fn=>{try{fn();}catch(e){}});
+}
+window.activatePage=activatePage;
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>activatePage(t.dataset.page)));
+
+/* ========== SIMPLE CANVAS CHARTS ========== */
+function drawBar(id,labels,values,colors,title=""){
+  const canvas=$(id); if(!canvas)return;
+  const ctx=canvas.getContext("2d"); if(!ctx)return;
+  canvas.width=canvas.offsetWidth||600; canvas.height=canvas.offsetHeight||260;
+  const W=canvas.width,H=canvas.height,pad=48,bGap=10;
+  ctx.clearRect(0,0,W,H);
+  const max=Math.max(...values.filter(v=>isFinite(v)),0.01);
+  const n=labels.length,bW=(W-pad*2-bGap*(n-1))/n;
+  ctx.fillStyle="#64748b"; ctx.font="13px Inter,sans-serif"; ctx.textAlign="center";
+  if(title){ctx.fillText(title,W/2,18);}
+  values.forEach((v,i)=>{
+    if(!isFinite(v))return;
+    const x=pad+i*(bW+bGap),bH=(v/max)*(H-pad*2),y=H-pad-bH;
+    ctx.fillStyle=colors[i%colors.length]; ctx.fillRect(x,y,bW,bH);
+    ctx.fillStyle="#374151"; ctx.textAlign="center";
+    ctx.fillText(v.toFixed(2)+"%",x+bW/2,y-5);
+    ctx.fillText(labels[i],x+bW/2,H-14);
+  });
+}
+
+function drawLine(id,xVals,datasets,title=""){
+  const canvas=$(id); if(!canvas)return;
+  const ctx=canvas.getContext("2d"); if(!ctx)return;
+  canvas.width=canvas.offsetWidth||600; canvas.height=canvas.offsetHeight||260;
+  const W=canvas.width,H=canvas.height,padL=54,padR=20,padT=30,padB=40;
+  ctx.clearRect(0,0,W,H);
+  const allY=datasets.flatMap(d=>d.values).filter(isFinite);
+  const minY=Math.min(...allY)*0.95, maxY=Math.max(...allY)*1.05;
+  const xMin=Math.min(...xVals),xMax=Math.max(...xVals);
+  const toX=x=>padL+(x-xMin)/(xMax-xMin||1)*(W-padL-padR);
+  const toY=y=>H-padB-(y-minY)/(maxY-minY||1)*(H-padT-padB);
+  ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){const y=minY+(maxY-minY)*i/5;ctx.beginPath();ctx.moveTo(padL,toY(y));ctx.lineTo(W-padR,toY(y));ctx.stroke();}
+  if(title){ctx.fillStyle="#64748b";ctx.font="13px Inter,sans-serif";ctx.textAlign="center";ctx.fillText(title,W/2,18);}
+  const colors=["#1a4f8a","#b8860b","#1a7a52","#c0392b","#8b5cf6"];
+  datasets.forEach((ds,di)=>{
+    ctx.beginPath();ctx.strokeStyle=colors[di%colors.length];ctx.lineWidth=2.5;
+    ds.values.forEach((v,i)=>{const x=toX(xVals[i]),y=toY(v);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.stroke();
+    ctx.fillStyle=colors[di%colors.length];ctx.font="12px Inter,sans-serif";ctx.textAlign="left";
+    if(ds.label)ctx.fillText(ds.label,W-padR-80,padT+di*16);
+  });
+  ctx.fillStyle="#64748b";ctx.font="11px Inter,sans-serif";ctx.textAlign="right";
+  for(let i=0;i<=5;i++){const y=minY+(maxY-minY)*i/5;ctx.fillText(y.toFixed(1),padL-4,toY(y)+4);}
+}
+
+/* ========== DASHBOARD ========== */
+function computeDash(){
+  const eq=+$("dEq").value||500, ke=+$("dKe").value/100||0.15;
+  const de=+$("dDe").value||300, kd=+$("dKd").value/100||0.10;
+  const ps=+$("dPs").value||100, kp=+$("dKp").value/100||0.12;
+  const re=+$("dRe").value||100, kr=+$("dKr").value/100||0.14;
+  const tax=+$("dTax").value/100||0.30;
+  const total=eq+de+ps+re;
+  const kdAt=kd*(1-tax);
+  const wacc=(eq/total)*ke+(de/total)*kdAt+(ps/total)*kp+(re/total)*kr;
+  $("dTotal").textContent="₹"+total+" Cr";
+  $("dKdAt").textContent=pct(kdAt*100);
+  $("dWACC").textContent=pct(wacc*100);
+  $("dWe").textContent=pct(eq/total*100);
+  drawBar("dashChart",["Equity","Debt","Preference","Retained E."],
+    [ke*100,kdAt*100,kp*100,kr*100],["#1a4f8a","#b8860b","#1a7a52","#6366f1"],"Component Costs (%)");
+}
+["dEq","dKe","dDe","dKd","dPs","dKp","dRe","dKr","dTax"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeDash);});
+
+/* ========== KD CALCULATOR ========== */
+function computeKd(){
+  const FV=+$("kdFV").value, cr=+$("kdCoupon").value/100;
+  const NP=+$("kdNP").value, RV=+$("kdRV").value;
+  const n=+$("kdN").value, T=+$("kdTax").value/100;
+  const I=FV*cr;
+  const kdPreApx=(I+(RV-NP)/n)/((RV+NP)/2);
+  const kdPostApx=kdPreApx*(1-T);
+  // YTM via Newton-Raphson (after-tax)
+  let r=kdPostApx;
+  const atI=I*(1-T);
+  for(let it=0;it<200;it++){
+    let pv=0,dpv=0;
+    for(let t2=1;t2<=n;t2++){pv+=atI/Math.pow(1+r,t2);dpv-=t2*atI/Math.pow(1+r,t2+1);}
+    pv+=RV/Math.pow(1+r,n); dpv-=n*RV/Math.pow(1+r,n+1);
+    const err=pv-NP; if(Math.abs(err)<0.0001)break;
+    r-=err/dpv;
+  }
+  $("kdInterest").textContent="₹"+I.toFixed(2);
+  $("kdPre").textContent=pct(kdPreApx*100);
+  $("kdPost").textContent=pct(kdPostApx*100);
+  $("kdYTM").textContent=pct(r*100);
+  $("kdNote").textContent=`Net proceeds ₹${NP}. After-tax annual payment ₹${atI.toFixed(2)}. YTM method is more accurate for longer maturities.`;
+  drawBar("kdChart",["Pre-tax Kd (approx)","After-tax Kd (approx)","After-tax Kd (YTM)"],
+    [kdPreApx*100,kdPostApx*100,r*100],["#b8860b","#1a4f8a","#1a7a52"]);
+}
+["kdFV","kdCoupon","kdNP","kdRV","kdN","kdTax"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeKd);});
+
+/* ========== KP ========== */
+function computeKp(){
+  const div=+$("kpDiv").value, NP=+$("kpNP").value;
+  const RV=+$("kpRV").value, n=+$("kpN").value;
+  let kpApx, kpYTM;
+  if(n===0){kpApx=div/NP; kpYTM=div/NP;}
+  else{kpApx=(div+(RV-NP)/n)/((RV+NP)/2); let r=kpApx;
+    for(let it=0;it<200;it++){let pv=0,dpv=0;
+      for(let t=1;t<=n;t++){pv+=div/Math.pow(1+r,t);dpv-=t*div/Math.pow(1+r,t+1);}
+      pv+=RV/Math.pow(1+r,n);dpv-=n*RV/Math.pow(1+r,n+1);
+      const err=pv-NP;if(Math.abs(err)<0.0001)break;r-=err/dpv;}
+    kpYTM=r;}
+  $("kpResult").textContent=pct(kpApx*100);
+  $("kpYTM").textContent=pct(kpYTM*100);
+  $("kpNote").textContent=n===0?"Irredeemable: Kp = Div/NP = "+pct(kpApx*100):`Redeemable ${n}yr: approx ${pct(kpApx*100)}, exact ${pct(kpYTM*100)}. No tax adjustment — preference dividends paid from post-tax profits.`;
+}
+["kpDiv","kpNP","kpRV","kpN"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeKp);});
+
+/* ========== KE (DGM) ========== */
+function computeKe(){
+  const D0=+$("keD0").value, g=+$("keG").value/100;
+  const P0=+$("keP0").value, f=+$("keF").value/100;
+  const D1=D0*(1+g);
+  const keNoF=D1/P0+g;
+  const keWithF=D1/(P0*(1-f))+g;
+  $("keD1").textContent="₹"+D1.toFixed(2);
+  $("keNoF").textContent=pct(keNoF*100);
+  $("keWithF").textContent=pct(keWithF*100);
+  $("keDY").textContent=pct(D1/P0*100);
+  drawBar("keChart",["Ke (no flotation)","Ke (with flotation)","Dividend yield","Growth g"],
+    [keNoF*100,keWithF*100,D1/P0*100,g*100],["#1a4f8a","#c0392b","#1a7a52","#b8860b"]);
+}
+["keD0","keG","keP0","keF"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeKe);});
+
+/* ========== KE (CAPM quick) ========== */
+function computeCapmQuick(){
+  const Rf=+$("cRf").value/100, beta=+$("cBeta").value, Rm=+$("cRm").value/100;
+  const erp=Rm-Rf, rp=beta*erp, ke=Rf+rp;
+  $("cERP").textContent=pct(erp*100);
+  $("cKe").textContent=pct(ke*100);
+  $("cRP").textContent=pct(rp*100);
+  // Draw SML
+  const canvas=$("capmChart"); if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  canvas.width=canvas.offsetWidth||400; canvas.height=canvas.offsetHeight||180;
+  const W=canvas.width,H=canvas.height,padL=50,padB=35,padT=20,padR=20;
+  ctx.clearRect(0,0,W,H);
+  const betas=[0,0.5,1,1.5,2];
+  const rets=betas.map(b=>Rf+b*erp);
+  const toX=b=>padL+b/2*(W-padL-padR);
+  const minR=Math.min(...rets)*0.9,maxR=Math.max(...rets)*1.1;
+  const toY=r=>H-padB-(r-minR)/(maxR-minR)*(H-padT-padB);
+  ctx.strokeStyle="#1a4f8a";ctx.lineWidth=2;ctx.beginPath();
+  betas.forEach((b,i)=>{i===0?ctx.moveTo(toX(b),toY(rets[i])):ctx.lineTo(toX(b),toY(rets[i]));});
+  ctx.stroke();
+  // Plot our stock
+  ctx.fillStyle="#c0392b";ctx.beginPath();ctx.arc(toX(beta),toY(ke),6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#64748b";ctx.font="11px Inter,sans-serif";ctx.textAlign="center";
+  ctx.fillText("β="+beta+", Ke="+pct(ke*100),toX(beta),toY(ke)-12);
+  ctx.fillText("Security Market Line (SML)",W/2,padT+10);
+  ctx.fillStyle="#374151";ctx.textAlign="right";
+  betas.forEach(b=>{ctx.fillText(b.toFixed(1),toX(b),H-8);});
+}
+["cRf","cBeta","cRm"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeCapmQuick);});
+
+/* ========== KR ========== */
+function computeKr(){
+  const D0=+$("krD0").value, g=+$("krG").value/100;
+  const P0=+$("krP0").value, f=+$("krF").value/100;
+  const D1=D0*(1+g);
+  const kr=D1/P0+g, ke=D1/(P0*(1-f))+g;
+  $("krD1").textContent="₹"+D1.toFixed(2);
+  $("krResult").textContent=pct(kr*100);
+  $("krKe").textContent=pct(ke*100);
+  $("krDiff").textContent=pct((ke-kr)*100)+" pp";
+  $("krNote").textContent=`Kr (${pct(kr*100)}) < Ke (${pct(ke*100)}) by ${pct((ke-kr)*100)} percentage points — difference = flotation cost impact.`;
+  drawBar("krChart",["Kr (retained)","Ke (new issue)","Flotation impact"],
+    [kr*100,ke*100,(ke-kr)*100],["#1a4f8a","#c0392b","#b8860b"]);
+}
+["krD0","krG","krP0","krF"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeKr);});
+
+/* ========== FLOTATION ========== */
+function computeFlotation(){
+  const D0=+$("flD0").value,g=+$("flG").value/100,P0=+$("flP0").value,f=+$("flF").value/100;
+  const D1=D0*(1+g),NP=P0*(1-f);
+  const ke0=D1/P0+g, kef=D1/NP+g;
+  $("flKe0").textContent=pct(ke0*100);
+  $("flKef").textContent=pct(kef*100);
+  $("flNP").textContent="₹"+NP.toFixed(2);
+  $("flDiff").textContent=((kef-ke0)*10000).toFixed(0)+" bps";
+  drawBar("flChart",["Ke (no flotation)","Ke (with flotation)"],
+    [ke0*100,kef*100],["#1a4f8a","#c0392b"],"Impact of Flotation on Ke");
+}
+["flD0","flG","flP0","flF"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeFlotation);});
+
+/* ========== WACC PANEL ========== */
+function computeWACC(){
+  const We=+$("wWe").value/100,Ke=+$("wKe").value/100;
+  const Wp=+$("wWp").value/100,Kp=+$("wKp").value/100;
+  const Wd=+$("wWd").value/100,Kd=+$("wKd").value/100;
+  const T=+$("wTax").value/100;
+  const Wr=+$("wWr").value/100,Kr=+$("wKr").value/100;
+  const total=We+Wp+Wd+Wr;
+  const KdAT=Kd*(1-T);
+  const wacc=We*Ke+Wp*Kp+Wd*KdAT+Wr*Kr;
+  $("wTotal").textContent=(total*100).toFixed(1)+"%";
+  $("wWACC").textContent=pct(wacc*100);
+  $("waccNote").textContent=total<0.999||total>1.001?"⚠ Weights do not sum to 100%.":"WACC = "+pct(wacc*100)+" | After-tax Kd = "+pct(KdAT*100);
+  drawBar("waccChart",["We×Ke","Wp×Kp","Wd×Kd(AT)","Wr×Kr"],
+    [We*Ke*100,Wp*Kp*100,Wd*KdAT*100,Wr*Kr*100],["#1a4f8a","#6366f1","#b8860b","#1a7a52"],"Weighted Component Costs (%)");
+}
+["wWe","wKe","wWp","wKp","wWd","wKd","wTax","wWr","wKr"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeWACC);});
+
+/* ========== BOOK VS MARKET ========== */
+function computeBM(){
+  const bkEq=+$("bkEq").value,bkDe=+$("bkDe").value,bkPr=+$("bkPr").value;
+  const mvEq=+$("mvEq").value,mvDe=+$("mvDe").value,mvPr=+$("mvPr").value;
+  const Ke=+$("bmKe").value/100,Kd=+$("bmKd").value/100,Kp=+$("bmKp").value/100;
+  const bkT=bkEq+bkDe+bkPr, mvT=mvEq+mvDe+mvPr;
+  const wBk=(src,t)=>src/t;
+  const waccBk=wBk(bkEq,bkT)*Ke+wBk(bkDe,bkT)*Kd+wBk(bkPr,bkT)*Kp;
+  const waccMv=wBk(mvEq,mvT)*Ke+wBk(mvDe,mvT)*Kd+wBk(mvPr,mvT)*Kp;
+  $("bmWaccBk").textContent=pct(waccBk*100);
+  $("bmWaccMv").textContent=pct(waccMv*100);
+  drawBar("bmChart",["WACC (book)","WACC (market)"],
+    [waccBk*100,waccMv*100],["#b8860b","#1a4f8a"],"Book vs Market WACC");
+}
+["bkEq","bkDe","bkPr","mvEq","mvDe","mvPr","bmKe","bmKd","bmKp"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeBM);});
+
+/* ========== MCC ========== */
+function computeMCC(){
+  const We=+$("mccWe").value/100,Wd=+$("mccWd").value/100,Wp=+$("mccWp").value/100;
+  const Kr=+$("mccKr").value/100,Ke=+$("mccKe").value/100;
+  const Kd1=+$("mccKd1").value/100,Kd2=+$("mccKd2").value/100,Kp=+$("mccKp").value/100;
+  const RE=+$("mccRE").value,Kd1Lim=+$("mccKd1Lim").value;
+  const BP1=We>0?RE/We:Infinity, BP2=Wd>0?Kd1Lim/Wd:Infinity;
+  const wacc1=We*Kr+Wd*Kd1+Wp*Kp;
+  const wacc2=We*Ke+Wd*Kd1+Wp*Kp;
+  const wacc3=We*Ke+Wd*Kd2+Wp*Kp;
+  const html=`<table>
+    <tr><th>Range (₹ Cr)</th><th>Equity cost</th><th>Debt cost</th><th>WACC</th></tr>
+    <tr><td>₹0 – ₹${BP1.toFixed(0)}</td><td>Kr = ${pct(Kr*100)}</td><td>Kd₁ = ${pct(Kd1*100)}</td><td class="good">${pct(wacc1*100)}</td></tr>
+    <tr><td>₹${BP1.toFixed(0)} – ₹${Math.max(BP1,BP2).toFixed(0)}</td><td>Ke = ${pct(Ke*100)}</td><td>Kd₁ = ${pct(Kd1*100)}</td><td class="warn">${pct(wacc2*100)}</td></tr>
+    <tr><td>Above ₹${Math.max(BP1,BP2).toFixed(0)}</td><td>Ke = ${pct(Ke*100)}</td><td>Kd₂ = ${pct(Kd2*100)}</td><td class="bad">${pct(wacc3*100)}</td></tr>
+  </table><p class="note" style="margin-top:8px">Break point 1 (RE exhausted) = ₹${BP1.toFixed(0)} Cr | Break point 2 (Kd₁ exhausted) = ₹${BP2.toFixed(0)} Cr</p>`;
+  $("mccOutput").innerHTML=html;
+  const xMax=Math.max(BP1,BP2)*1.5;
+  drawLine("mccChart",[0,BP1,BP1,BP2,BP2,xMax],
+    [{label:"WACC %",values:[wacc1*100,wacc1*100,wacc2*100,wacc2*100,wacc3*100,wacc3*100]}],"MCC Schedule");
+}
+window.computeMCC=computeMCC;
+
+/* ========== CAPITAL STRUCTURE ========== */
+function computeCS(){
+  const rA=+$("csRA").value/100, T=+$("csT").value/100, k=+$("csK").value;
+  const dvRatios=[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
+  const waccs=dvRatios.map(dv=>{
+    const taxShield=rA*T*dv;
+    const distress=k*dv*dv;
+    return (rA-taxShield+distress)*100;
+  });
+  const minWacc=Math.min(...waccs);
+  const optDV=dvRatios[waccs.indexOf(minWacc)];
+  $("csNote").textContent=`Optimal D/(D+E) ≈ ${(optDV*100).toFixed(0)}% with minimum WACC ≈ ${minWacc.toFixed(2)}%.`;
+  drawLine("csChart",dvRatios.map(d=>d*100),
+    [{label:"WACC %",values:waccs}],"WACC vs Leverage D/(D+E)");
+}
+["csRA","csT","csK"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeCS);});
+
+/* ========== CAPM FULL ========== */
+function computeCAPMFull(){
+  const Rf=+$("capmRf").value/100,Rm=+$("capmRm").value/100;
+  const BL=+$("capmBL").value,DE=+$("capmDE").value;
+  const compBL=+$("capmCompBL").value,compDE=+$("capmCompDE").value;
+  const T=+$("capmTax").value/100;
+  const erp=Rm-Rf;
+  const keDirect=Rf+BL*erp;
+  const bU=compBL/(1+(1-T)*compDE);
+  const bRL=bU*(1+(1-T)*DE);
+  const keAdj=Rf+bRL*erp;
+  $("capmERP").textContent=pct(erp*100);
+  $("capmKeDirect").textContent=pct(keDirect*100);
+  $("capmBU").textContent=bU.toFixed(4);
+  $("capmBRL").textContent=bRL.toFixed(4);
+  $("capmKeAdj").textContent=pct(keAdj*100);
+  // Draw SML
+  const canvas=$("capmSML"); if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  canvas.width=canvas.offsetWidth||400; canvas.height=canvas.offsetHeight||200;
+  const W=canvas.width,H=canvas.height,padL=54,padB=38,padT=24,padR=24;
+  ctx.clearRect(0,0,W,H);
+  const maxB=Math.max(BL,bRL,2)*1.1;
+  const betas=[0,maxB];
+  const rets=betas.map(b=>Rf+b*erp);
+  const minR=Math.min(...rets)*0.9,maxR=Math.max(...rets)*1.05;
+  const toX=b=>padL+b/maxB*(W-padL-padR);
+  const toY=r=>H-padB-(r-minR)/(maxR-minR)*(H-padT-padB);
+  ctx.strokeStyle="#1a4f8a";ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(toX(0),toY(Rf));ctx.lineTo(toX(maxB),toY(Rf+maxB*erp));ctx.stroke();
+  // dots
+  [[BL,keDirect,"#c0392b","Observed β"],[bRL,keAdj,"#1a7a52","Re-levered β"]].forEach(([b,r,col,lbl])=>{
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(toX(b),toY(r),6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=col;ctx.font="11px Inter,sans-serif";ctx.textAlign="left";
+    ctx.fillText(lbl+" ("+b.toFixed(2)+")",toX(b)+8,toY(r)+4);
+  });
+  ctx.fillStyle="#64748b";ctx.font="12px Inter,sans-serif";ctx.textAlign="center";
+  ctx.fillText("Security Market Line",W/2,padT);
+  ctx.textAlign="right";ctx.font="11px Inter,sans-serif";
+  for(let i=0;i<=4;i++){const r=minR+(maxR-minR)*i/4;ctx.fillText(pct(r*100),padL-4,toY(r)+4);}
+}
+["capmRf","capmRm","capmBL","capmDE","capmCompBL","capmCompDE","capmTax"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeCAPMFull);});
+
+/* ========== DGM TWO-STAGE ========== */
+function computeDGM(){
+  const D0=+$("dgmD0").value,g1=+$("dgmG1").value/100;
+  const n=+$("dgmN").value,g2=+$("dgmG2").value/100;
+  const P0=+$("dgmP0").value,f=+$("dgmF").value/100;
+  const NP=P0*(1-f);
+  const D1=D0*(1+g1);
+  // Constant growth Ke
+  const keConst=D1/NP+g2;
+  $("dgmKe1").textContent=pct(keConst*100);
+  // Build cash flow series for IRR
+  const divs=[];
+  for(let t=1;t<=n;t++) divs.push(D0*Math.pow(1+g1,t));
+  // Solve IRR iteratively
+  function pvAtR(r){
+    let pv=0;
+    for(let t=1;t<=n;t++) pv+=divs[t-1]/Math.pow(1+r,t);
+    const Dn=divs[n-1],Pn=Dn*(1+g2)/(r-g2);
+    pv+=Pn/Math.pow(1+r,n);
+    return pv-NP;
+  }
+  let lo=g2+0.001,hi=1.0;
+  for(let it=0;it<200;it++){const mid=(lo+hi)/2;pvAtR(mid)>0?lo=mid:hi=mid;}
+  const ke2=(lo+hi)/2;
+  $("dgmKe2").textContent=pct(ke2*100);
+  // Table
+  let tbl="<table><tr><th>Year</th><th>Dividend</th><th>PV @ Ke</th></tr>";
+  let sumPV=0;
+  for(let t=1;t<=n;t++){const d=divs[t-1],pv=d/Math.pow(1+ke2,t);sumPV+=pv;tbl+=`<tr><td>${t}</td><td>₹${d.toFixed(2)}</td><td>₹${pv.toFixed(2)}</td></tr>`;}
+  const Pn=divs[n-1]*(1+g2)/(ke2-g2),pvPn=Pn/Math.pow(1+ke2,n);sumPV+=pvPn;
+  tbl+=`<tr><td>Year ${n} terminal P</td><td>₹${Pn.toFixed(2)}</td><td>₹${pvPn.toFixed(2)}</td></tr>`;
+  tbl+=`<tr><th>Total PV</th><th></th><th>₹${sumPV.toFixed(2)}</th></tr></table>`;
+  $("dgmTable").innerHTML=tbl;
+  drawBar("dgmChart",["Ke (constant-g)","Ke (two-stage)"],[keConst*100,ke2*100],["#b8860b","#1a4f8a"],"DGM Ke comparison");
+}
+window.computeDGM=computeDGM;
+
+/* ========== MULTI-METHOD Ke ========== */
+function computeMultiKe(){
+  const D1=+$("mmD1").value,P0=+$("mmP0").value,g=+$("mmG").value/100;
+  const Rf=+$("mmRf").value/100,Beta=+$("mmBeta").value,Rm=+$("mmRm").value/100;
+  const Kd=+$("mmKd").value/100,ERP=+$("mmERP").value/100,EPS=+$("mmEPS").value;
+  const keDGM=D1/P0+g, keCAPM=Rf+Beta*(Rm-Rf), keEP=EPS/P0, keBond=Kd+ERP;
+  const avg=(keDGM+keCAPM+keEP+keBond)/4;
+  $("mmKeDGM").textContent=pct(keDGM*100);
+  $("mmKeCAPM").textContent=pct(keCAPM*100);
+  $("mmKeEP").textContent=pct(keEP*100);
+  $("mmKeBond").textContent=pct(keBond*100);
+  $("mmKeAvg").textContent=pct(avg*100);
+  drawBar("mmChart",["DGM","CAPM","E/P","Bond+RP","Average"],
+    [keDGM*100,keCAPM*100,keEP*100,keBond*100,avg*100],
+    ["#1a4f8a","#b8860b","#1a7a52","#6366f1","#374151"],"Ke by method (%)");
+}
+["mmD1","mmP0","mmG","mmRf","mmBeta","mmRm","mmKd","mmERP","mmEPS"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeMultiKe);});
+
+/* ========== CALC KD ========== */
+function computeCalcKd(){
+  const FV=+$("ckdFV").value,cr=+$("ckdCR").value/100;
+  const IP=+$("ckdIP").value,FC=+$("ckdFC").value/100;
+  const RV=+$("ckdRV").value,n=+$("ckdN").value,T=+$("ckdT").value/100;
+  const type=$("ckdType").value;
+  const NP=IP*(1-FC), I=FV*cr, atI=I*(1-T);
+  $("ckdI").textContent="₹"+I.toFixed(2);
+  $("ckdNP").textContent="₹"+NP.toFixed(2);
+  let preApx,postApx,ytmAt;
+  if(type==="perpetual"){preApx=I/NP;postApx=preApx*(1-T);ytmAt=postApx;}
+  else if(type==="zerocoupon"){preApx=Math.pow(RV/NP,1/n)-1;postApx=preApx;ytmAt=preApx;}
+  else{preApx=(I+(RV-NP)/n)/((RV+NP)/2);postApx=preApx*(1-T);
+    let r=postApx;
+    for(let it=0;it<300;it++){let pv=0,dpv=0;
+      for(let t=1;t<=n;t++){pv+=atI/Math.pow(1+r,t);dpv-=t*atI/Math.pow(1+r,t+1);}
+      pv+=RV/Math.pow(1+r,n);dpv-=n*RV/Math.pow(1+r,n+1);
+      const err=pv-NP;if(Math.abs(err)<0.00001)break;r-=err/dpv;}
+    ytmAt=r;}
+  $("ckdPreApx").textContent=pct(preApx*100);
+  $("ckdPostApx").textContent=pct(postApx*100);
+  $("ckdYTM").textContent=pct(ytmAt*100);
+  $("ckdDiff").textContent=Math.abs((postApx-ytmAt)*10000).toFixed(1)+" bps";
+  $("ckdNote").textContent=`Type: ${type}. NP = ₹${NP.toFixed(2)}. After-tax coupon = ₹${atI.toFixed(2)}. Approx vs exact difference = ${Math.abs((postApx-ytmAt)*10000).toFixed(1)} basis points.`;
+  drawBar("ckdChart",["Pre-tax Kd (approx)","AT Kd (approx)","AT Kd (YTM)"],
+    [preApx*100,postApx*100,ytmAt*100],["#b8860b","#1a4f8a","#1a7a52"]);
+}
+["ckdFV","ckdCR","ckdIP","ckdFC","ckdRV","ckdN","ckdT","ckdType"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeCalcKd);});
+
+/* ========== CALC KE ========== */
+function computeCalcKe(){
+  const D0=+$("ckeD0").value,g=+$("ckeG").value/100;
+  const P0=+$("ckeP0").value,f=+$("ckeF").value/100;
+  const Rf=+$("ckeRf").value/100,Beta=+$("ckeBeta").value,Rm=+$("ckeRm").value/100;
+  const EPS=+$("ckeEPS").value,RP=+$("ckeRP").value/100,Kd=+$("ckeKd").value/100;
+  const D1=D0*(1+g);
+  const keDGM0=D1/P0+g, keDGMf=D1/(P0*(1-f))+g;
+  const keCAPM=Rf+Beta*(Rm-Rf), keEP=EPS/P0, keBond=Kd+RP;
+  const avg=(keDGM0+keCAPM+keEP+keBond)/4;
+  $("ckeKeDGM0").textContent=pct(keDGM0*100);
+  $("ckeKeDGMf").textContent=pct(keDGMf*100);
+  $("ckeKeCAPM").textContent=pct(keCAPM*100);
+  $("ckeKeEP").textContent=pct(keEP*100);
+  $("ckeKeBond").textContent=pct(keBond*100);
+  $("ckeAvg").textContent=pct(avg*100);
+  $("ckeNote").textContent=`DGM no-flotation: ${pct(keDGM0*100)} | DGM with flotation: ${pct(keDGMf*100)} | CAPM: ${pct(keCAPM*100)} | E/P: ${pct(keEP*100)} | Bond+RP: ${pct(keBond*100)}.`;
+  drawBar("ckeChart",["DGM (no f)","DGM (with f)","CAPM","E/P","Bond+RP","Average"],
+    [keDGM0*100,keDGMf*100,keCAPM*100,keEP*100,keBond*100,avg*100],
+    ["#1a4f8a","#2563b0","#b8860b","#1a7a52","#6366f1","#374151"]);
+}
+["ckeD0","ckeG","ckeP0","ckeF","ckeRf","ckeBeta","ckeRm","ckeEPS","ckeRP","ckeKd"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeCalcKe);});
+
+/* ========== CALC WACC TABLE ========== */
+function computeWACCTable(){
+  const rows=document.querySelectorAll("#waccTable tr");
+  let totBk=0,totMv=0;
+  const data=[];
+  rows.forEach((r,ri)=>{if(ri===0)return;
+    const bk=parseFloat(r.querySelector(".wBk")?.value)||0;
+    const mv=parseFloat(r.querySelector(".wMv")?.value)||0;
+    const cost=parseFloat(r.querySelector(".wCost")?.value)||0;
+    const taxable=r.querySelector(".wTaxable")?.value==="yes";
+    const taxRate=parseFloat(r.querySelector(".wTaxRate")?.value)||0;
+    const atc=taxable?cost*(1-taxRate/100):cost;
+    totBk+=bk; totMv+=mv;
+    data.push({bk,mv,atc});
+    r.querySelector(".wATC").textContent=pct(atc);
+  });
+  let waccBk=0,waccMv=0;
+  data.forEach((d,i)=>{
+    const bkWt=totBk>0?d.bk/totBk:0, mvWt=totMv>0?d.mv/totMv:0;
+    const row=rows[i+1];
+    row.querySelector(".wBkWt").textContent=pct(bkWt*100);
+    row.querySelector(".wBkWC").textContent=pct(bkWt*d.atc);
+    row.querySelector(".wMvWt").textContent=pct(mvWt*100);
+    row.querySelector(".wMvWC").textContent=pct(mvWt*d.atc);
+    waccBk+=bkWt*d.atc; waccMv+=mvWt*d.atc;
+  });
+  $("waccTotalBk").textContent="₹"+totBk+" Cr";
+  $("waccTotalMv").textContent="₹"+totMv+" Cr";
+  $("waccResultBk").textContent=pct(waccBk);
+  $("waccResultMv").textContent=pct(waccMv);
+  drawBar("waccCalcChart",["WACC (Book)","WACC (Market)"],[waccBk,waccMv],["#b8860b","#1a4f8a"],"WACC Comparison");
+}
+document.querySelectorAll("#waccTable input, #waccTable select").forEach(el=>el.addEventListener("input",computeWACCTable));
+
+/* ========== CAPM FULL CALC ========== */
+function computeFCAPM(){
+  const Rf=+$("fcRf").value/100,Rm=+$("fcRm").value/100;
+  const betas=[+$("fcB1").value,+$("fcB2").value,+$("fcB3").value,+$("fcB4").value];
+  const erp=Rm-Rf;
+  $("fcERP").textContent=pct(erp*100);
+  betas.forEach((b,i)=>{$(`fcKe${i+1}`).textContent=pct((Rf+b*erp)*100);});
+  // SML chart
+  const canvas=$("fcSML"); if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  canvas.width=canvas.offsetWidth||400; canvas.height=canvas.offsetHeight||230;
+  const W=canvas.width,H=canvas.height,padL=56,padB=36,padT=24,padR=24;
+  ctx.clearRect(0,0,W,H);
+  const maxB=Math.max(...betas)*1.2;
+  const toX=b=>padL+b/maxB*(W-padL-padR);
+  const minR=Rf*0.9,maxR=(Rf+maxB*erp)*1.05;
+  const toY=r=>H-padB-(r-minR)/(maxR-minR)*(H-padT-padB);
+  ctx.strokeStyle="#1a4f8a";ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(toX(0),toY(Rf));ctx.lineTo(toX(maxB),toY(Rf+maxB*erp));ctx.stroke();
+  const cols=["#c0392b","#1a7a52","#6366f1","#b8860b"];
+  betas.forEach((b,i)=>{const ke=Rf+b*erp;
+    ctx.fillStyle=cols[i];ctx.beginPath();ctx.arc(toX(b),toY(ke),6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=cols[i];ctx.font="11px Inter,sans-serif";ctx.textAlign="left";
+    ctx.fillText("β"+String.fromCharCode(8321+i)+"="+b,toX(b)+8,toY(ke)+4);
+  });
+  ctx.fillStyle="#64748b";ctx.font="12px Inter,sans-serif";ctx.textAlign="center";
+  ctx.fillText("Security Market Line (SML)",W/2,padT);
+}
+["fcRf","fcRm","fcB1","fcB2","fcB3","fcB4"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",computeFCAPM);});
+
+/* ========== BETA FROM RETURNS ========== */
+function computeBeta(){
+  const sR=parseList($("fcStockR").value), mR=parseList($("fcMktR").value);
+  if(sR.length<3||sR.length!==mR.length){$("fcBeta").textContent="Need ≥3 matched pairs";return;}
+  const n=sR.length;
+  const sBar=sR.reduce((a,b)=>a+b)/n, mBar=mR.reduce((a,b)=>a+b)/n;
+  let cov=0,varM=0;
+  sR.forEach((s,i)=>{cov+=(s-sBar)*(mR[i]-mBar);varM+=(mR[i]-mBar)**2;});
+  const beta=cov/varM, alpha=sBar-beta*mBar;
+  let ssRes=0,ssTot=0;
+  sR.forEach((s,i)=>{const pred=alpha+beta*mR[i];ssRes+=(s-pred)**2;ssTot+=(s-sBar)**2;});
+  const r2=1-ssRes/ssTot;
+  $("fcBeta").textContent=beta.toFixed(4);
+  $("fcAlpha").textContent=alpha.toFixed(4);
+  $("fcR2").textContent=r2.toFixed(4);
+  // Scatter
+  const canvas=$("fcRegChart"); if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  canvas.width=canvas.offsetWidth||380; canvas.height=canvas.offsetHeight||200;
+  const W=canvas.width,H=canvas.height,pad=44;
+  ctx.clearRect(0,0,W,H);
+  const minX=Math.min(...mR),maxX=Math.max(...mR),minY=Math.min(...sR),maxY=Math.max(...sR);
+  const toX=x=>pad+(x-minX)/(maxX-minX||1)*(W-pad*2);
+  const toY=y=>H-pad-(y-minY)/(maxY-minY||1)*(H-pad*2);
+  ctx.strokeStyle="#e5e7eb";ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad,toY(0));ctx.lineTo(W-pad,toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(0),pad);ctx.lineTo(toX(0),H-pad);ctx.stroke();
+  mR.forEach((m,i)=>{ctx.fillStyle="#1a4f8a";ctx.beginPath();ctx.arc(toX(m),toY(sR[i]),4,0,Math.PI*2);ctx.fill();});
+  ctx.strokeStyle="#c0392b";ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(toX(minX),toY(alpha+beta*minX));ctx.lineTo(toX(maxX),toY(alpha+beta*maxX));ctx.stroke();
+  ctx.fillStyle="#64748b";ctx.font="11px Inter,sans-serif";ctx.textAlign="center";
+  ctx.fillText("β="+beta.toFixed(3)+", R²="+r2.toFixed(3),W/2,18);
+}
+window.computeBeta=computeBeta;
+
+/* ========== MCC LAB ========== */
+function computeMCCLab(){
+  const We=+$("labWe").value/100,Wd=+$("labWd").value/100;
+  const T=+$("labTax").value/100;
+  const Kr=+$("labKr").value/100,Ke=+$("labKe").value/100;
+  const Kd1=+$("labKd1").value/100*(1-T),Kd2=+$("labKd2").value/100*(1-T);
+  const RE=+$("labRE").value,Kd1L=+$("labKd1L").value;
+  const BP1=We>0?RE/We:Infinity, BP2=Wd>0?Kd1L/Wd:Infinity;
+  const mccSegments=[
+    {from:0,to:Math.min(BP1,BP2),wacc:We*Kr+Wd*Kd1},
+    {from:Math.min(BP1,BP2),to:Math.max(BP1,BP2),wacc:We*(BP1<BP2?Kr:Ke)+Wd*(BP1<BP2?Kd1:Kd2)},
+    {from:Math.max(BP1,BP2),to:Math.max(BP1,BP2)*2,wacc:We*Ke+Wd*Kd2}
+  ];
+  // IOS projects
+  const irrs=[...document.querySelectorAll(".iosIRR")].map(el=>parseFloat(el.value)/100);
+  const costs=[...document.querySelectorAll(".iosCost")].map(el=>parseFloat(el.value));
+  const projs=irrs.map((r,i)=>({name:String.fromCharCode(65+i),irr:r,cost:costs[i]}));
+  projs.sort((a,b)=>b.irr-a.irr);
+  let cumCost=0;
+  let outHtml="<table><tr><th>Project</th><th>IRR</th><th>Cost (₹ Cr)</th><th>Cumulative</th><th>MCC at level</th><th>Decision</th></tr>";
+  projs.forEach(p=>{
+    cumCost+=p.cost;
+    const seg=mccSegments.find(s=>cumCost>s.from&&cumCost<=s.to)||mccSegments[mccSegments.length-1];
+    const accept=p.irr>seg.wacc;
+    outHtml+=`<tr><td>${p.name}</td><td>${pct(p.irr*100)}</td><td>₹${p.cost}</td><td>₹${cumCost}</td><td>${pct(seg.wacc*100)}</td><td class="${accept?"good":"bad"}">${accept?"✓ Accept":"✗ Reject"}</td></tr>`;
+  });
+  outHtml+="</table>";
+  $("mccLabOutput").innerHTML=outHtml;
+  // Chart
+  const canvas=$("mccLabChart"); if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  canvas.width=canvas.offsetWidth||500; canvas.height=canvas.offsetHeight||320;
+  const W=canvas.width,H=canvas.height,padL=56,padB=44,padT=32,padR=20;
+  ctx.clearRect(0,0,W,H);
+  const maxX=Math.max(BP1,BP2)*2;
+  const allY=[...mccSegments.map(s=>s.wacc),...irrs].filter(isFinite);
+  const minY=Math.min(...allY)*0.9,maxY=Math.max(...allY)*1.1;
+  const toX=x=>padL+x/maxX*(W-padL-padR);
+  const toY=y=>H-padB-(y-minY)/(maxY-minY||0.01)*(H-padT-padB);
+  // MCC step line
+  ctx.strokeStyle="#1a4f8a";ctx.lineWidth=2.5;ctx.beginPath();
+  mccSegments.forEach(s=>{ctx.moveTo(toX(s.from),toY(s.wacc));ctx.lineTo(toX(s.to),toY(s.wacc));});
+  ctx.stroke();
+  // Vertical connectors
+  ctx.strokeStyle="#93b4d8";ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(toX(Math.min(BP1,BP2)),toY(mccSegments[0].wacc));ctx.lineTo(toX(Math.min(BP1,BP2)),toY(mccSegments[1].wacc));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(Math.max(BP1,BP2)),toY(mccSegments[1].wacc));ctx.lineTo(toX(Math.max(BP1,BP2)),toY(mccSegments[2].wacc));ctx.stroke();
+  ctx.setLineDash([]);
+  // IOS
+  let cx=0;
+  projs.forEach(p=>{
+    const x1=toX(cx),x2=toX(cx+p.cost),y=toY(p.irr);
+    ctx.fillStyle=p.irr>mccSegments.find(s=>cx+p.cost>s.from&&cx+p.cost<=s.to||s===mccSegments[mccSegments.length-1]).wacc?"#1a7a52":"#c0392b";
+    ctx.fillRect(x1,y,x2-x1,H-padB-y);
+    ctx.fillStyle="#fff";ctx.font="11px Inter,sans-serif";ctx.textAlign="center";
+    ctx.fillText(p.name,x1+(x2-x1)/2,y+14);
+    cx+=p.cost;
+  });
+  ctx.fillStyle="#374151";ctx.font="12px Inter,sans-serif";ctx.textAlign="center";
+  ctx.fillText("MCC Schedule vs Investment Opportunity Schedule",W/2,padT-4);
+  ctx.fillStyle="#1a4f8a";ctx.textAlign="right";ctx.font="11px Inter,sans-serif";
+  for(let i=0;i<=4;i++){const y=minY+(maxY-minY)*i/4;ctx.fillText(pct(y*100),padL-4,toY(y)+4);}
+}
+window.computeMCCLab=computeMCCLab;
+
+/* ========== MCQ BANK ========== */
+const MCQS=[
+  {q:"The cost of retained earnings is:",opts:["Zero, as no cash outflow occurs","Equal to the cost of new equity","Less than or equal to the cost of new equity due to absence of flotation costs","Greater than the cost of new equity"],ans:2,exp:"Retained earnings have an opportunity cost equal to what shareholders could earn elsewhere. Since no flotation cost is incurred, Kr ≤ Ke."},
+  {q:"Which cost of capital is tax-deductible?",opts:["Cost of equity (Ke)","Cost of preference shares (Kp)","Cost of debt (Kd) — interest is deductible","Cost of retained earnings (Kr)"],ans:2,exp:"Interest on debt is an allowable deduction for corporate income tax. Dividends (preference or equity) are not."},
+  {q:"The weighted average cost of capital (WACC) is best described as:",opts:["The cost of the cheapest source of finance","The minimum required return on new investments financed by the existing capital mix","The maximum rate a firm can afford to pay on its borrowings","The cost of equity only"],ans:1,exp:"WACC is the blended required return on the firm's assets, weighted by the capital structure proportions. It serves as the hurdle rate for investment decisions."},
+  {q:"For capital budgeting decisions, which weights should ideally be used in WACC?",opts:["Book value weights","Market value weights","Historical cost weights","Equal weights for all sources"],ans:1,exp:"Market value weights reflect the current opportunity cost of each financing source and are theoretically preferred. Book values may significantly deviate from market values."},
+  {q:"If the Hamada equation gives βU = 0.8, D/E = 1.0 and T = 30%, what is βL?",opts:["0.8","1.24","1.36","1.12"],ans:2,exp:"βL = βU × [1+(1−T)×(D/E)] = 0.8×[1+0.7×1] = 0.8×1.7 = 1.36"},
+  {q:"A firm has Ke = 15%, Kd(pre-tax) = 10%, T = 30%, weights: equity 60%, debt 40%. WACC = ?",opts:["12.4%","11.8%","13.0%","10.2%"],ans:1,exp:"WACC = 0.6×15 + 0.4×10×(1−0.3) = 9 + 2.8 = 11.8%"},
+  {q:"The marginal cost of capital (MCC) schedule rises beyond the break point because:",opts:["Tax rates increase","Cheaper sources are exhausted and more expensive funds must be raised","The risk-free rate increases","WACC is constant by definition"],ans:1,exp:"Once retained earnings or lower-cost debt tranches are exhausted, the firm must issue new equity (with flotation costs) or higher-rate debt, raising the MCC."},
+  {q:"Under Modigliani-Miller with no taxes, WACC:",opts:["Falls as leverage increases due to cheaper debt","Rises as leverage increases due to higher Ke","Remains constant regardless of leverage","First falls then rises"],ans:2,exp:"MM Proposition I (no tax): firm value is constant, so WACC = rA. As D/E rises, Ke rises proportionally (Proposition II), exactly offsetting the benefit of cheaper debt."},
+  {q:"In the dividend growth model, g is best estimated as:",opts:["Inflation rate","Prime lending rate","ROE × retention ratio (sustainable growth rate)","Average market return"],ans:2,exp:"g = ROE × b where b = 1 − payout ratio. This is the sustainable growth rate — the maximum growth achievable from reinvested profits without changing leverage."},
+  {q:"Preference dividends are excluded from the tax adjustment because:",opts:["They are smaller than interest payments","They are paid before tax computation","They are paid from post-tax profits and are not an allowable tax deduction","Preference shareholders are risk-free"],ans:2,exp:"Unlike interest (which reduces taxable income), dividends are distributed from after-tax profit. No tax shield exists for preference dividends."},
+  {q:"The break point for equity in the MCC schedule is computed as:",opts:["Available retained earnings × Equity weight","Available retained earnings ÷ Equity weight","Total capital × Equity weight","WACC ÷ Equity weight"],ans:1,exp:"BP = (Amount of lower-cost source available) / (Weight of that source). So BP_equity = Retained earnings / We."},
+  {q:"Which approach for Ke is most suitable for a firm that pays no dividends?",opts:["Dividend growth model (DGM)","CAPM","Bond-yield-plus-risk-premium","Both CAPM and Bond-yield-plus"],ans:3,exp:"DGM requires observable dividends and a dividend growth rate. CAPM and Bond-yield-plus do not depend on dividend policy, making them suitable for zero-dividend firms."},
+  {q:"Under the trade-off theory, the optimal capital structure is where:",opts:["Equity weight equals debt weight","The tax shield from debt equals the present value of distress costs","WACC is maximised","Beta equals one"],ans:1,exp:"The trade-off theory balances the tax shield benefit of debt against the rising expected costs of financial distress and agency conflicts."},
+  {q:"Excel formula for after-tax cost of debt (YTM method):",opts:["=IRR(cashflows)","=RATE(n, −I*(1−T), NP, −RV)","=NPV(r, cashflows)","=XNPV(r, cashflows, dates)"],ans:1,exp:"=RATE(n, -after_tax_coupon, net_proceeds, -redemption_value) computes the YTM on after-tax cash flows, giving the exact after-tax cost of debt."},
+  {q:"A firm's CAPM Ke = 14%, DGM Ke = 11%. The best practice is to:",opts:["Always use CAPM","Always use DGM","Average the two estimates and investigate the divergence","Use the lower estimate to be conservative"],ans:2,exp:"Best practice is to triangulate multiple methods. A large divergence signals model sensitivity — investigate growth rate estimates, risk premium assumptions, and market conditions."},
+  {q:"Flotation costs affect which component of cost of capital?",opts:["Cost of retained earnings","Cost of existing debt","Cost of new external equity issue","WACC is unaffected by flotation costs"],ans:2,exp:"Flotation costs reduce net proceeds from new equity issues, raising the effective Ke. Retained earnings have no flotation cost — hence Kr < Ke."},
+  {q:"The pecking order theory implies firms prefer financing in this order:",opts:["Equity → Debt → Retained earnings","Retained earnings → Debt → New equity","Debt → Equity → Retained earnings","New equity → Preference → Debt"],ans:1,exp:"Myers & Majluf (1984): due to information asymmetry, firms prefer internal funds (RE) first, then debt, and issue new equity only as last resort to avoid signalling undervaluation."},
+  {q:"If D/E increases and all else remains equal, what happens to Ke under MM (with tax)?",opts:["Decreases","Remains constant","Increases","First decreases then increases"],ans:2,exp:"MM Proposition II (with tax): Ke = rA + (rA−Kd)(1−T)(D/E). Ke rises linearly with D/E, though the slope is moderated by the tax shield [(1−T) factor]."},
+  {q:"What does an SML plot with beta on the X-axis and required return on Y-axis show?",opts:["The Capital Market Line for portfolios","The Security Market Line for individual assets","The WACC schedule","The MCC schedule"],ans:1,exp:"The Security Market Line (SML) is derived from CAPM: E(Ri) = Rf + β×ERP. It is a line on a beta-vs-return graph. The Capital Market Line (CML) uses standard deviation (total risk) not beta."},
+  {q:"A project's IRR is 11% and the applicable WACC is 13%. The correct decision is:",opts:["Accept — IRR exceeds 10%","Accept — always accept positive-IRR projects","Reject — IRR < WACC implies value destruction","Need more information"],ans:2,exp:"IRR < WACC means the project earns less than its cost of financing. NPV would be negative, destroying shareholder value. Reject."}
+];
+
+function renderMCQs(count=8){
+  const pool=[...MCQS].sort(()=>Math.random()-0.5).slice(0,Math.min(count,MCQS.length));
+  let html="";
+  pool.forEach((q,qi)=>{
+    html+=`<div class="quiz-card"><b>Q${qi+1}. ${q.q}</b>`;
+    q.opts.forEach((opt,oi)=>{
+      html+=`<button class="mcq-option" onclick="checkMCQ(this,${oi===q.ans},'${q.exp.replace(/'/g,"\\'")}',${qi})">${oi+1}. ${opt}</button>`;
+    });
+    html+=`<div class="answer" id="mcqFb${qi}" style="display:none"></div></div>`;
+  });
+  $("mcqContainer").innerHTML=html;
+}
+window.renderMCQs=renderMCQs;
+
+function checkMCQ(btn,correct,exp,qi){
+  const card=btn.closest(".div-quiz-card,div");
+  card.querySelectorAll(".mcq-option").forEach(b=>{b.disabled=true;});
+  btn.classList.add(correct?"correct":"wrong");
+  const fb=$("mcqFb"+qi); if(fb){fb.style.display="block";fb.innerHTML=(correct?"✅ Correct!":"❌ Incorrect.")+` ${exp}`;}
+}
+window.checkMCQ=checkMCQ;
+
+/* ========== EXAM GENERATOR ========== */
+function generateExam(){
+  const marks=+$("egMarks").value||100;
+  const mcq=$("egMCQ").value==="yes";
+  const num=$("egNum").value==="yes";
+  const theo=$("egTheo").value==="yes";
+  const diff=$("egDiff").value;
+  let html=`<h3>Cost of Capital — Model Question Paper</h3><p class="note">Total Marks: ${marks} | Time: ${Math.round(marks*1.5)} minutes | Diff: ${diff}</p><ol>`;
+  const pick=(arr,n)=>[...arr].sort(()=>Math.random()-0.5).slice(0,n);
+  if(mcq){
+    const qs=pick(MCQS,Math.min(10,MCQS.length));
+    html+=`<li><b>Multiple Choice (${Math.round(marks*0.2)} marks — 2 marks each)</b><ol>`;
+    qs.slice(0,Math.round(marks*0.2/2)).forEach(q=>html+=`<li>${q.q}<br><i>${q.opts.map((o,i)=>(i+1)+". "+o).join(" &nbsp;&nbsp; ")}</i></li>`);
+    html+="</ol></li>";
+  }
+  const numQs={easy:[
+    "A company issues 12% debentures of ₹100 FV at ₹95, redeemable at par after 6 years. Tax = 35%. Calculate after-tax Kd (approx and exact). (8 marks)",
+    "D₀ = ₹6, g = 8%, P₀ = ₹90, flotation = 4%. Find Ke and Kr. (6 marks)",
+    "Capital structure: Equity ₹400 Cr (Ke=15%), Debt ₹300 Cr (Kd=10%, T=30%), Preference ₹100 Cr (Kp=12%). Find WACC using book weights. (8 marks)",
+    "Preference shares: 13% dividend, issued at ₹98, redeemable at ₹105 after 8 years. Find Kp. Explain why no tax adjustment. (6 marks)"
+  ],hard:[
+    "Sunrise Ltd target structure: 50% equity, 50% debt. Retained earnings ₹240 Cr, Kr=13%, Ke=16%, Kd₁ AT=7% (up to ₹200 Cr), Kd₂ AT=9.5%. Projects: X(IRR 18%, ₹100Cr), Y(IRR 14%, ₹200Cr), Z(IRR 12%, ₹150Cr), W(IRR 10%, ₹100Cr). Draw MCC schedule, plot IOS, determine optimal capital budget. (16 marks)",
+    "Using the Hamada equation: comparable firm βL=1.1, D/E=0.5, T=30%. Your firm D/E=1.2. Rƒ=7%, Rm=14%. Also estimate Ke using DGM: D₀=₹9, g=9%, P₀=₹150, f=5%. Compute CAPM Ke and DGM Ke. Comment on divergence. (12 marks)",
+    "Derive the MM WACC formula with corporate tax. Show how PV(tax shield)=T×D under perpetual debt. Explain why 100% debt is theoretically optimal under MM but not in practice. (10 marks)",
+    "Ashoka Steel: 14% debentures ₹500 Cr (market ₹470 Cr), 12% preference ₹100 Cr (market ₹92 Cr), equity 2 Cr shares at ₹10 FV, CMP ₹320. RE = ₹80 Cr. D₀=₹14, g=10%, f=5%, T=30%. Calculate WACC on both book and market weights. Comment on difference. (14 marks)"
+  ]};
+  const pool=diff==="easy"?numQs.easy:diff==="hard"?numQs.hard:[...numQs.easy,...numQs.hard];
+  if(num){
+    const qs=pick(pool,3);
+    html+="<li><b>Numerical Problems</b><ol>";
+    qs.forEach(q=>html+=`<li>${q}</li>`);
+    html+="</ol></li>";
+  }
+  if(theo){
+    const tqs=pick(["Explain the concept of opportunity cost as applied to retained earnings. Why is Kr > 0?","Compare book value and market value weights in WACC computation. Which is preferred and why?","Describe the MCC schedule. How do break points arise and how does the MCC schedule interact with the IOS?","Explain the Hamada equation and demonstrate how to estimate beta for an unlisted firm using the pure-play method.","Compare the three methods of estimating the cost of equity: DGM, CAPM, and Bond-yield-plus. When would each be preferred?","'Under MM (no tax), WACC is constant.' Derive this result from first principles and explain its assumptions.","Explain the trade-off theory of capital structure. What does it imply about the relationship between leverage and WACC?","Distinguish between the marginal cost of capital and the weighted average cost of capital. Why is the marginal cost relevant for new investment decisions?"],3);
+    html+="<li><b>Theory/Essay Questions</b><ol>";
+    tqs.forEach(q=>html+=`<li>${q}</li>`);
+    html+="</ol></li>";
+  }
+  html+="</ol>";
+  $("egPaper").innerHTML=html;
+}
+window.generateExam=generateExam;
+
+/* ========== GLOSSARY ========== */
+const GLOSSARY=[
+  ["After-tax cost of debt","Kd × (1−T). The effective cost of debt after the corporate tax shield on interest; always lower than the pre-tax coupon rate."],
+  ["Beta (β)","A measure of systematic (market) risk. β = Cov(Ri, Rm)/Var(Rm). β=1 moves with market; >1 aggressive; <1 defensive."],
+  ["Bond-yield-plus-risk-premium","Ke estimate = pre-tax Kd + equity risk premium (3–5%). Useful when DGM/CAPM data is unreliable."],
+  ["Break point","Funding level at which the MCC schedule steps up because a cheaper source of finance is exhausted. BP = Limit/Weight."],
+  ["CAPM","Capital Asset Pricing Model. Ke = Rƒ + β(Rm−Rƒ). Links required return to systematic risk."],
+  ["Capital Asset Pricing Model","See CAPM."],
+  ["Composite cost of capital","See WACC."],
+  ["Cost of capital","Minimum required rate of return on investment needed to satisfy all capital providers. Used as hurdle rate and discount rate."],
+  ["Cost of debt (Kd)","Pre-tax or after-tax rate of return required by debt holders. After-tax Kd = Kd_pre × (1−T)."],
+  ["Cost of equity (Ke)","Required return on equity capital, estimated via DGM, CAPM, E/P, or bond-yield-plus. Highest explicit cost due to equity's residual risk."],
+  ["Cost of preference (Kp)","Required return on preference shares. No tax shield. Kp = Div/NP for irredeemable; approximate or YTM for redeemable."],
+  ["Cost of retained earnings (Kr)","Opportunity cost of reinvested profits. Kr ≤ Ke (no flotation cost on internal funds). Kr = D₁/P₀ + g (DGM)."],
+  ["Dividend growth model","Gordon's DGM: Ke = D₁/P₀ + g. Assumes constant dividend growth forever. Fails for zero-dividend firms."],
+  ["Equity risk premium (ERP)","Rm − Rƒ. The excess return of the market portfolio over the risk-free rate. Compensates equity holders for systematic risk."],
+  ["Flotation cost","Expenses of issuing new securities (underwriting, brokerage, legal). Reduces net proceeds and raises effective Ke."],
+  ["Hamada equation","βL = βU × [1+(1−T)(D/E)]. Separates business risk (βU) from financial risk. Used to re-lever beta across firms or structures."],
+  ["Hurdle rate","Minimum acceptable rate of return on an investment, typically equal to WACC for projects of average firm risk."],
+  ["Investment opportunity schedule (IOS)","Projects ranked by IRR from highest to lowest, plotted against cumulative investment. Optimal budget is where MCC = IOS."],
+  ["Marginal cost of capital (MCC)","Cost of the next rupee of new capital raised. Rises beyond break points as cheaper sources are exhausted."],
+  ["Market value weight","Proportion of each capital source based on current market values. Theoretically preferred for WACC computation."],
+  ["MM Proposition I","Modigliani-Miller: with no taxes and perfect markets, firm value is unaffected by capital structure. WACC is constant."],
+  ["MM Proposition II","Ke rises proportionally with D/E to exactly offset the advantage of cheaper debt, keeping WACC constant (no-tax case)."],
+  ["Net proceeds (NP)","Amount actually received from issuing a security = Issue price − Flotation costs."],
+  ["Opportunity cost","Return forgone by committing resources to a particular use. The basis for the cost of retained earnings."],
+  ["Pecking order theory","Myers & Majluf: firms prefer internal finance (RE) → debt → new equity, due to information asymmetry. No target D/E."],
+  ["Pure-play method","Estimating beta for a private or diversifying firm by finding a comparable listed firm with only that business exposure, unlevering its beta, and re-levering at the target D/E."],
+  ["Required rate of return","Return that satisfies capital providers given the time value of money and risk. Market-determined, not managerial."],
+  ["Risk premium","Compensation for bearing systematic risk above the risk-free rate. β × (Rm−Rƒ) in CAPM."],
+  ["Security Market Line (SML)","Graphical representation of CAPM: E(Ri) = Rƒ + β×ERP. Line through Rƒ on return-axis and slope ERP."],
+  ["Sustainable growth rate","g = ROE × b where b = retention ratio. Maximum growth achievable without changing leverage or issuing equity."],
+  ["Tax shield","Reduction in tax liability from interest deductibility. PV of tax shield on perpetual debt = T×D (MM)."],
+  ["Trade-off theory","Capital structure balances PV(tax shield) against PV(distress costs). Implies an optimal D/E where WACC is minimised."],
+  ["WACC","Weighted Average Cost of Capital. Σ Wᵢ×Kᵢ(AT). The firm's blended required return; used as the investment hurdle rate."],
+  ["YTM (Yield to maturity)","The internal rate of return of a bond's cash flows. Used as the exact (precise) cost of debt rather than the approximate formula."]
+];
+function renderGlossary(filter=""){
+  const f=filter.toLowerCase();
+  $("glList").innerHTML=GLOSSARY.filter(([t,d])=>t.toLowerCase().includes(f)||d.toLowerCase().includes(f))
+    .map(([t,d])=>`<div class="quiz-card"><b>${t}</b><div class='note' style='margin-top:4px'>${d}</div></div>`).join("")
+    ||'<p class="note">No terms match.</p>';
+}
+function filterGlossary(){renderGlossary($("glSearch").value);}
+window.filterGlossary=filterGlossary;
+
+/* ========== MASTER SEARCH ========== */
+const SEARCH_INDEX=[];
+function buildSearchIndex(){
+  document.querySelectorAll(".tab").forEach(t=>{
+    SEARCH_INDEX.push({page:t.dataset.page,title:t.textContent.trim(),body:($(t.dataset.page)?.textContent||"").replace(/\s+/g," ").slice(0,4000)});
+  });
+}
+function runMasterSearch(){
+  const q=($("masterSearch")?.value||"").trim().toLowerCase();
+  const out=$("masterSearchResults"); if(!out)return;
+  if(!q){out.innerHTML='<p class="muted">Type a topic — e.g. WACC, Kd, CAPM, beta, MCC, flotation — to jump straight to it.</p>';return;}
+  const hits=SEARCH_INDEX.map(s=>{
+    const t=s.title.toLowerCase(),b=s.body.toLowerCase();
+    let score=0;if(t.includes(q))score+=100;const bi=b.indexOf(q);if(bi>=0)score+=40;
+    return {s,score,bi};
+  }).filter(h=>h.score>0).sort((a,b)=>b.score-a.score).slice(0,20);
+  if(!hits.length){out.innerHTML='<p class="muted">No matches. Try a shorter keyword.</p>';return;}
+  out.innerHTML=hits.map(h=>{
+    let snip="";if(h.bi>=0){const start=Math.max(0,h.bi-60);snip="…"+h.s.body.slice(start,h.bi+80)+"…";}
+    return `<div class="quiz-card"><button class="small-btn" onclick="activatePage('${h.s.page}')">Go to: ${h.s.title}</button><div class="note" style="margin-top:6px">${snip}</div></div>`;
+  }).join("");
+}
+
+/* ========== INIT ALL ========== */
+window.RUN_ALL=[computeDash,computeKd,computeKp,computeKe,computeCapmQuick,computeKr,computeFlotation,computeWACC,computeBM,computeCS,computeCAPMFull,computeMultiKe,computeCalcKd,computeCalcKe,computeWACCTable,computeFCAPM];
+
+document.addEventListener("DOMContentLoaded",()=>{
+  buildSearchIndex();
+  const ms=$("masterSearch");if(ms)ms.addEventListener("input",runMasterSearch);
+  runMasterSearch();
+  renderMCQs(8);
+  renderGlossary();
+  if(window.RUN_ALL)window.RUN_ALL.forEach(fn=>{try{fn();}catch(e){}});
+});
+let _rz;window.addEventListener("resize",()=>{clearTimeout(_rz);_rz=setTimeout(()=>{if(window.RUN_ALL)window.RUN_ALL.forEach(fn=>{try{fn();}catch(e){}});},200);});
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

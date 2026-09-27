@@ -1,0 +1,1540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Internal Rate of Return — Interactive Deep-Dive Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f3fa;--card:#fff;--ink:#141828;--muted:#546080;--line:#d4daea;
+  --navy:#1a3068;--navy-d:#0d1a3a;--navy-l:#e6ecf8;
+  --teal:#0a6b5a;--teal-l:#e0f4ef;
+  --gold:#a86b00;--gold-l:#fdf3e0;--gold-d:#7a4e00;
+  --red:#9e2020;--red-l:#fceaea;
+  --green:#136038;--green-l:#e2f4ea;
+  --purple:#5230a0;--purple-l:#eeeafa;
+  --orange:#b54a00;--orange-l:#fff0e6;
+  --nav-bg:#e2e8f4;color-scheme:light
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:17px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.65 'Inter',system-ui,sans-serif}
+.wrap{max-width:1480px;margin:auto;padding:16px}
+
+/* HERO */
+.hero{padding:36px 40px 32px;border-radius:22px;background:linear-gradient(140deg,#060e28 0%,#1a3068 55%,#2a50a8 100%);color:#fff;position:relative;overflow:hidden;box-shadow:0 18px 56px #060e2860}
+.hero::before{content:"";position:absolute;right:-60px;top:-60px;width:360px;height:360px;border-radius:50%;background:rgba(120,180,255,.07);pointer-events:none}
+.hero::after{content:"";position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#a86b00,#f0c040,#a86b00)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#ffffff15;border:1px solid #ffffff25;padding:5px 15px;border-radius:999px;font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;color:#b8d0ff}
+.hero h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(26px,4vw,54px);margin:0 0 12px;line-height:1.06;letter-spacing:-.01em}
+.hero h1 em{color:#f0c040;font-style:italic}
+.hero p{margin:0;max-width:1060px;opacity:.93;font-size:1rem;line-height:1.65}
+.hero-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hero-acts button{border:1px solid #ffffff30;background:#ffffff15;color:#fff;border-radius:10px;padding:9px 17px;font-weight:700;cursor:pointer;font-size:.86rem;font-family:inherit;transition:.14s}
+.hero-acts button.on{background:#fff;color:var(--navy-d)}
+.hero-acts button:hover{background:#ffffff28}
+
+/* NAV */
+.nav{display:flex;flex-wrap:nowrap;gap:5px;padding:9px 11px;margin:13px 0 0;background:var(--nav-bg);border:1px solid var(--line);border-radius:15px;overflow-x:auto;scrollbar-width:thin;position:sticky;top:0;z-index:10}
+.tab{border:1px solid #b4c4dc;background:#fff;color:#223060;padding:7px 11px;border-radius:8px;font-weight:700;font-size:.79rem;white-space:nowrap;cursor:pointer;transition:.12s;font-family:inherit}
+.tab:hover{border-color:#6090c0;transform:translateY(-1px)}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 4px 14px #1a306840}
+.navsep{align-self:center;padding:0 4px;font-size:.6rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#7888b0;white-space:nowrap;user-select:none}
+
+/* PAGES */
+.page{display:none}.page.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:.2}to{opacity:1}}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s9{grid-column:span 9}.s12{grid-column:span 12}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:22px;box-shadow:0 2px 12px #14182808}
+.cn{border-top:4px solid var(--navy)}.ct{border-top:4px solid var(--teal)}.cg{border-top:4px solid var(--gold)}.cr{border-top:4px solid var(--red)}.cgreen{border-top:4px solid var(--green)}.cp{border-top:4px solid var(--purple)}.co{border-top:4px solid var(--orange)}
+h2{font-family:'Playfair Display',Georgia,serif;margin:0 0 12px;font-size:1.55rem;line-height:1.18;letter-spacing:-.01em}
+h3{margin:16px 0 7px;font-size:1.02rem;font-weight:700}h3:first-child{margin-top:0}
+.muted{color:var(--muted)}.kicker{font-size:.75rem;text-transform:uppercase;letter-spacing:.11em;font-weight:800;color:var(--gold);margin-bottom:6px}
+
+/* INPUTS */
+label{display:block;font-weight:600;margin:11px 0 4px;font-size:.9rem}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font:inherit;font-size:.94rem}
+input:focus,select:focus{outline:2px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+button{border:0;border-radius:9px;padding:10px 15px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;font-size:.94rem;font-family:inherit;transition:.13s}
+button:hover{filter:brightness(1.1)}
+.btn-sm{padding:7px 11px;font-size:.82rem}.btn-teal{background:var(--teal)}.btn-gold{background:var(--gold)}.btn-ghost{background:var(--navy-l);color:var(--navy-d)}.btn-green{background:var(--green);color:#fff}
+
+/* FORMULA */
+.formula{background:var(--navy-d);color:#b8d0ff;border-radius:12px;padding:16px 20px;font:1rem/1.75 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;margin:9px 0}
+.formula b{color:#f0d060}
+
+/* CALLOUTS */
+.callout{padding:13px 15px;border-left:4px solid var(--navy);background:var(--navy-l);border-radius:9px;font-size:.95rem;margin:9px 0}
+.ca{border-color:var(--gold);background:var(--gold-l)}.cr2{border-color:var(--red);background:var(--red-l)}.cg2{border-color:var(--green);background:var(--green-l)}.ct2{border-color:var(--teal);background:var(--teal-l)}.cp2{border-color:var(--purple);background:var(--purple-l)}.co2{border-color:var(--orange);background:var(--orange-l)}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:.9rem}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{background:#edf0f8;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+tr:last-child td{border-bottom:none}.scroll{overflow-x:auto;max-height:460px}
+
+/* METRICS */
+.metrics{display:grid;gap:9px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}.c5{grid-template-columns:repeat(5,1fr)}
+.metric{padding:13px 15px;border-radius:12px;background:#edf0f8;border:1px solid #c8d0e8}
+.metric small{color:var(--muted);font-size:.73rem;text-transform:uppercase;letter-spacing:.04em;display:block}
+.metric strong{display:block;font-size:1.28rem;font-weight:800;margin-top:3px}
+
+/* STEPS */
+.stepflow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.step{background:var(--navy-l);border:1px solid #b0bcd8;color:#0d1a3a;padding:8px 14px;border-radius:9px;font-weight:700;font-size:.85rem}
+.arr{color:var(--muted)}
+
+/* TWO / THREE */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:11px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.adv{border-left:4px solid var(--green);background:var(--green-l);padding:11px 14px;border-radius:9px;margin:5px 0}
+.lim{border-left:4px solid var(--red);background:var(--red-l);padding:11px 14px;border-radius:9px;margin:5px 0}
+.na{border-left:4px solid var(--gold);background:var(--gold-l);padding:11px 14px;border-radius:9px;margin:5px 0}
+.nt{border-left:4px solid var(--teal);background:var(--teal-l);padding:11px 14px;border-radius:9px;margin:5px 0}
+.np{border-left:4px solid var(--purple);background:var(--purple-l);padding:11px 14px;border-radius:9px;margin:5px 0}
+
+/* QUIZ */
+.quiz-card{padding:15px 17px;border:1px solid var(--line);border-radius:13px;margin:9px 0}
+.answer{margin-top:9px;padding:11px 13px;border-radius:9px;background:var(--navy-l);font-size:.93rem}
+.mcq-opt{display:block;width:100%;text-align:left;padding:9px 13px;margin:4px 0;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:.92rem;font-weight:500;font-family:inherit;transition:.11s}
+.mcq-opt:hover{background:var(--navy-l);border-color:#9aaecc}
+.mcq-opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green)}
+.mcq-opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+
+/* CHIPS / PILLS */
+.chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;background:var(--navy-l);color:var(--navy-d);font-weight:700;font-size:.8rem;margin:2px 3px 2px 0}
+.chip-g{background:var(--green-l);color:var(--green)}.chip-r{background:var(--red-l);color:var(--red)}.chip-a{background:var(--gold-l);color:var(--gold-d)}.chip-t{background:var(--teal-l);color:var(--teal)}.chip-p{background:var(--purple-l);color:var(--purple)}
+.pillrow{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+
+/* DASH */
+.dash-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:12px 0}
+.dash-cell{padding:13px;border-radius:12px;background:#fff;border:1px solid var(--line);text-align:center}
+.dash-cell small{display:block;color:var(--muted);font-size:.71rem;text-transform:uppercase;letter-spacing:.05em}
+.dash-cell .val{font-size:1.2rem;font-weight:800;margin:4px 0;color:var(--navy)}
+
+/* VERDICT */
+.verdict{display:inline-block;padding:4px 13px;border-radius:8px;font-weight:800;font-size:.88rem}
+.v-accept{background:var(--green-l);color:var(--green)}.v-reject{background:var(--red-l);color:var(--red)}.v-neutral{background:var(--gold-l);color:var(--gold-d)}
+.good{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}.warn{color:var(--gold);font-weight:700}
+
+/* TEACHER */
+.teacher-note{display:none;border-left:4px solid var(--gold);background:var(--gold-l);padding:11px 14px;border-radius:9px;margin-top:9px;font-size:.91rem}
+body.teacher .teacher-note{display:block}
+
+/* CANVAS */
+canvas{display:block;width:100%;border-radius:11px;border:1px solid var(--line);background:#fff}
+
+/* SLIDER */
+input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) var(--pct,40%),var(--line) var(--pct,40%));border:none;padding:0;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--navy);border:3px solid #fff;box-shadow:0 2px 8px #1a306840;cursor:pointer}
+
+/* RESPONSIVE */
+@media(max-width:1060px){.s3,.s4,.s5,.s6,.s7,.s8,.s9{grid-column:span 6}.dash-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.s3,.s4,.s5,.s6,.s7,.s8,.s9,.s12{grid-column:span 12}.two,.three{grid-template-columns:1fr}.metrics.c3,.metrics.c4{grid-template-columns:1fr 1fr}.dash-grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:10px}}
+@media print{.nav,.hero-acts,button,input,select{display:none!important}.page{display:block!important}.card{box-shadow:none;border:1px solid #bbb;break-inside:avoid}body{background:#fff}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Corporate Finance · Capital Budgeting · Internal Rate of Return</div>
+  <h1>Internal Rate of Return<br><em>Interactive Deep-Dive Lab</em></h1>
+  <p>A comprehensive, fully offline lab on the <b>Internal Rate of Return (IRR)</b> — the most popular (and most misunderstood) investment metric in corporate finance. Covers the concept, the IRR equation, manual calculation by interpolation, numerical root-finding, the NPV-vs-rate profile, <b>multiple IRRs</b>, the no-IRR case, the reinvestment assumption, MIRR, XIRR, and the classic <b>IRR vs NPV conflicts</b> (scale, timing, mutually exclusive). Supports Indian ₹ throughout, and every computation runs live in your browser.</p>
+  <div class="hero-acts">
+    <button id="modeStudent" class="on" onclick="setMode('student')">Student Mode</button>
+    <button id="modeTeacher" onclick="setMode('teacher')">Teacher Mode</button>
+    <button onclick="window.print()">Print / PDF</button>
+  </div>
+</header>
+
+<nav class="nav">
+  <span class="navsep">Start</span>
+  <button class="tab active" data-page="dashboard">Dashboard</button>
+  <button class="tab" data-page="concept">Concept &amp; Meaning</button>
+  <span class="navsep">Foundations</span>
+  <button class="tab" data-page="equation">The IRR Equation</button>
+  <button class="tab" data-page="methods">Calculation Methods</button>
+  <button class="tab" data-page="profile">NPV Profile &amp; IRR</button>
+  <span class="navsep">Special Cases</span>
+  <button class="tab" data-page="multi_irr">Multiple IRRs</button>
+  <button class="tab" data-page="no_irr">No IRR / Negative IRR</button>
+  <button class="tab" data-page="reinvest">Reinvestment Assumption</button>
+  <span class="navsep">Other Metrics</span>
+  <button class="tab" data-page="mirr">Modified IRR (MIRR)</button>
+  <button class="tab" data-page="xirr">XIRR (Dated CFs)</button>
+  <span class="navsep">Comparison</span>
+  <button class="tab" data-page="vs_npv">IRR vs NPV — Side by Side</button>
+  <button class="tab" data-page="conflicts">IRR vs NPV Conflicts</button>
+  <span class="navsep">Calculators</span>
+  <button class="tab" data-page="calc_irr">IRR Calculator</button>
+  <button class="tab" data-page="calc_mirr">MIRR Calculator</button>
+  <button class="tab" data-page="calc_xirr">XIRR Calculator</button>
+  <button class="tab" data-page="calc_compare">IRR vs NPV Compare</button>
+  <span class="navsep">Practice</span>
+  <button class="tab" data-page="examples">Worked Examples</button>
+  <button class="tab" data-page="mcq">MCQ Bank</button>
+  <button class="tab" data-page="exam_gen">Exam Generator</button>
+  <span class="navsep">Ref</span>
+  <button class="tab" data-page="formula_bank">Formula Bank</button>
+  <button class="tab" data-page="glossary">Glossary</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active"><div class="grid" style="margin-top:14px">
+<div class="card s12 cn" style="background:linear-gradient(135deg,#f5f7fc,var(--navy-l))">
+  <div class="kicker">Signature Tool — Live IRR Engine</div>
+  <h2>IRR Dashboard — Enter Any Project, See Everything</h2>
+  <p class="muted" style="margin-top:-6px;margin-bottom:14px">Enter cash flows and a discount rate. The dashboard solves for the IRR (including <b>all</b> roots when there are several), computes NPV at your required rate, derives MIRR, and draws the NPV profile marking every IRR crossing — all live.</p>
+  <div class="grid">
+    <div class="s4">
+      <label>Initial Investment (₹) — enter as positive</label><input id="d_icf" type="number" value="1000000" step="10000">
+      <label>Required / Discount Rate — WACC (%)</label><input id="d_r" type="number" value="12" step="0.5">
+      <label>Finance rate for MIRR (%)</label><input id="d_fin" type="number" value="12" step="0.5">
+      <label>Reinvest rate for MIRR (%)</label><input id="d_rin" type="number" value="12" step="0.5">
+      <label>Cash Flow Pattern</label>
+      <select id="d_pattern" onchange="handlePattern()">
+        <option value="custom">Custom — enter each year separately</option>
+        <option value="annuity">Uniform Annuity</option>
+        <option value="growing">Growing Annuity</option>
+      </select>
+      <div id="d_pattern_inputs"></div>
+      <div id="d_custom_cfs">
+        <label>Number of years</label>
+        <select id="d_n" onchange="renderDCFs()"><option>1</option><option>2</option><option>3</option><option>4</option><option value="5" selected>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+        <div id="d_cfs_div"></div>
+      </div>
+      <button onclick="runDash()" style="margin-top:14px;width:100%">Compute IRR, NPV &amp; MIRR</button>
+    </div>
+    <div class="s8">
+      <div class="dash-grid">
+        <div class="dash-cell"><small>IRR (1st root)</small><div class="val" id="dm_irr">—</div></div>
+        <div class="dash-cell"><small># of IRRs</small><div class="val" id="dm_nirr">—</div></div>
+        <div class="dash-cell"><small>NPV @ WACC</small><div class="val" id="dm_npv">—</div></div>
+        <div class="dash-cell"><small>MIRR</small><div class="val" id="dm_mirr">—</div></div>
+        <div class="dash-cell"><small>Decision</small><div class="val" id="dm_verdict">—</div></div>
+      </div>
+      <h3>NPV Profile — Discount Rate vs NPV (IRR = x-intercept)</h3>
+      <canvas id="dashCanvas" height="260"></canvas>
+      <div id="dashCallout" class="callout" style="margin-top:10px">Enter values and click Compute.</div>
+    </div>
+  </div>
+  <h3 style="margin-top:16px">Discounting Schedule</h3>
+  <div class="scroll"><table id="dashTable">
+    <tr><th>Year</th><th>Cash Flow (₹)</th><th>PV Factor</th><th>Present Value (₹)</th><th>Cumulative PV (₹)</th></tr>
+  </table></div>
+</div>
+<div class="card s5">
+  <div class="kicker">Find Anything</div>
+  <h3>Master Search</h3>
+  <input id="masterSearch" type="text" placeholder="Search: interpolation, MIRR, multiple IRR, XIRR, crossover…">
+  <div id="masterSearchResults" style="margin-top:11px"></div>
+</div>
+<div class="card s7">
+  <div class="kicker">Learning Path</div>
+  <h3>Suggested sequence</h3>
+  <div class="stepflow">
+    <span class="step">1 · Concept</span><span class="arr">→</span>
+    <span class="step">2 · The Equation</span><span class="arr">→</span>
+    <span class="step">3 · Calculation</span><span class="arr">→</span>
+    <span class="step">4 · NPV Profile</span><span class="arr">→</span>
+    <span class="step">5 · Special Cases</span><span class="arr">→</span>
+    <span class="step">6 · MIRR / XIRR</span><span class="arr">→</span>
+    <span class="step">7 · IRR vs NPV</span>
+  </div>
+  <div class="pillrow" style="margin-top:10px">
+    <button class="btn-sm btn-ghost" onclick="activatePage('calc_irr')">IRR Calc</button>
+    <button class="btn-sm btn-ghost" onclick="activatePage('calc_mirr')">MIRR Calc</button>
+    <button class="btn-sm btn-ghost" onclick="activatePage('calc_xirr')">XIRR Calc</button>
+    <button class="btn-sm btn-ghost" onclick="activatePage('calc_compare')">Compare</button>
+    <button class="btn-sm btn-ghost" onclick="activatePage('vs_npv')">Side-by-Side</button>
+  </div>
+</div>
+</div></section>
+
+<!-- CONCEPT -->
+<section id="concept" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cn">
+  <div class="kicker">Concept &amp; Meaning</div>
+  <h2>Internal Rate of Return — Concept and Meaning</h2>
+  <p>The <b>Internal Rate of Return (IRR)</b> is the discount rate that makes the <b>Net Present Value (NPV)</b> of a project's cash flows exactly equal to zero. In plain terms, it is the <em>effective annual yield</em> the project earns on the capital invested — the break-even rate of return at which the project neither creates nor destroys value.</p>
+  <div class="callout"><b>Core definition:</b> IRR is the rate <code>r</code> that satisfies:<br>NPV(r) = C₀ + C₁/(1+r)¹ + C₂/(1+r)² + … + Cₙ/(1+r)ⁿ = 0<br>Equivalently: the rate at which the PV of inflows exactly equals the PV of outflows.</div>
+  <h3>The economic intuition behind IRR</h3>
+  <p>Imagine the project as a special "bank account." You deposit the initial outlay C₀ today, and the account pays back the future cash flows C₁, C₂, …, Cₙ. The IRR is the <b>implicit interest rate</b> that this account earns. If that rate exceeds what you could earn elsewhere at equivalent risk (your WACC), the project adds value; if it falls short, the project destroys value relative to the alternative.</p>
+  <div class="three" style="margin:14px 0">
+    <div class="nt" style="text-align:center"><b style="font-size:1.1rem;color:var(--green)">IRR &gt; WACC</b><br>Project earns MORE than the cost of capital.<br>Wealth is CREATED.<br><span class="chip-g chip">ACCEPT</span></div>
+    <div class="na" style="text-align:center"><b style="font-size:1.1rem;color:var(--gold)">IRR = WACC</b><br>Project earns EXACTLY the cost of capital.<br>Investors fairly compensated.<br><span class="chip-a chip">INDIFFERENT</span></div>
+    <div style="border-left:4px solid var(--red);background:var(--red-l);padding:11px 14px;border-radius:9px;text-align:center"><b style="font-size:1.1rem;color:var(--red)">IRR &lt; WACC</b><br>Project earns LESS than the cost of capital.<br>Wealth is DESTROYED.<br><span class="chip-r chip">REJECT</span></div>
+  </div>
+  <h3>Why IRR is so popular (and where it misleads)</h3>
+  <ul>
+    <li><b>Intuitive communication:</b> "This project returns 22% against our 12% cost of capital" is far easier for non-finance managers to grasp than "NPV = ₹4.8 lakh."</li>
+    <li><b>Scale-independent:</b> IRR is a percentage, so it looks comparable across projects of different sizes — but that is exactly where it can mislead (see the scale conflict).</li>
+    <li><b>No need to specify a discount rate to compute it:</b> the IRR is intrinsic to the cash flows, which is convenient — but it still must be compared to a separately-chosen hurdle rate.</li>
+    <li><b>Pitfall:</b> Unlike NPV, IRR can give <b>multiple answers</b>, can be <b>undefined</b>, implicitly assumes <b>reinvestment at the IRR</b>, and can <b>rank projects incorrectly</b> for mutually exclusive choices.</li>
+  </ul>
+  <div class="teacher-note"><b>Teaching note:</b> Introduce IRR through the bank-account analogy, then immediately contrast with NPV. Ask: "Two projects — A returns 50% on ₹1,000 (₹500 profit); B returns 20% on ₹10,000 (₹2,000 profit). Which is better for the firm?" IRR says A; NPV says B. Plant the seed that IRR is a communication tool, not the final arbiter.</div>
+</div>
+<div class="card s4">
+  <h3>IRR in one sentence</h3>
+  <div class="callout ca" style="font-size:1.05rem"><b>"IRR is the break-even discount rate of a project — the rate at which its NPV is zero — and we accept it only when that rate beats our required return."</b></div>
+  <h3 style="margin-top:14px">Historical note</h3>
+  <p class="muted" style="font-size:.9rem">Like NPV, IRR descends from Irving Fisher's capital theory and was popularised in the mid-20th century. It remains the most widely quoted capital-budgeting metric in corporate practice even though academics favour NPV — which is precisely why understanding its conflicts with NPV is essential.</p>
+  <h3>IRR vs Profit</h3>
+  <table>
+    <tr><th>Feature</th><th>Accounting Profit</th><th>IRR</th></tr>
+    <tr><td>Time value</td><td class="bad">Ignored</td><td class="good">Fully incorporated</td></tr>
+    <tr><td>Basis</td><td class="bad">Accrual accounting</td><td class="good">Cash flows</td></tr>
+    <tr><td>Risk</td><td class="bad">Not captured</td><td class="good">In discount rate (comparison)</td></tr>
+    <tr><td>Single answer?</td><td class="good">Yes</td><td class="bad">May have multiple / none</td></tr>
+  </table>
+</div>
+</div></section>
+
+<!-- EQUATION -->
+<section id="equation" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cn">
+  <div class="kicker">Foundations</div>
+  <h2>The IRR Equation — Explained Term by Term</h2>
+  <div class="formula"><b>0 = C₀ + C₁/(1+IRR)¹ + C₂/(1+IRR)² + … + Cₙ/(1+IRR)ⁿ</b>
+
+Where:
+  C₀  = Initial investment (usually negative: the outlay at Year 0)
+  Cₜ  = Net cash flow in year t (positive = inflow, negative = outflow)
+  IRR = The unknown rate that solves the equation
+  n   = Project life
+
+<b>Solving for IRR is "finding the root" of the NPV function:</b>
+  Define f(r) = NPV(r). We seek r such that f(r) = 0.
+  The IRR is the x-intercept of the NPV-vs-rate curve.</div>
+  <h3>Why there is no closed-form formula</h3>
+  <p>For a single cash flow (lump sum) or a level annuity, the IRR can be isolated algebraically. But for <b>general uneven cash flows</b> the NPV equation is a polynomial of degree n in (1+IRR), and there is no general algebraic solution for degree ≥ 5. So IRR is almost always found by <b>numerical methods</b>: trial-and-error with interpolation, bisection, the secant method, or Newton's method. Spreadsheet <code>=IRR()</code> and the engine on this page use exactly such root-finding.</p>
+  <h3>Algebraic IRR — simple special cases</h3>
+  <table>
+    <tr><th>Case</th><th>IRR formula</th><th>Example</th></tr>
+    <tr><td>Single lump sum at year n</td><td>IRR = (Cₙ/|C₀|)^(1/n) − 1</td><td>Outlay ₹5L, receive ₹8L in 5 yrs → (1.6)^0.2−1 = 9.86%</td></tr>
+    <tr><td>Level annuity, n years</td><td>Solve PVIFA(IRR,n) = |C₀|/CF</td><td>Outlay ₹5L, ₹1.6L/yr for 5 yrs → PVIFA=3.125 → IRR≈17%</td></tr>
+    <tr><td>Perpetual annuity</td><td>IRR = CF/|C₀| − growth (if any)</td><td>Outlay ₹10L, ₹1.4L/yr forever → 14%</td></tr>
+  </table>
+  <div class="callout" style="margin-top:12px"><b>Key insight:</b> The IRR is <b>intrinsic to the cash-flow pattern</b> — it does not depend on your discount rate. You compute the IRR from the cash flows alone, then <em>judge</em> it against your WACC. This separation is why IRR feels "standalone," but also why it must always be interpreted relative to a hurdle rate.</div>
+  <div class="teacher-note"><b>Teaching note:</b> Have students solve the single-lump-sum IRR by hand first (it only requires an nth root), then the annuity IRR by reading the PVIFA table backwards. Only then introduce the full polynomial and numerical methods — students appreciate <em>why</em> computers are needed.</div>
+</div>
+<div class="card s4">
+  <h3>The IRR decision rule</h3>
+  <div class="formula" style="font-size:.92rem">Standalone (independent) project:
+  IRR &gt; WACC → ACCEPT
+  IRR = WACC → Indifferent
+  IRR &lt; WACC → REJECT
+
+Mutually exclusive projects:
+  DO NOT simply pick the
+  highest IRR — rank by NPV.
+  (IRR can misrank; see Conflicts.)
+
+Capital rationing:
+  IRR alone is insufficient;
+  use Profitability Index (PI)
+  to rank within the budget.</div>
+  <h3>Common errors in IRR use</h3>
+  <ul style="font-size:.9rem">
+    <li>Picking the highest IRR among mutually exclusive projects</li>
+    <li>Forgetting IRR can have multiple or zero solutions</li>
+    <li>Treating IRR as a "safe" percentage without checking NPV</li>
+    <li>Ignoring the reinvestment-rate assumption</li>
+    <li>Comparing IRRs of projects with different lives</li>
+  </ul>
+</div>
+</div></section>
+
+<!-- METHODS -->
+<section id="methods" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cg">
+  <div class="kicker">Foundations</div>
+  <h2>Calculation Methods for IRR</h2>
+  <p>Because the IRR equation is generally a high-degree polynomial, we use practical solution techniques. All of them amount to <b>finding the discount rate at which NPV = 0</b>.</p>
+  <h3>Method 1 — Trial-and-error with linear interpolation</h3>
+  <div class="formula"><b>1.</b> Guess two rates r₁, r₂ that bracket zero: NPV(r₁) &gt; 0 and NPV(r₂) &lt; 0.
+<b>2.</b> Linearly interpolate between them:
+    IRR ≈ r₁ + (r₂ − r₁) × [ NPV(r₁) / (NPV(r₁) − NPV(r₂)) ]
+
+<b>Worked example:</b> Flows −₹1000, ₹300, ₹420, ₹680; r = 10% → NPV = +33.6; r = 15% → NPV = −58.9.
+  IRR ≈ 10% + 5% × [33.6 / (33.6 − (−58.9))]
+      = 10% + 5% × (33.6 / 92.5)
+      = 10% + 5% × 0.363 = <b>11.8%</b>   (true IRR ≈ 12.0%)</div>
+  <p class="muted" style="font-size:.9rem">Interpolation assumes the NPV curve is linear between r₁ and r₂ — a good approximation when the bracket is narrow, less so when it is wide.</p>
+  <h3>Method 2 — Bisection (interval halving)</h3>
+  <div class="formula">Start with a bracket [lo, hi] where NPV(lo) &gt; 0 and NPV(hi) &lt; 0.
+Repeat:
+  mid = (lo + hi) / 2
+  if NPV(mid) &gt; 0 → lo = mid   else hi = mid
+until |NPV(mid)| &lt; tolerance.
+<b>Guaranteed to converge</b> for any single root within the bracket — this is what the Live IRR Engine uses to find every IRR.</div>
+  <h3>Method 3 — Newton–Raphson (fast, needs derivative)</h3>
+  <div class="formula">r_{k+1} = r_k − NPV(r_k) / NPV'(r_k)
+where NPV'(r) = −Σ t·Cₜ/(1+r)^(t+1)
+
+Converges very fast (quadratically) when started near the root, but can diverge or jump to a different root if started poorly. Best for well-behaved, conventional cash flows.</div>
+  <h3>Method 4 — Spreadsheet &amp; code</h3>
+  <table>
+    <tr><th>Tool</th><th>Syntax</th><th>Notes</th></tr>
+    <tr><td>Excel / Sheets</td><td><code>=IRR(A1:A5)</code></td><td>Periodic CFs; needs a guess only if multiple IRRs</td></tr>
+    <tr><td>Excel / Sheets</td><td><code>=XIRR(A1:A5,B1:B5)</code></td><td>Dated CFs; see XIRR page</td></tr>
+    <tr><td>Python</td><td><code>numpy_financial.irr(cf)</code></td><td>Returns one IRR</td></tr>
+    <tr><td>Python</td><td><code>scipy.optimize.newton(npv_fn, 0.1)</code></td><td>Newton on the NPV function</td></tr>
+  </table>
+  <div class="callout cg2" style="margin-top:12px"><b>Best practice:</b> Always cross-check IRR with NPV. Compute IRR for communication, but make the <em>accept/reject</em> decision on NPV — especially for mutually exclusive projects and when multiple IRRs exist.</div>
+  <div class="teacher-note"><b>Teaching note:</b> Walk students through one full trial-and-error table by hand (r = 0%, 5%, 10%, 15%, 20%) so they feel the curve crossing zero. Then show how the Live IRR Engine reproduces it instantly — demystifying the "black box."</div>
+</div>
+<div class="card s4">
+  <h3>NPV at sample rates (intuition)</h3>
+  <div class="callout ca">Project: −₹1000, ₹300, ₹420, ₹680<br><br>
+    r = 0%  → NPV = +400<br>
+    r = 5%  → NPV = +184<br>
+    r = 10% → NPV = +34<br>
+    r = 12% → NPV ≈ 0  ← <b>IRR</b><br>
+    r = 15% → NPV = −59<br>
+    r = 20% → NPV = −171<br><br>
+  The NPV falls steadily as r rises; it crosses zero once — at the IRR.</div>
+  <h3>When to use which method</h3>
+  <div class="lim" style="margin-top:8px"><b>Single conventional project:</b> Any method works; <code>=IRR()</code> is fastest.</div>
+  <div class="lim" style="margin-top:8px"><b>Multiple IRRs suspected:</b> Use a root-scan (bisection across a grid) like the Live Engine — interpolation/Newton may miss roots.</div>
+  <div class="adv" style="margin-top:8px"><b>Teaching / exams:</b> Trial-and-error + interpolation is what is expected by hand; show the full NPV table.</div>
+</div>
+</div></section>
+
+<!-- PROFILE -->
+<section id="profile" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cn">
+  <div class="kicker">Analysis</div>
+  <h2>The NPV Profile and the IRR</h2>
+  <p>The <b>NPV profile</b> plots NPV (y-axis) against the discount rate (x-axis). Its <b>x-intercept is, by definition, the IRR</b>. Everything about a project's IRR and its sensitivity to the discount rate is visible on this one chart.</p>
+  <h3>Reading the profile</h3>
+  <table>
+    <tr><th>Feature</th><th>Location</th><th>Meaning</th></tr>
+    <tr><td><b>Y-intercept (r = 0%)</b></td><td>Sum of undiscounted CFs − ICF</td><td>Max possible NPV if money had no time value</td></tr>
+    <tr><td><b>X-intercept (NPV = 0)</b></td><td>The IRR</td><td>Break-even discount rate</td></tr>
+    <tr><td><b>Shape</b></td><td>Downward sloping, convex</td><td>NPV falls as r rises (conventional CFs)</td></tr>
+    <tr><td><b>Accept region</b></td><td>Left of IRR</td><td>Any WACC below the IRR → positive NPV</td></tr>
+    <tr><td><b>Reject region</b></td><td>Right of IRR</td><td>Any WACC above the IRR → negative NPV</td></tr>
+    <tr><td><b>Margin of safety</b></td><td>Distance from WACC to IRR</td><td>How far rates can rise before the decision flips</td></tr>
+  </table>
+  <h3>Interactive profile</h3>
+  <p>Enter a project below and watch the curve and its IRR crossing update live.</p>
+  <div class="grid">
+    <div class="s6">
+      <label>Initial Investment (₹)</label><input id="pr_icf" type="number" value="1000000" step="50000">
+      <label>Number of years (1–8)</label>
+      <select id="pr_n" onchange="renderProfileCFs()"><option>1</option><option>2</option><option>3</option><option>4</option><option value="5" selected>5</option><option>6</option><option>7</option><option>8</option></select>
+      <div id="pr_cfs"></div>
+      <label>Your WACC (%)</label><input id="pr_wacc" type="number" value="12" step="0.5">
+      <label>Rate range: 0% to (%)</label><input id="pr_maxr" type="number" value="40" step="5">
+      <button onclick="buildProfileIRR()" style="margin-top:12px;width:100%">Draw Profile &amp; IRR</button>
+    </div>
+    <div class="s6">
+      <canvas id="profileCanvasIRR" height="300"></canvas>
+      <div id="profileStatsIRR" class="callout" style="margin-top:10px">Profile appears after clicking.</div>
+    </div>
+  </div>
+  <div class="callout cg2" style="margin-top:12px"><b>Strategic use:</b> If WACC = 12% and IRR = 12.2%, the positive-NPV decision rests on a razor-thin margin — any upward revision to the discount rate flips it to reject. A project with WACC = 12% and IRR = 28% is far more robust. The profile reveals this at a glance.</div>
+  <div class="teacher-note"><b>Teaching note:</b> Always draw the profile <em>before</em> quoting the IRR. The profile shows (1) how sensitive the decision is to the rate, (2) how confident we should be, and (3) the maximum discount rate at which we would still accept. These strategic insights rival the numerical IRR itself.</div>
+</div>
+<div class="card s4">
+  <h3>Crossover rate (two projects)</h3>
+  <div class="callout ct2">When two NPV profiles intersect, the intersection rate is the <b>crossover rate</b> — where the projects have equal NPV. It equals the IRR of the <b>incremental</b> cash flows (Project B − Project A). Below it one project wins; above it the other does. The firm's actual WACC, not the average of the two IRRs, decides which is better. See the <b>IRR vs NPV Compare</b> tool.</div>
+</div>
+</div></section>
+
+<!-- MULTIPLE IRR -->
+<section id="multi_irr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cr">
+  <div class="kicker">Special Cases</div>
+  <h2>Multiple IRRs — When One Answer Isn't Enough</h2>
+  <p>A project can have <b>more than one IRR</b> when its cash flows change sign <b>more than once</b>. By <b>Descartes' Rule of Signs</b>, the number of <em>positive</em> IRRs is at most the number of sign changes in the cash-flow stream.</p>
+  <div class="formula"><b>Classic example:</b> Cash flows (₹):  C₀ = −100,  C₁ = +230,  C₂ = −132
+Sign changes:  − → +  (1st),  + → −  (2nd)  ⇒  up to 2 positive IRRs.
+
+NPV(r) = −100 + 230/(1+r) − 132/(1+r)²
+Let x = 1/(1+r):  −100 + 230x − 132x² = 0  ⇒  132x² − 230x + 100 = 0
+x = (230 ± √(52900 − 52800)) / 264 = (230 ± 10)/264
+x = 0.9091  ⇒  r = 10.0%
+x = 0.8333  ⇒  r = 20.0%
+
+<b>Two IRRs: 10% AND 20%</b> — which is "the" IRR?</div>
+  <h3>What this means for decision-making</h3>
+  <ul>
+    <li>With two IRRs, the simple rule "accept if IRR &gt; WACC" breaks down. If WACC = 15%, the project's NPV is <b>negative</b> (between the two roots) even though 15% lies between two "IRR" values.</li>
+    <li>The accept/reject region is no longer a simple "left of IRR" zone — it can be a band.</li>
+    <li><b>Fix:</b> Use NPV (which is unambiguous), or MIRR, or read the full profile to see <em>all</em> crossings.</li>
+  </ul>
+  <h3>Interactive — see both roots</h3>
+  <div class="grid">
+    <div class="s6">
+      <label>Year 0 (Outflow, ₹)</label><input id="mi_icf" type="number" value="100" step="10">
+      <label>Year 1 CF (₹)</label><input id="mi_c1" type="number" value="230" step="10">
+      <label>Year 2 CF (₹)</label><input id="mi_c2" type="number" value="-132" step="10">
+      <label>WACC (%)</label><input id="mi_wacc" type="number" value="15" step="0.5">
+      <button onclick="buildMultiIRR()" style="margin-top:12px;width:100%">Show Multiple IRRs</button>
+    </div>
+    <div class="s6">
+      <canvas id="multiCanvas" height="280"></canvas>
+      <div id="multiStats" class="callout" style="margin-top:10px"></div>
+    </div>
+  </div>
+  <div class="callout cr2" style="margin-top:12px"><b>Where multiple IRRs arise in practice:</b> Projects with mid-life outflows — e.g., a nuclear plant (build, operate, then pay decommissioning costs), a mine (develop, extract, then reclaim), or any "borrow–repay–borrow" pattern. The Live IRR Engine finds <em>all</em> real roots in [−50%, 500%], so you will never be shown a single misleading IRR when several exist.</div>
+  <div class="teacher-note"><b>Teaching note:</b> After showing the 10%/20% example, ask students to compute NPV at r = 15% and confirm it is negative. The punchline: "Both IRRs are 15%? No — at 15% the project loses money." This permanently fixes the idea that multiple IRRs invalidate the naive IRR rule.</div>
+</div>
+<div class="card s4">
+  <h3>Descartes' Rule of Signs (quick)</h3>
+  <div class="callout ca">Count sign changes in the ordered cash-flow stream (C₀, C₁, …, Cₙ).
+  · 1 sign change ⇒ at most 1 positive IRR (the normal case)
+  · 2 sign changes ⇒ up to 2 positive IRRs
+  · 3 sign changes ⇒ up to 3 positive IRRs
+  <b>Convention:</b> Report all IRRs, then decide with NPV.</div>
+  <h3>Sign-pattern examples</h3>
+  <table>
+    <tr><th>Pattern</th><th>IRR count</th></tr>
+    <tr><td>−, +, +, +</td><td>1</td></tr>
+    <tr><td>−, +, −, +</td><td>up to 3</td></tr>
+    <tr><td>−, +, −</td><td>up to 2</td></tr>
+    <tr><td>−, −, +</td><td>1</td></tr>
+  </table>
+</div>
+</div></section>
+
+<!-- NO IRR -->
+<section id="no_irr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cn">
+  <div class="kicker">Special Cases</div>
+  <h2>When IRR Is Undefined — No IRR or Negative IRR</h2>
+  <p>IRR is not guaranteed to exist, and when it does it need not be positive.</p>
+  <h3>Case 1 — No IRR (all cash flows same sign)</h3>
+  <p>If every cash flow is positive (a pure inflow stream with no outlay) or every cash flow is negative, there is <b>no discount rate that drives NPV to zero</b>. IRR is simply undefined.</p>
+  <div class="formula">Example: Receive ₹100, ₹200, ₹300 with NO initial outflow.
+  NPV(r) = 100/(1+r) + 200/(1+r)² + 300/(1+r)³  &gt; 0 for all r ≥ 0.
+  No root ⇒ <b>IRR does not exist.</b></div>
+  <h3>Case 2 — Negative IRR</h3>
+  <p>A negative IRR occurs when even at a 0% discount rate the project destroys value — i.e., the sum of undiscounted inflows is <b>less</b> than the initial outlay. The break-even rate is below zero.</p>
+  <div class="formula">Example: C₀ = −1000, C₁ = 900.
+  NPV(r) = −1000 + 900/(1+r) = 0  ⇒  (1+r) = 0.9  ⇒  r = <b>−10%</b>.
+  The project returns less than even keeping the cash under the mattress.</div>
+  <h3>Case 3 — IRR above 100% (or huge)</h3>
+  <p>Very short, very front-loaded projects can show enormous IRRs. A ₹100 outlay returning ₹300 in one week has an IRR in the thousands of percent — technically correct but economically meaningless without context (and it ignores reinvestment).</p>
+  <table style="margin-top:12px">
+    <tr><th>Situation</th><th>IRR behaviour</th><th>What to do</th></tr>
+    <tr><td>All CFs same sign</td><td>No real IRR</td><td>Use NPV; IRR unavailable</td></tr>
+    <tr><td>Undiscounted total &lt; outlay</td><td>Negative IRR</td><td>Reject; NPV &lt; 0 at r=0</td></tr>
+    <tr><td>Very short, front-loaded</td><td>IRR &gt; 100%</td><td>Check NPV; watch reinvestment</td></tr>
+    <tr><td>Conventional (− then +)</td><td>One positive IRR</td><td>Standard IRR rule applies</td></tr>
+  </table>
+  <div class="callout" style="margin-top:12px"><b>Takeaway:</b> IRR is a derived quantity that can misbehave. NPV is the primitive, always-well-defined metric. Whenever IRR looks strange, fall back to NPV.</div>
+  <div class="teacher-note"><b>Teaching note:</b> The "negative IRR" case is a great reality check — students expect IRR to always be a nice positive percentage. Showing that a project can have IRR = −10% (worse than doing nothing) cements the link between IRR and the time value of money.</div>
+</div>
+<div class="card s4">
+  <h3>Quick NPV reality check</h3>
+  <div class="callout ca">Before trusting an IRR, compute NPV at r = 0%:
+  NPV(0) = (sum of all inflows) − (initial outlay)
+  · NPV(0) &lt; 0  ⇒  IRR is negative or undefined
+  · NPV(0) &gt; 0  ⇒  at least one positive IRR exists (for conventional CFs)
+  This single calculation predicts whether a sensible IRR even exists.</div>
+</div>
+</div></section>
+
+<!-- REINVEST -->
+<section id="reinvest" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cp">
+  <div class="kicker">Special Cases</div>
+  <h2>The Reinvestment Assumption — IRR's Hidden Flaw</h2>
+  <p>The most important theoretical criticism of IRR: it implicitly assumes that <b>all intermediate cash flows are reinvested at the IRR itself</b>. NPV, by contrast, assumes reinvestment at the <b>cost of capital (WACC)</b> — the rate the firm can actually earn.</p>
+  <h3>Why this matters</h3>
+  <div class="formula"><b>IRR assumption:</b> Each ₹1 received early is reinvested to earn the project's own IRR.
+  If IRR = 40% but the firm can only reinvest at 12% (WACC), the IRR <b>overstates</b> the project's true compounded return.
+
+<b>NPV assumption:</b> Intermediate CFs are reinvested at WACC — the realistic, market-based rate.
+
+A high-IRR project is therefore "penalised" by reality: its early cash flows cannot actually be reinvested at that lofty rate, so its real wealth contribution is lower than its IRR suggests.</div>
+  <h3>Worked illustration</h3>
+  <p>Two projects, each ICF = ₹1,000, each returns a total of ₹1,500, but timed differently. WACC = 12%.</p>
+  <table>
+    <tr><th>Project</th><th>CFs</th><th>IRR</th><th>NPV @12%</th><th>True compounded value @12%</th></tr>
+    <tr><td>A (early)</td><td>₹1,500 at Yr 1</td><td class="good">50.0%</td><td class="good">+₹339</td><td>₹1,500×1.12 = ₹1,680</td></tr>
+    <tr><td>B (late)</td><td>₹1,500 at Yr 5</td><td class="bad">8.4%</td><td class="bad">−₹149</td><td>₹1,500 (no reinvest)</td></tr>
+  </table>
+  <p>IRR ranks A far above B (50% vs 8.4%), but that ranking <em>presumes</em> A's early ₹1,500 can be reinvested at 50%. At the realistic 12%, A compounds to only ₹1,680 — and NPV already reflects that. NPV is the consistent, assumption-honest metric.</p>
+  <div class="callout cp2" style="margin-top:12px"><b>The fix — MIRR:</b> Modified IRR forces an explicit, realistic reinvestment rate (the firm's cost of capital or a specified rate), eliminating the hidden assumption. See the MIRR page. MIRR always yields a single, economically sensible rate.</div>
+  <div class="teacher-note"><b>Teaching note:</b> The reinvestment critique is the deepest reason IRR can conflict with NPV. Show students the "compounded value at WACC" column and let them see that IRR's number implicitly requires reinvesting at IRR. Once they grasp this, MIRR feels like a natural cure rather than a separate topic.</div>
+</div>
+<div class="card s4">
+  <h3>IRR vs MIRR — assumption</h3>
+  <div class="callout ct2"><b>IRR:</b> reinvest at IRR (often unrealistically high).<br><br>
+  <b>MIRR:</b> reinvest at a stated reinvestment rate (usually WACC) and finance outflows at a finance rate.<br><br>
+  MIRR ≤ IRR when the project's IRR exceeds the reinvestment rate (the usual case). MIRR gives one answer and no multiple-root problem.</div>
+</div>
+</div></section>
+
+<!-- MIRR -->
+<section id="mirr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cg">
+  <div class="kicker">Other Metrics</div>
+  <h2>Modified Internal Rate of Return (MIRR)</h2>
+  <p>MIRR fixes IRR's two weaknesses — the <b>multiple-root problem</b> and the <b>unrealistic reinvestment assumption</b> — by using two explicit rates: a <b>finance rate</b> (to discount outflows) and a <b>reinvestment rate</b> (to compound inflows).</p>
+  <h3>The MIRR formula</h3>
+  <div class="formula"><b>Step 1 — Terminal Value (TV):</b> Compound all positive CFs to the end (year n) at the reinvestment rate rr:
+  TV = Σ_{Cₜ &gt; 0}  Cₜ × (1 + rr)^(n − t)
+
+<b>Step 2 — Present Value of Costs (PVC):</b> Discount all negative CFs to time 0 at the finance rate f:
+  PVC = Σ_{Cₜ &lt; 0}  |Cₜ| / (1 + f)^t
+
+<b>Step 3 — MIRR:</b>
+  MIRR = ( TV / PVC )^(1/n) − 1
+
+MIRR is a SINGLE, well-defined rate — no multiple answers, no hidden reinvestment at IRR.</div>
+  <h3>Worked example</h3>
+  <div class="formula">Flows (₹): C₀ = −1000, C₁ = 300, C₂ = 420, C₃ = 680.  f = 12%, rr = 12%, n = 3.
+  TV  = 300×(1.12)² + 420×1.12 + 680 = 376.3 + 470.4 + 680 = 1,526.7
+  PVC = 1000   (only the initial outlay is negative)
+  MIRR = (1,526.7 / 1,000)^(1/3) − 1 = (1.5267)^0.333 − 1 = <b>15.2%</b>
+  (Compare IRR ≈ 12.0% — MIRR is higher here because rr &gt; IRR is not the case; the difference reflects the explicit terminal-value treatment.)</div>
+  <h3>When MIRR ≠ IRR</h3>
+  <table>
+    <tr><th>Condition</th><th>Relation</th><th>Reason</th></tr>
+    <tr><td>IRR &gt; reinvest rate (typical)</td><td>MIRR &lt; IRR</td><td>IRR overstated the reinvestment opportunity</td></tr>
+    <tr><td>IRR &lt; reinvest rate</td><td>MIRR &gt; IRR</td><td>Conservative IRR understated true reinvestment</td></tr>
+    <tr><td>Multiple IRRs in original CFs</td><td>MIRR = single value</td><td>Compounding/discounting removes multiple roots</td></tr>
+  </table>
+  <div class="callout cg2" style="margin-top:12px"><b>Recommendation:</b> When communicating a percentage return for a project with non-conventional cash flows or a very high IRR, report <b>MIRR</b> alongside (or instead of) IRR. It is the "honest IRR."</div>
+  <div class="teacher-note"><b>Teaching note:</b> Have students compute both IRR and MIRR for the multiple-IRR example (−100, +230, −132). The original has two IRRs (10%, 20%); MIRR collapses them to one sensible number — a powerful demonstration of MIRR's value.</div>
+</div>
+<div class="card s4">
+  <h3>MIRR calculator (quick)</h3>
+  <label>Initial Outflow (₹)</label><input id="mq_icf" type="number" value="1000000" step="50000">
+  <label>Years n</label><input id="mq_n" type="number" value="5" min="1" step="1">
+  <div id="mq_cfs"></div>
+  <label>Finance rate f (%)</label><input id="mq_f" type="number" value="12" step="0.5">
+  <label>Reinvest rate rr (%)</label><input id="mq_rr" type="number" value="12" step="0.5">
+  <button onclick="calcMIRRQuick()" style="margin-top:12px;width:100%">Compute MIRR</button>
+  <div id="mq_out" class="callout" style="margin-top:10px"></div>
+</div>
+</div></section>
+
+<!-- XIRR -->
+<section id="xirr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 ct">
+  <div class="kicker">Other Metrics</div>
+  <h2>XIRR — Internal Rate of Return for Dated Cash Flows</h2>
+  <p>IRR assumes cash flows occur at exact, evenly-spaced periods (year-end). Real investments — private equity, venture capital, irregular dividends, machinery bought mid-year — don't. <b>XIRR</b> extends IRR to cash flows that occur on <b>specific calendar dates</b>, discounting by the exact elapsed time.</p>
+  <h3>The XIRR equation</h3>
+  <div class="formula"><b>0 = Σ  Cᵢ / (1 + XIRR)^( (dᵢ − d₀) / 365 )</b>
+
+where dᵢ is the date of cash flow i, d₀ is the date of the first
+cash flow, and the exponent is the fraction of a year elapsed.
+
+This is identical in spirit to IRR — find the rate that sets
+present value to zero — but with precise day-counting instead of
+whole periods.</div>
+  <h3>Why XIRR matters</h3>
+  <ul>
+    <li><b>Accuracy:</b> A flow on 5 April vs 31 December in the same "year" is materially different; XIRR captures it.</li>
+    <li><b>Industry standard:</b> XIRR is the metric PE/VC funds report because capital calls and distributions are highly irregular.</li>
+    <li><b>Handles any timing:</b> Negative and positive flows can interleave on any dates; XIRR still solves for the rate.</li>
+  </ul>
+  <h3>Interactive XIRR</h3>
+  <div id="xirr_rows"></div>
+  <button class="btn-sm btn-ghost" onclick="addXirrRow()">+ Add cash flow</button>
+  <button onclick="calcXIRR()" style="margin-top:8px;width:100%">Compute XIRR</button>
+  <div id="xirr_out" class="callout" style="margin-top:10px"></div>
+  <div class="callout ct2" style="margin-top:10px"><b>Excel/Sheets:</b> <code>=XIRR(values, dates, [guess])</code>. The function uses Newton's method on the dated-NPV equation. If cash flows never change sign, XIRR returns #NUM! (no solution) — same "no IRR" issue as regular IRR.</div>
+  <div class="teacher-note"><b>Teaching note:</b> Give students a simple two-date example: invest ₹10,00,000 on 1 Jan 2024, receive ₹12,00,000 on 1 Jul 2024 (181 days). XIRR ≈ (1,200,000/1,000,000)^(365/181) − 1 ≈ 44.3% — far higher than the naive 20% (which would ignore that the money was returned in half a year.</div>
+</div>
+<div class="card s4">
+  <h3>XIRR vs IRR — key difference</h3>
+  <div class="callout"><b>IRR:</b> whole-period discounting, Cₜ at t = 1,2,3…<br><br>
+  <b>XIRR:</b> date-exact discounting, Cᵢ at actual days elapsed.<br><br>
+  Use <b>IRR</b> for textbook annual CFs; use <b>XIRR</b> for anything with real calendar dates. For annual-end CFs, XIRR ≈ IRR.</div>
+</div>
+</div></section>
+
+<!-- VS NPV SIDE BY SIDE -->
+<section id="vs_npv" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12 cn">
+  <div class="kicker">Comparison — Side by Side</div>
+  <h2>IRR vs NPV — Placed Side by Side</h2>
+  <p>The two metrics answer <b>different questions</b>. IRR asks "what is the break-even rate of return?" (a percentage, good for communication). NPV asks "how many rupees of wealth does this create?" (an absolute amount, the correct decision metric). Here they sit directly next to each other.</p>
+</div>
+<div class="card s6">
+  <div class="kicker">Metric 1</div>
+  <h2 style="font-size:1.3rem">Internal Rate of Return (IRR)</h2>
+  <ul style="font-size:.95rem">
+    <li><b>Unit:</b> a percentage return (%).</li>
+    <li><b>Question:</b> At what discount rate does NPV = 0?</li>
+    <li><b>Strength:</b> intuitive, scale-free, easy to compare to a hurdle rate.</li>
+    <li class="bad" style="font-weight:600">Can give multiple or no answers.</li>
+    <li class="bad" style="font-weight:600">Assumes reinvestment at the IRR.</li>
+    <li class="bad" style="font-weight:600">Can misrank mutually exclusive projects (scale, timing).</li>
+    <li class="bad" style="font-weight:600">Not additive — you cannot average IRRs.</li>
+  </ul>
+  <div class="callout ca" style="margin-top:8px"><b>Best used for:</b> communicating a project's return, screening, and cross-checking NPV.</div>
+</div>
+<div class="card s6">
+  <div class="kicker">Metric 2</div>
+  <h2 style="font-size:1.3rem">Net Present Value (NPV)</h2>
+  <ul style="font-size:.95rem">
+    <li><b>Unit:</b> rupees of wealth (₹).</li>
+    <li><b>Question:</b> How much value does the project add at the WACC?</li>
+    <li><b>Strength:</b> always a unique, well-defined answer.</li>
+    <li class="good" style="font-weight:600">Correct for mutually exclusive projects (pick highest NPV).</li>
+    <li class="good" style="font-weight:600">Realistic reinvestment at WACC.</li>
+    <li class="good" style="font-weight:600">Additive: NPV(A+B) = NPV(A) + NPV(B).</li>
+    <li class="good" style="font-weight:600">Directly linked to shareholder wealth.</li>
+  </ul>
+  <div class="callout cg2" style="margin-top:8px"><b>Best used for:</b> the primary accept/reject and ranking decision — always.</div>
+</div>
+<div class="card s12">
+  <h3>Head-to-head summary</h3>
+  <div class="scroll"><table>
+    <tr><th>Criterion</th><th>IRR</th><th>NPV</th></tr>
+    <tr><td>Measures wealth in ₹?</td><td class="bad">No — % return</td><td class="good">Yes ✓</td></tr>
+    <tr><td>Unique answer always?</td><td class="bad">No — multiple/no IRR</td><td class="good">Yes ✓</td></tr>
+    <tr><td>Correct for mutually exclusive?</td><td class="bad">May conflict</td><td class="good">Always ✓</td></tr>
+    <tr><td>Realistic reinvestment?</td><td class="bad">At IRR ✗</td><td class="good">At WACC ✓</td></tr>
+    <tr><td>Additive property?</td><td class="bad">No ✗</td><td class="good">Yes ✓</td></tr>
+    <tr><td>Easy to understand?</td><td class="good">Very (a %)</td><td class="bad">Moderate</td></tr>
+    <tr><td>Best used for</td><td>Communication &amp; screening</td><td><b>Primary decision &amp; ranking</b></td></tr>
+  </table></div>
+  <div class="callout" style="margin-top:12px"><b>The verdict:</b> Compute both. <b>Report IRR for communication; decide on NPV.</b> When they disagree (mutually exclusive projects, scale or timing differences), NPV wins — every time.</div>
+  <div style="margin-top:12px"><button class="btn-sm btn-gold" onclick="activatePage('calc_compare')">→ Open the IRR vs NPV Compare Tool</button>
+  <button class="btn-sm btn-ghost" onclick="activatePage('conflicts')">→ See the Classic Conflicts</button></div>
+</div>
+</div></section>
+
+<!-- CONFLICTS -->
+<section id="conflicts" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 cr">
+  <div class="kicker">Comparison</div>
+  <h2>IRR vs NPV — The Classic Conflicts</h2>
+  <p>For <b>independent, conventional</b> projects, IRR and NPV always agree. They disagree for <b>mutually exclusive</b> projects, and the disagreement has three well-known causes.</p>
+  <h3>1 · Scale problem</h3>
+  <div class="two">
+    <div class="na"><b>Project A (small):</b> ICF ₹1,000; CF ₹1,500 at Yr 1.<br>IRR = <b>50%</b>; NPV@10% = +₹364.<br>High return, small absolute value.</div>
+    <div class="na"><b>Project B (large):</b> ICF ₹10,000; CF ₹12,000 at Yr 1.<br>IRR = <b>20%</b>; NPV@10% = +₹909.<br>Lower return, larger absolute value.</div>
+  </div>
+  <p>IRR says <b>A</b> (50% &gt; 20%); NPV says <b>B</b> (₹909 &gt; ₹364). Since the projects are mutually exclusive, the firm should pick <b>B</b> — it creates more wealth. IRR misleads because it ignores scale.</p>
+  <h3>2 · Timing problem</h3>
+  <div class="two">
+    <div class="na"><b>Project S (front-loaded):</b> ICF ₹1,000; CF ₹1,100 at Yr 1.<br>IRR = <b>10%</b>; NPV@5% = +₹48.</div>
+    <div class="na"><b>Project L (back-loaded):</b> ICF ₹1,000; CF ₹2,000 at Yr 10.<br>IRR = <b>7.2%</b>; NPV@5% = +₹228.</div>
+  </div>
+  <p>IRR says <b>S</b> (10% &gt; 7.2%); NPV says <b>L</b> (₹228 &gt; ₹48) at WACC = 5%. IRR favours the early-returning project even though L creates more total wealth. The ranking depends on the WACC relative to the <b>crossover rate</b>.</p>
+  <h3>3 · Mutually exclusive with different lives</h3>
+  <p>Comparing a 3-year machine to a 10-year machine using raw IRR/NPV is invalid — you must use <b>equivalent annual annuity (EAA)</b> or a common reinvestment horizon. IRR is especially dangerous here because it says nothing about duration.</p>
+  <h3>The resolution — incremental analysis</h3>
+  <div class="formula">To choose between mutually exclusive A and B (with B larger):
+  1. Compute the INCREMENTAL cash flows: Δ = B − A.
+  2. Compute IRR(Δ) — the <b>crossover rate</b>.
+  3. If IRR(Δ) &gt; WACC → choose B (the larger project).
+     If IRR(Δ) &lt; WACC → choose A.
+  This makes IRR consistent with NPV — because you are now
+  evaluating one "project" (the increment) the same way you would standalone.</div>
+  <div class="callout cr2" style="margin-top:12px"><b>Rule of thumb:</b> For mutually exclusive projects, <b>rank by NPV</b> (or by the IRR of the incremental cash flows). Never rank by standalone IRR.</div>
+  <div class="teacher-note"><b>Teaching note:</b> Use the "₹1,000 vs ₹10,000" scale example on day one — it is the single most effective demonstration that IRR can be wrong. Students remember that a 50% return on ₹1,000 is still only ₹500, while a 20% return on ₹10,000 is ₹2,000.</div>
+</div>
+<div class="card s4">
+  <h3>Crossover rate</h3>
+  <div class="callout ct2">The crossover rate is the discount rate where two projects have equal NPV. It is the IRR of the incremental (B − A) cash flows.
+  <b>Below</b> crossover: the steeper/larger profile has higher NPV.
+  <b>Above</b> crossover: the other has higher NPV.
+  The firm's actual WACC decides — not the average of the two IRRs. Try it in the <b>Compare</b> tool.</div>
+</div>
+</div></section>
+
+<!-- CALC: IRR -->
+<section id="calc_irr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s4 cn">
+  <div class="kicker">Calculator</div>
+  <h2>IRR Calculator</h2>
+  <label>Initial Investment (₹)</label><input id="i_icf" type="number" value="1000000" step="50000">
+  <label>Discount Rate / WACC (%)</label><input id="i_r" type="number" value="12" step="0.5">
+  <label>Finance rate (MIRR) (%)</label><input id="i_fin" type="number" value="12" step="0.5">
+  <label>Reinvest rate (MIRR) (%)</label><input id="i_rin" type="number" value="12" step="0.5">
+  <label>Number of years (1–10)</label>
+  <select id="i_n" onchange="renderIRRCFs()"><option>1</option><option>2</option><option>3</option><option>4</option><option value="5" selected>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+  <div id="i_cfs"></div>
+  <button onclick="calcIRR()" style="margin-top:14px;width:100%">Compute IRR, NPV &amp; MIRR</button>
+</div>
+<div class="card s8" id="i_result"><h3>Results will appear here</h3><p class="muted">Enter values and click Compute.</p></div>
+</div></section>
+
+<!-- CALC: MIRR -->
+<section id="calc_mirr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s4 cg">
+  <div class="kicker">Calculator</div>
+  <h2>MIRR Calculator</h2>
+  <label>Initial Outflow (₹)</label><input id="m2_icf" type="number" value="1000000" step="50000">
+  <label>Number of years (1–10)</label>
+  <select id="m2_n" onchange="renderM2CFs()"><option>1</option><option>2</option><option>3</option><option>4</option><option value="5" selected>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+  <div id="m2_cfs"></div>
+  <label>Finance rate f (%)</label><input id="m2_f" type="number" value="12" step="0.5">
+  <label>Reinvest rate rr (%)</label><input id="m2_rr" type="number" value="12" step="0.5">
+  <button onclick="calcMIRRFull()" style="margin-top:14px;width:100%">Compute MIRR</button>
+</div>
+<div class="card s8" id="m2_result"><h3>Results will appear here</h3><p class="muted">Enter values and click Compute.</p></div>
+</div></section>
+
+<!-- CALC: XIRR -->
+<section id="calc_xirr" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s4 ct">
+  <div class="kicker">Calculator</div>
+  <h2>XIRR Calculator</h2>
+  <p class="muted" style="font-size:.88rem;margin-top:-6px">Add dated cash flows (first one is usually negative — the investment).</p>
+  <div id="xirr2_rows"></div>
+  <button class="btn-sm btn-ghost" onclick="addXirr2Row()">+ Add cash flow</button>
+  <button onclick="calcXIRR2()" style="margin-top:10px;width:100%">Compute XIRR</button>
+</div>
+<div class="card s8" id="xirr2_result"><h3>Results will appear here</h3><p class="muted">Enter values and click Compute.</p></div>
+</div></section>
+
+<!-- CALC: COMPARE -->
+<section id="calc_compare" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12 cp">
+  <div class="kicker">Calculator</div>
+  <h2>IRR vs NPV — Compare Two Projects Side by Side</h2>
+  <p class="muted" style="margin-top:-6px">Enter two mutually exclusive projects. The tool computes IRR and NPV for each, shows them side by side, computes the <b>crossover (incremental) IRR</b>, and flags any IRR-vs-NPV conflict. Load a preset to see a textbook conflict instantly.</p>
+  <div class="pillrow">
+    <button class="btn-sm btn-gold" onclick="loadPreset('scale')">Load Scale Conflict</button>
+    <button class="btn-sm btn-gold" onclick="loadPreset('timing')">Load Timing Conflict</button>
+    <button class="btn-sm btn-ghost" onclick="loadPreset('agree')">Load Agreement Case</button>
+  </div>
+</div>
+<div class="card s4">
+  <h3>Project A</h3>
+  <label>Initial Investment (₹)</label><input id="cmpA_icf" type="number" value="1000" step="100">
+  <label>Number of years</label>
+  <select id="cmpA_n" onchange="renderCmpA()"><option>1</option><option>2</option><option>3</option><option>4</option><option value="5" selected>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+  <div id="cmpA_cfs"></div>
+  <label>WACC (%)</label><input id="cmp_wacc" type="number" value="10" step="0.5">
+  <button onclick="runCompare()" style="margin-top:12px;width:100%">Compare</button>
+</div>
+<div class="card s4">
+  <h3>Project B</h3>
+  <label>Initial Investment (₹)</label><input id="cmpB_icf" type="number" value="10000" step="100">
+  <label>Number of years</label>
+  <select id="cmpB_n" onchange="renderCmpB()"><option>1</option><option>2</option><option>3</option><option>4</option><option value="5" selected>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+  <div id="cmpB_cfs"></div>
+</div>
+<div class="card s4">
+  <h3>Results</h3>
+  <div id="cmp_out" class="muted">Click Compare to see the side-by-side analysis and the NPV profiles.</div>
+  <canvas id="cmpChart" height="240" style="margin-top:10px"></canvas>
+</div>
+</div></section>
+
+<!-- EXAMPLES -->
+<section id="examples" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12 cn"><div class="kicker">Practice</div><h2>Comprehensive Worked Examples</h2></div>
+<div class="card s6">
+  <h3>Example 1 — Basic IRR (interpolation)</h3>
+  <p>Flows: −₹1,000; ₹300; ₹420; ₹680. Find IRR by trial and check against NPV at 12%.</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e1')">Show / Hide</button>
+  <div id="e1" class="answer" style="display:none">
+    <table><tr><th>r</th><th>NPV(₹)</th></tr><tr><td>10%</td><td>+33.6</td></tr><tr><td>15%</td><td>−58.9</td></tr></table>
+    <p>Interpolate: IRR ≈ 10% + 5% × 33.6/(33.6+58.9) = <b>11.8%</b> (true ≈ 12.0%).<br>Since IRR &gt; WACC 12%? It is ≈12% — borderline accept. Decision hinges on precise WACC.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 2 — Annuity IRR</h3>
+  <p>ICF = ₹5,00,000; ₹1,60,000/yr for 5 yrs. IRR?</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e2')">Show / Hide</button>
+  <div id="e2" class="answer" style="display:none">
+    <p>PVIFA(IRR,5) = 5,00,000/1,60,000 = 3.125.</p>
+    <p>From PVIFA table: at 17%, PVIFA=3.199; at 18%, PVIFA=3.127; at 19%, PVIFA=3.058. → <b>IRR ≈ 18%</b>.</p>
+    <p>At WACC 12%: NPV = 1,60,000×3.6048 − 5,00,000 = +₹76,768 → ACCEPT.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 3 — Multiple IRRs</h3>
+  <p>Flows: −₹100; +₹230; −₹132. Show the two IRRs.</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e3')">Show / Hide</button>
+  <div id="e3" class="answer" style="display:none">
+    <p>Solve −100 + 230/(1+r) − 132/(1+r)² = 0. Let x=1/(1+r): 132x² − 230x + 100 = 0 → x = 0.9091 or 0.8333.</p>
+    <p><b>IRR = 10% and IRR = 20%.</b> At WACC 15%, NPV = −100 + 230/1.15 − 132/1.3225 = −100 + 200 − 99.8 = <b>−₹0.2 (≈0, slightly negative)</b>. IRR rule is ambiguous — use NPV.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 4 — MIRR</h3>
+  <p>Flows: −₹1,000; ₹300; ₹420; ₹680. f = 12%, rr = 12%, n = 3. MIRR?</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e4')">Show / Hide</button>
+  <div id="e4" class="answer" style="display:none">
+    <p>TV = 300×1.12² + 420×1.12 + 680 = 376.3 + 470.4 + 680 = 1,526.7.<br>PVC = 1,000.</p>
+    <p>MIRR = (1,526.7/1,000)^(1/3) − 1 = <b>15.2%</b>.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 5 — XIRR</h3>
+  <p>Invest ₹10,00,000 on 1 Jan 2024; receive ₹12,00,000 on 1 Jul 2024 (181 days). XIRR?</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e5')">Show / Hide</button>
+  <div id="e5" class="answer" style="display:none">
+    <p>XIRR = (1,200,000/1,000,000)^(365/181) − 1 = 1.2^2.0177 − 1 = <b>≈ 44.3%</b>.</p>
+    <p>The money was returned in half a year, so the annualised return is far above the naive 20%.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 6 — Scale conflict</h3>
+  <p>A: ICF ₹1,000, ₹1,500 at Yr1. B: ICF ₹10,000, ₹12,000 at Yr1. WACC 10%. Which to accept if mutually exclusive?</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e6')">Show / Hide</button>
+  <div id="e6" class="answer" style="display:none">
+    <p>A: IRR 50%, NPV = 1,500/1.1 − 1,000 = +₹364.<br>B: IRR 20%, NPV = 12,000/1.1 − 10,000 = +₹909.</p>
+    <p>IRR prefers A; <b>NPV prefers B</b>. Since mutually exclusive, accept <b>B</b> (more wealth). Incremental (B−A): ICF ₹9,000, CF ₹10,500 at Yr1 → IRR = 16.7% &gt; 10% WACC → choose B. Consistent.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 7 — Reinvestment illustration</h3>
+  <p>A: ₹1,500 at Yr1; B: ₹1,500 at Yr5; both ICF ₹1,000; WACC 12%. Compare IRR vs NPV.</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e7')">Show / Hide</button>
+  <div id="e7" class="answer" style="display:none">
+    <p>A: IRR 50%, NPV@12% = 1,500/1.12 − 1,000 = +₹339.<br>B: IRR 8.4%, NPV@12% = 1,500/1.7623 − 1,000 = −₹149.</p>
+    <p>IRR ranks A ≫ B; NPV agrees A &gt; B here, but the 50% IRR implicitly assumes reinvesting ₹1,500 at 50% — unrealistic. At the real 12%, A compounds to only ₹1,680.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 8 — No IRR</h3>
+  <p>Flows: +₹100; +₹200; +₹300 (no initial outlay). IRR?</p>
+  <button class="btn-sm btn-ghost" onclick="toggleAns('e8')">Show / Hide</button>
+  <div id="e8" class="answer" style="display:none">
+    <p>NPV(r) = 100/(1+r) + 200/(1+r)² + 300/(1+r)³ &gt; 0 for all r ≥ 0. There is <b>no discount rate that makes NPV zero</b> → IRR does not exist. IRR is undefined; the project is a pure inflow with no investment benchmark.</p>
+  </div>
+</div>
+</div></section>
+
+<!-- MCQ -->
+<section id="mcq" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12 cn">
+  <div class="kicker">Practice</div>
+  <h2>MCQ Bank — Internal Rate of Return</h2>
+  <div id="mcqContainer"></div>
+  <button onclick="renderMCQs(8)" class="btn-ghost" style="margin-top:12px">Shuffle &amp; Reload 8 Questions</button>
+</div>
+</div></section>
+
+<!-- EXAM GEN -->
+<section id="exam_gen" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s5"><div class="kicker">Practice</div>
+  <h2>Exam Paper Generator</h2>
+  <label>Number of MCQs</label><input id="eg_mcq" type="number" value="6" min="0" max="15">
+  <label>Number of calculation problems</label><input id="eg_calc" type="number" value="3" min="0" max="6">
+  <label>Include theory questions?</label>
+  <select id="eg_theory"><option value="1">Yes</option><option value="0">No</option></select>
+  <button onclick="generateExam()" style="margin-top:14px;width:100%">Generate Exam Paper</button>
+</div>
+<div class="card s7"><div id="eg_paper"><p class="muted">Configure and click Generate.</p></div></div>
+</div></section>
+
+<!-- FORMULA BANK -->
+<section id="formula_bank" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s6 cn"><div class="kicker">Reference</div><h2>IRR Formula Bank</h2>
+  <h3>Core IRR</h3>
+  <div class="formula">0 = C₀ + Σ Cₜ/(1+IRR)^t   (t=1..n)
+IRR = rate where NPV = 0
+Accept: IRR &gt; WACC | Reject: IRR &lt; WACC</div>
+  <h3>Interpolation</h3>
+  <div class="formula">IRR ≈ r₁ + (r₂−r₁) ×
+       NPV(r₁) / [NPV(r₁) − NPV(r₂)]
+with NPV(r₁)&gt;0, NPV(r₂)&lt;0</div>
+  <h3>Simple closed forms</h3>
+  <div class="formula">Single CF at n: IRR=(Cₙ/|C₀|)^(1/n)−1
+Annuity: solve PVIFA(IRR,n)=|C₀|/CF
+Perpetuity: IRR = CF/|C₀|</div>
+</div>
+<div class="card s6">
+  <h3>MIRR</h3>
+  <div class="formula">TV  = Σ_{Cₜ>0} Cₜ(1+rr)^(n−t)
+PVC = Σ_{Cₜ<0} |Cₜ|/(1+f)^t
+MIRR = (TV/PVC)^(1/n) − 1</div>
+  <h3>XIRR</h3>
+  <div class="formula">0 = Σ Cᵢ/(1+XIRR)^((dᵢ−d₀)/365)
+dᵢ = date of flow i; d₀ = first date</div>
+  <h3>Crossover (incremental) IRR</h3>
+  <div class="formula">IRR( B − A ) = crossover rate
+If &gt; WACC → choose larger project B
+If &lt; WACC → choose project A</div>
+  <h3>NPV (for comparison)</h3>
+  <div class="formula">NPV = Σ Cₜ/(1+WACC)^t − C₀
+Rank mutually exclusive by NPV</div>
+</div>
+</div></section>
+
+<!-- GLOSSARY -->
+<section id="glossary" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12">
+  <div class="kicker">Reference</div>
+  <h2>Glossary — Internal Rate of Return</h2>
+  <input id="gl_search" type="text" placeholder="Search terms…" oninput="filterGlossary()">
+  <div id="gl_list" style="margin-top:12px"></div>
+</div>
+</div></section>
+
+</div>
+<script>
+/* === UTILS === */
+function $(i){return document.getElementById(i);}
+function fmtR(n){return isNaN(n)||n===undefined?'—':'₹'+Math.round(Math.abs(n)).toLocaleString('en-IN');}
+function fmtRs(n){if(isNaN(n))return'—';return(n<0?'(₹':'₹')+Math.round(Math.abs(n)).toLocaleString('en-IN')+(n<0?')':'');}
+function fmtP(n,d){d=d===undefined?2:d;return isNaN(n)||!isFinite(n)?'—':(n<0?'-':'')+Math.abs(n).toFixed(d)+'%';}
+function pvf(r,t){return Math.pow(1+r,-t);}
+function pvifa(r,n){return r===0?n:(1-Math.pow(1+r,-n))/r;}
+function npvAt(rate,icf,cfs){return cfs.reduce((acc,cf,i)=>acc+cf*Math.pow(1+rate,-(i+1)),-icf);}
+
+/* === IRR ROOT FINDING === */
+function bisect(f,a,b){
+  var fa=f(a),fb=f(b); if(fa===0)return a; if(fb===0)return b; if(fa*fb>0)return null;
+  for(var k=0;k<200;k++){var m=(a+b)/2,fm=f(m); if(Math.abs(fm)<1e-7||(b-a)<1e-12)return m; if(fa*fm<0){b=m;fb=fm;}else{a=m;fa=fm;}}
+  return (a+b)/2;
+}
+function findAllIRR(icf,cfs){
+  var roots=[], lo=-0.5, hi=5, step=0.002, prev=lo, fprev=npvAt(prev,icf,cfs);
+  for(var r=lo+step;r<=hi;r+=step){
+    var f=npvAt(r,icf,cfs);
+    if(fprev===0) roots.push(prev);
+    else if(fprev*f<0){var rt=bisect(x=>npvAt(x,icf,cfs),prev,r); if(rt!==null) roots.push(rt);}
+    prev=r; fprev=f;
+  }
+  // also check endpoint hi
+  var fhi=npvAt(hi,icf,cfs); if(Math.abs(fhi)<1e-6) roots.push(hi);
+  return roots.filter((v,i)=>roots.findIndex(u=>Math.abs(u-v)<1e-4)===i);
+}
+function computeMIRR(icf,cfs,fin,rin){
+  var n=cfs.length, pvC=0, tv=0;
+  cfs.forEach((cf,i)=>{ if(cf<0) pvC+=(-cf)/Math.pow(1+fin,i+1); else tv+=cf*Math.pow(1+rin,n-(i+1)); });
+  if(pvC<=0) return NaN;
+  return Math.pow(tv/pvC,1/n)-1;
+}
+/* === XIRR === */
+function xnpvAt(rate,amts,dates){
+  var t0=dates[0].getTime();
+  return amts.reduce((acc,a,i)=>acc+a/Math.pow(1+rate,(dates[i].getTime()-t0)/31557600000),0);
+}
+function computeXIRR(amts,dates){
+  var r=0.1;
+  for(var k=0;k<200;k++){
+    var f=xnpvAt(r,amts,dates), fp=(xnpvAt(r+1e-7,amts,dates)-f)/1e-7;
+    if(Math.abs(fp)<1e-12) break;
+    var rn=r-f/fp; if(Math.abs(rn-r)<1e-9){r=rn;break;} r=rn;
+  }
+  return r;
+}
+
+/* === NAV === */
+function activatePage(p){
+  document.querySelectorAll('.page').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  var pg=$(p);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>{if(t.dataset.page===p)t.classList.add('active');});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.activatePage=activatePage;
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>activatePage(t.dataset.page)));
+function setMode(m){
+  document.body.classList.toggle('teacher',m==='teacher');
+  $('modeStudent').classList.toggle('on',m==='student');
+  $('modeTeacher').classList.toggle('on',m==='teacher');
+}
+window.setMode=setMode;
+
+/* === IRR PROFILE (marks ALL roots) === */
+function drawIRRProfile(canvas,icf,cfs,wacc,maxR,roots){
+  if(!canvas)return;
+  var W=canvas.offsetWidth||700,H=canvas.height||280; canvas.width=W;
+  var ctx=canvas.getContext('2d');
+  var pl=62,pr=18,pt=22,pb=44,cW=W-pl-pr,cH=H-pt-pb;
+  ctx.clearRect(0,0,W,H);
+  function npvAtL(rate,icf0,cfs0){return cfs0.reduce((acc,cf,i)=>acc+cf*Math.pow(1+rate,-(i+1)),-icf0);}
+  var step=maxR/60, rates=[], npvs=[];
+  for(var pct=0;pct<=maxR;pct+=step){rates.push(pct);npvs.push(npvAtL(pct/100,icf,cfs));}
+  var minV=Math.min(...npvs)*1.05, maxV=Math.max(...npvs)*1.05;
+  if(maxV===minV){maxV+=1;minV-=1;}
+  function xOf(pct){return pl+cW*pct/maxR;}
+  function yOf(v){return pt+cH*(1-(v-minV)/(maxV-minV));}
+  ctx.strokeStyle='#d4daea';ctx.lineWidth=1;
+  for(var g=0;g<=5;g++){var yg=pt+cH*g/5;ctx.beginPath();ctx.moveTo(pl,yg);ctx.lineTo(pl+cW,yg);ctx.stroke();var yval=maxV-(maxV-minV)*g/5;ctx.fillStyle='#546080';ctx.font='10px Inter,sans-serif';ctx.textAlign='right';ctx.fillText(Math.round(yval/1000)+'K',pl-4,yg+4);}
+  for(var g2=0;g2<=6;g2++){ctx.fillStyle='#546080';ctx.textAlign='center';ctx.fillText((maxR*g2/6).toFixed(0)+'%',pl+cW*g2/6,H-6);}
+  if(minV<0&&maxV>0){var y0=yOf(0);ctx.strokeStyle='#99aac0';ctx.lineWidth=1.2;ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(pl+cW,y0);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#99aac0';ctx.font='9px Inter,sans-serif';ctx.textAlign='left';ctx.fillText('NPV=0',pl+3,y0-3);}
+  ctx.strokeStyle='#1a3068';ctx.lineWidth=2.5;ctx.beginPath();
+  rates.forEach((r,i)=>{i===0?ctx.moveTo(xOf(r),yOf(npvs[i])):ctx.lineTo(xOf(r),yOf(npvs[i]));});
+  ctx.stroke();
+  (roots||[]).forEach(irr=>{
+    if(irr>=0&&irr<=maxR){
+      var xi=xOf(irr),yi=yOf(0);
+      ctx.strokeStyle='#9e2020';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+      ctx.beginPath();ctx.moveTo(xi,pt);ctx.lineTo(xi,pt+cH);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='#9e2020';ctx.beginPath();ctx.arc(xi,yi,5,0,Math.PI*2);ctx.fill();
+      ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('IRR '+(irr*100).toFixed(1)+'%',xi,pt+12);
+    }
+  });
+  if(wacc>=0&&wacc<=maxR){var xw=xOf(wacc);ctx.strokeStyle='#0a6b5a';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(xw,pt);ctx.lineTo(xw,pt+cH);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#0a6b5a';ctx.font='bold 9px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('WACC '+(wacc*100).toFixed(0)+'%',xw,pt+cH+14);}
+  ctx.fillStyle='#546080';ctx.font='9px Inter,sans-serif';ctx.textAlign='right';ctx.fillText('NPV (₹K)',pl+3,pt+8);
+  ctx.textAlign='right';ctx.fillText('Discount Rate →',pl+cW,H-1);
+}
+
+/* === DASHBOARD === */
+function handlePattern(){
+  var p=$('d_pattern').value, pi=$('d_pattern_inputs'), cc=$('d_custom_cfs');
+  cc.style.display=p==='custom'?'block':'none';
+  var h='';
+  if(p==='annuity'){h='<label>Annual CF (₹)</label><input id="d_acf" type="number" value="300000" step="5000"><label>Years n</label><input id="d_an" type="number" value="5" step="1" min="1">';}
+  else if(p==='growing'){h='<label>CF₁ (₹)</label><input id="d_gcf1" type="number" value="250000" step="5000"><label>Growth rate g (%)</label><input id="d_gg" type="number" value="6" step="0.5"><label>Years n</label><input id="d_gn" type="number" value="5" step="1" min="1">';}
+  pi.innerHTML=h;
+}
+function renderDCFs(){
+  var n=+$('d_n').value,h='';
+  for(var i=1;i<=n;i++) h+=`<label>Year ${i} CF (₹)</label><input type="number" class="d_cf_inp" value="${i<=3?300000:200000}" step="5000">`;
+  $('d_cfs_div').innerHTML=h;
+}
+function getCFsIRR(){
+  var p=$('d_pattern').value, icf=+$('d_icf').value||0, cfs=[];
+  if(p==='custom'){cfs=[...document.querySelectorAll('.d_cf_inp')].map(e=>+e.value||0);}
+  else if(p==='annuity'){var cf=+$('d_acf').value||0,n=+$('d_an').value||5;for(var i=0;i<n;i++)cfs.push(cf);}
+  else if(p==='growing'){var cf1=+$('d_gcf1').value||0,g=+$('d_gg').value/100,n=+$('d_gn').value||5;for(var i=0;i<n;i++)cfs.push(cf1*Math.pow(1+g,i));}
+  return{cfs,icf};
+}
+function runDash(){
+  var r=+$('d_r').value/100,{cfs,icf}=getCFsIRR();
+  if(icf<=0||cfs.length<1){$('dashCallout').textContent='Enter a positive initial investment and at least one cash flow.';return;}
+  var pvs=cfs.map((cf,i)=>cf*pvf(r,i+1));
+  var sumPV=pvs.reduce((a,b)=>a+b,0);
+  var npv=sumPV-icf;
+  var roots=findAllIRR(icf,cfs);
+  var mirr=computeMIRR(icf,cfs,+$('d_fin').value/100,+$('d_rin').value/100);
+  $('dm_irr').textContent=roots.length?fmtP(roots[0]*100):'n/a';
+  $('dm_nirr').textContent=roots.length+'';
+  $('dm_npv').textContent=fmtR(npv);$('dm_npv').style.color=npv>=0?'var(--green)':'var(--red)';
+  $('dm_mirr').textContent=fmtP(mirr*100);
+  var decision;
+  if(!roots.length) decision='<span class="verdict v-reject">NO IRR</span>';
+  else{
+    var ok=roots[0]>r;
+    decision=ok?'<span class="verdict v-accept">ACCEPT</span>':'<span class="verdict v-reject">REJECT</span>';
+  }
+  $('dm_verdict').innerHTML=decision;
+  var rows='',cumPV=-icf;
+  cfs.slice(0,12).forEach((cf,i)=>{var pv=pvs[i];cumPV+=pv;var cs=cumPV>=0?'color:var(--green)':'color:var(--red)';rows+=`<tr><td>${i+1}</td><td>${fmtR(cf)}</td><td>${pvf(r,i+1).toFixed(4)}</td><td>${fmtR(pv)}</td><td style="${cs}">${fmtR(cumPV)}</td></tr>`;});
+  $('dashTable').innerHTML=`<tr><th>Year</th><th>Cash Flow (₹)</th><th>PV Factor</th><th>Present Value (₹)</th><th>Cumulative PV (₹)</th></tr>`+rows;
+  var callout=`<b>IRR:</b> ${roots.length?roots.map(x=>fmtP(x*100)).join(', '):'none (undefined)'}. `;
+  callout+=`<b>NPV@${$('d_r').value}% = ${fmtR(npv)}</b> → ${npv>=0?'ACCEPT':'REJECT'}. `;
+  callout+=`<b>MIRR = ${fmtP(mirr*100)}</b>.`;
+  if(roots.length>1) callout+=' <span class="warn">Multiple IRRs present — decide on NPV, not IRR.</span>';
+  $('dashCallout').innerHTML=callout;
+  drawIRRProfile($('dashCanvas'),icf,cfs,r,40,roots);
+}
+window.runDash=runDash;
+
+/* === PROFILE PAGE === */
+function renderProfileCFs(){
+  var n=+$('pr_n').value,h='';
+  for(var i=1;i<=n;i++) h+=`<label>Year ${i} CF (₹)</label><input type="number" class="pr_cf" value="${i<=3?300000:200000}" step="5000">`;
+  $('pr_cfs').innerHTML=h;
+}
+function buildProfileIRR(){
+  var icf=+$('pr_icf').value||0, r=+$('pr_wacc').value/100, maxR=+$('pr_maxr').value||40;
+  var cfs=[...document.querySelectorAll('.pr_cf')].map(e=>+e.value||0);
+  var roots=findAllIRR(icf,cfs);
+  drawIRRProfile($('profileCanvasIRR'),icf,cfs,r,maxR,roots);
+  var npvW=npvAt(r,icf,cfs);
+  var s=`IRR (all roots): <b>${roots.length?roots.map(x=>fmtP(x*100)).join(', '):'none'}</b>.<br>NPV @${$('pr_wacc').value}% = <b>${fmtR(npvW)}</b> → ${npvW>=0?'ACCEPT':'REJECT'}.`;
+  if(roots.length>1) s+=' <span class="warn">Multiple IRRs — use NPV.</span>';
+  $('profileStatsIRR').innerHTML=s;
+}
+window.buildProfileIRR=buildProfileIRR;
+
+/* === MULTIPLE IRR PAGE === */
+function buildMultiIRR(){
+  var icf=+$('mi_icf').value||0, c1=+$('mi_c1').value||0, c2=+$('mi_c2').value||0;
+  var cfs=[c1,c2], wacc=+$('mi_wacc').value/100;
+  var roots=findAllIRR(icf,cfs);
+  drawIRRProfile($('multiCanvas'),icf,cfs,wacc,60,roots);
+  var npvW=npvAt(wacc,icf,cfs);
+  var s=`<b>IRRs found:</b> ${roots.length?roots.map(x=>fmtP(x*100)).join(', '):'none'}.<br>`;
+  s+=`At WACC ${$('mi_wacc').value}%: NPV = <b>${fmtR(npvW)}</b> → ${npvW>=0?'ACCEPT (band)':'REJECT (band)'}.<br>`;
+  s+=`<span class="warn">With multiple IRRs, the accept region is not a simple "left of IRR" zone — rely on NPV.</span>`;
+  $('multiStats').innerHTML=s;
+}
+window.buildMultiIRR=buildMultiIRR;
+
+/* === MIRR QUICK === */
+function renderMQRows(){
+  var n=+$('mq_n').value,h='';
+  for(var i=1;i<=n;i++) h+=`<label>Year ${i} CF (₹)</label><input type="number" class="mq_cf" value="${i<=3?300000:200000}" step="5000">`;
+  $('mq_cfs').innerHTML=h;
+}
+function calcMIRRQuick(){
+  var icf=+$('mq_icf').value||0, cfs=[...document.querySelectorAll('.mq_cf')].map(e=>+e.value||0), n=cfs.length;
+  var f=+$('mq_f').value/100, rr=+$('mq_rr').value/100;
+  var tv=0,pvc=0;
+  cfs.forEach((cf,i)=>{ if(cf<0) pvc+=(-cf)/Math.pow(1+f,i+1); else tv+=cf*Math.pow(1+rr,n-(i+1)); });
+  var mirr=pvc>0?Math.pow(tv/pvc,1/n)-1:NaN;
+  $('mq_out').innerHTML=`<b>Terminal Value</b> = ${fmtR(tv)}<br><b>PV of Costs</b> = ${fmtR(pvc)}<br><b>MIRR</b> = <b>${fmtP(mirr*100)}</b>`;
+}
+window.calcMIRRQuick=calcMIRRQuick;
+
+/* === XIRR PAGE === */
+function addXirrRow(date,amt){
+  var d=document.createElement('div'); d.style.margin='4px 0'; d.style.display='flex'; d.style.gap='6px';
+  d.innerHTML=`<input type="date" value="${date||''}" class="xirr_date" style="flex:1"><input type="number" step="any" value="${amt!==undefined?amt:''}" placeholder="amount ₹" class="xirr_amt" style="flex:1"><button onclick="this.parentNode.remove()">x</button>`;
+  $('xirr_rows').appendChild(d);
+}
+function calcXIRR(){
+  var rows=[...$('xirr_rows').children];
+  var ds=[],am=[];
+  rows.forEach(r=>{var d=r.querySelector('.xirr_date').value,a=parseFloat(r.querySelector('.xirr_amt').value);if(d&&!isNaN(a)){ds.push(new Date(d));am.push(a);}});
+  if(ds.length<2){$('xirr_out').textContent='Need at least two dated flows.';return;}
+  var x=computeXIRR(am,ds);
+  $('xirr_out').innerHTML=`<b>XIRR = ${fmtP(x*100)}</b>`;
+}
+window.calcXIRR=calcXIRR;
+
+/* === CALC: IRR === */
+function renderIRRCFs(){
+  var n=+$('i_n').value,h='';
+  for(var i=1;i<=n;i++) h+=`<label>Year ${i} CF (₹)</label><input type="number" class="i_cf" value="${i<=3?300000:200000}" step="5000">`;
+  $('i_cfs').innerHTML=h;
+}
+function calcIRR(){
+  var icf=+$('i_icf').value||0, r=+$('i_r').value/100, cfs=[...document.querySelectorAll('.i_cf')].map(e=>+e.value||0);
+  var pvs=cfs.map((cf,i)=>cf*pvf(r,i+1));
+  var sumPV=pvs.reduce((a,b)=>a+b,0), npv=sumPV-icf;
+  var roots=findAllIRR(icf,cfs);
+  var mirr=computeMIRR(icf,cfs,+$('i_fin').value/100,+$('i_rin').value/100);
+  var pi=icf>0?sumPV/icf:NaN;
+  var rows='',cumPV=-icf;
+  cfs.forEach((cf,i)=>{var pv=pvs[i];cumPV+=pv;var cs=cumPV>=0?'color:var(--green)':'color:var(--red)';rows+=`<tr><td>${i+1}</td><td>${fmtR(cf)}</td><td>${pvf(r,i+1).toFixed(4)}</td><td>${fmtR(pv)}</td><td style="${cs}">${fmtR(cumPV)}</td></tr>`;});
+  var irrHtml = roots.length? roots.map((x,i)=>`<span class="chip ${x>r?'chip-g':'chip-r'}">IRR${roots.length>1?'#'+(i+1):''}: ${fmtP(x*100)}</span>`).join(' ') : '<span class="chip chip-r">No real IRR</span>';
+  $('i_result').innerHTML=`<h3>IRR Result</h3>
+  <div class="metrics c4" style="margin-bottom:12px">
+    <div class="metric"><small>IRR (1st)</small><strong>${roots.length?fmtP(roots[0]*100):'n/a'}</strong></div>
+    <div class="metric"><small># IRRs</small><strong>${roots.length}</strong></div>
+    <div class="metric" style="background:${npv>=0?'var(--green-l)':'var(--red-l)'}"><small>NPV @${$('i_r').value}%</small><strong style="color:${npv>=0?'var(--green)':'var(--red)'}">${fmtR(npv)}</strong></div>
+    <div class="metric"><small>MIRR</small><strong>${fmtP(mirr*100)}</strong></div>
+  </div>
+  <div class="pillrow">${irrHtml}</div>
+  <div class="scroll"><table><tr><th>Year</th><th>CF (₹)</th><th>PVF @${$('i_r').value}%</th><th>PV (₹)</th><th>Cum PV (₹)</th></tr>${rows}</table></div>
+  <div class="formula" style="margin-top:12px">NPV = ${fmtR(sumPV)} − ${fmtR(icf)} = <b>${fmtR(npv)}</b>
+Decision vs WACC ${$('i_r').value}%: ${npv>=0?'✓ ACCEPT':'✗ REJECT'}${roots.length>1?'  ⚠ MULTIPLE IRRs — decide on NPV':''}
+PI = ${isNaN(pi)?'—':pi.toFixed(4)} | MIRR = ${fmtP(mirr*100)}</div>`;
+}
+window.calcIRR=calcIRR;
+
+/* === CALC: MIRR FULL === */
+function renderM2CFs(){
+  var n=+$('m2_n').value,h='';
+  for(var i=1;i<=n;i++) h+=`<label>Year ${i} CF (₹)</label><input type="number" class="m2_cf" value="${i<=3?300000:200000}" step="5000">`;
+  $('m2_cfs').innerHTML=h;
+}
+function calcMIRRFull(){
+  var icf=+$('m2_icf').value||0, cfs=[...document.querySelectorAll('.m2_cf')].map(e=>+e.value||0), n=cfs.length;
+  var f=+$('m2_f').value/100, rr=+$('m2_rr').value/100;
+  var tv=0,pvc=0, steps=[];
+  cfs.forEach((cf,i)=>{ if(cf<0){var d=Math.pow(1+f,i+1);pvc+=(-cf)/d;steps.push(`PV(outflow ${fmtR(cf)}) = ${fmtR(-cf)}/${(1+f).toFixed(2)}^${i+1} = ${fmtR(-cf/d)}`);} else {var c=Math.pow(1+rr,n-(i+1));tv+=cf*c;steps.push(`FV(inflow ${fmtR(cf)}) = ${fmtR(cf)}×${(1+rr).toFixed(2)}^${n-(i+1)} = ${fmtR(cf*c)}`);} });
+  var mirr=pvc>0?Math.pow(tv/pvc,1/n)-1:NaN;
+  var irrRoots=findAllIRR(icf,cfs);
+  $('m2_result').innerHTML=`<h3>MIRR Result</h3>
+  <div class="formula">${steps.join('\n')}
+PV of Costs = ${fmtR(pvc)}
+Terminal Value = ${fmtR(tv)}
+MIRR = (${fmtR(tv)} / ${fmtR(pvc)})^(1/${n}) − 1 = <b>${fmtP(mirr*100)}</b></div>
+  <div class="metrics c3" style="margin-top:12px">
+    <div class="metric"><small>MIRR</small><strong>${fmtP(mirr*100)}</strong></div>
+    <div class="metric"><small>Plain IRR</small><strong>${irrRoots.length?fmtP(irrRoots[0]*100):'n/a'}</strong></div>
+    <div class="metric"><small># IRRs</small><strong>${irrRoots.length}</strong></div>
+  </div>
+  <div class="callout ${mirr>=0?'cg2':'cr2'}">MIRR = ${fmtP(mirr*100)} is a single, reinvestment-honest rate. ${irrRoots.length>1?'Original CFs had multiple IRRs — MIRR resolves them.':''}</div>`;
+}
+window.calcMIRRFull=calcMIRRFull;
+
+/* === CALC: XIRR 2 === */
+function addXirr2Row(date,amt){
+  var d=document.createElement('div'); d.style.margin='4px 0'; d.style.display='flex'; d.style.gap='6px';
+  d.innerHTML=`<input type="date" value="${date||''}" class="x2_date" style="flex:1"><input type="number" step="any" value="${amt!==undefined?amt:''}" placeholder="amount ₹" class="x2_amt" style="flex:1"><button onclick="this.parentNode.remove()">x</button>`;
+  $('xirr2_rows').appendChild(d);
+}
+function calcXIRR2(){
+  var rows=[...$('xirr2_rows').children];
+  var ds=[],am=[];
+  rows.forEach(r=>{var d=r.querySelector('.x2_date').value,a=parseFloat(r.querySelector('.x2_amt').value);if(d&&!isNaN(a)){ds.push(new Date(d));am.push(a);}});
+  if(ds.length<2){$('xirr2_result').innerHTML='<div class="callout cr2">Need at least two dated flows.</div>';return;}
+  var x=computeXIRR(am,ds);
+  $('xirr2_result').innerHTML=`<h3>XIRR Result</h3><div class="metrics c2"><div class="metric" style="background:var(--teal-l)"><small>XIRR</small><strong>${fmtP(x*100)}</strong></div><div class="metric"><small># Flows</small><strong>${ds.length}</strong></div></div><div class="callout ct2" style="margin-top:10px">XIRR = ${fmtP(x*100)} — the annualised return across the exact calendar dates. If all flows share one sign, XIRR is undefined.</div>`;
+}
+window.calcXIRR2=calcXIRR2;
+
+/* === CALC: COMPARE === */
+function renderCmpA(){var n=+$('cmpA_n').value,h='';for(var i=1;i<=n;i++)h+=`<label>Year ${i} CF (₹)</label><input type="number" class="cmpA_cf" value="${i<=3?200000:100000}" step="1000">`;$('cmpA_cfs').innerHTML=h;}
+function renderCmpB(){var n=+$('cmpB_n').value,h='';for(var i=1;i<=n;i++)h+=`<label>Year ${i} CF (₹)</label><input type="number" class="cmpB_cf" value="${i<=3?200000:100000}" step="1000">`;$('cmpB_cfs').innerHTML=h;}
+function projNPV(icf,cfs,wacc){return cfs.reduce((a,cf,i)=>a+cf*Math.pow(1+wacc,-(i+1)),-icf);}
+function projIRR(icf,cfs){var rs=findAllIRR(icf,cfs);return rs.length?rs[0]:NaN;}
+function loadPreset(kind){
+  if(kind==='scale'){
+    $('cmpA_icf').value=1000;$('cmpA_n').value=1;renderCmpA();document.querySelectorAll('.cmpA_cf')[0].value=1500;
+    $('cmpB_icf').value=10000;$('cmpB_n').value=1;renderCmpB();document.querySelectorAll('.cmpB_cf')[0].value=12000;
+    $('cmp_wacc').value=10;
+  } else if(kind==='timing'){
+    $('cmpA_icf').value=1000;$('cmpA_n').value=1;renderCmpA();document.querySelectorAll('.cmpA_cf')[0].value=1100;
+    $('cmpB_icf').value=1000;$('cmpB_n').value=10;renderCmpB();
+    document.querySelectorAll('.cmpB_cf').forEach((e,i)=>e.value= i===9?2000:0);
+    $('cmp_wacc').value=5;
+  } else {
+    $('cmpA_icf').value=1000;$('cmpA_n').value=5;renderCmpA();
+    document.querySelectorAll('.cmpA_cf').forEach((e,i)=>e.value= i<3?260000:200000);
+    $('cmpB_icf').value=1000;$('cmpB_n').value=5;renderCmpB();
+    document.querySelectorAll('.cmpB_cf').forEach((e,i)=>e.value= i<3?300000:230000);
+    $('cmp_wacc').value=12;
+  }
+  runCompare();
+}
+function runCompare(){
+  var wacc=+$('cmp_wacc').value/100;
+  var icfA=+$('cmpA_icf').value||0, cfsA=[...document.querySelectorAll('.cmpA_cf')].map(e=>+e.value||0);
+  var icfB=+$('cmpB_icf').value||0, cfsB=[...document.querySelectorAll('.cmpB_cf')].map(e=>+e.value||0);
+  var irrA=projIRR(icfA,cfsA), irrB=projIRR(icfB,cfsB);
+  var npvA=projNPV(icfA,cfsA,wacc), npvB=projNPV(icfB,cfsB,wacc);
+  // incremental
+  var n=Math.max(cfsA.length,cfsB.length);
+  var incCFs=[], incICF=icfB-icfA;
+  for(var i=0;i<n;i++) incCFs.push((cfsB[i]||0)-(cfsA[i]||0));
+  var cross=findAllIRR(incICF,incCFs);
+  var irrPick = (irrA>irrB)?'A':'B';
+  var npvPick = (npvA>npvB)?'A':'B';
+  var conflict = (irrPick!==npvPick) && !isNaN(irrA) && !isNaN(irrB);
+  var html=`<div class="metrics c2" style="margin-bottom:10px">
+    <div class="metric" style="background:var(--navy-l)"><small>Project A — IRR</small><strong>${fmtP(irrA*100)}</strong></div>
+    <div class="metric" style="background:var(--navy-l)"><small>Project B — IRR</small><strong>${fmtP(irrB*100)}</strong></div>
+    <div class="metric" style="background:${npvA>=0?'var(--green-l)':'var(--red-l)'}"><small>Project A — NPV@${$('cmp_wacc').value}%</small><strong style="color:${npvA>=0?'var(--green)':'var(--red)'}">${fmtR(npvA)}</strong></div>
+    <div class="metric" style="background:${npvB>=0?'var(--green-l)':'var(--red-l)'}"><small>Project B — NPV@${$('cmp_wacc').value}%</small><strong style="color:${npvB>=0?'var(--green)':'var(--red)'}">${fmtR(npvB)}</strong></div>
+  </div>`;
+  html+=`<div class="two">
+    <div class="callout ${npvA>=npvB?'cg2':'ca'}"><b>NPV ranking:</b> Project ${npvPick} is better (${fmtR(Math.max(npvA,npvB))} vs ${fmtR(Math.min(npvA,npvB))}).</div>
+    <div class="callout ${irrA>=irrB?'ct2':'ca'}"><b>IRR ranking:</b> Project ${irrPick} is better (${fmtP(Math.max(irrA,irrB)*100)} vs ${fmtP(Math.min(irrA,irrB)*100)}).</div>
+  </div>`;
+  if(conflict){
+    html+=`<div class="callout cr2" style="margin-top:10px"><b>⚠ CONFLICT:</b> IRR and NPV disagree! IRR says Project ${irrPick}, but NPV (the correct metric) says Project ${npvPick}. Crossover (incremental) IRR = ${cross.length?fmtP(cross[0]*100):'n/a'}. Since WACC = ${$('cmp_wacc').value}% ${cross.length&&cross[0]>wacc?'>':'<'} crossover, the NPV choice stands. <b>Accept Project ${npvPick}.</b></div>`;
+  } else {
+    html+=`<div class="callout cg2" style="margin-top:10px"><b>✓ Agreement:</b> Both IRR and NPV favour Project ${npvPick}. Crossover (incremental) IRR = ${cross.length?fmtP(cross[0]*100):'n/a'}. Accept Project ${npvPick}.</div>`;
+  }
+  $('cmp_out').innerHTML=html;
+  // draw both profiles using npv_lab-style drawProfile
+  drawProfile($('cmpChart'),icfA,cfsA,+$('cmp_wacc').value,50,icfB,cfsB);
+}
+window.runCompare=runCompare;window.loadPreset=loadPreset;
+
+/* === TOGGLE === */
+function toggleAns(id){var e=$(id);if(e)e.style.display=e.style.display==='none'?'block':'none';}
+window.toggleAns=toggleAns;
+
+/* === MCQ === */
+var ALL_MCQ=[
+  {q:"The Internal Rate of Return (IRR) is defined as:",opts:["The average annual accounting profit as a percentage of investment","The discount rate that makes the NPV of the project's cash flows equal to zero","The project's return divided by its initial investment","The ratio of total cash inflows to total cash outflows"],ans:1,exp:"IRR is the rate r that satisfies NPV(r) = 0, i.e., the rate at which the PV of inflows exactly equals the PV of outflows. It is the break-even discount rate of the project."},
+  {q:"For a conventional project (one outflow followed by inflows), the correct accept/reject rule using IRR is:",opts:["Accept if IRR < WACC","Accept if IRR > WACC","Accept if IRR = 0","Accept if IRR > NPV"],ans:1,exp:"Accept when the project's IRR exceeds the required return (WACC). At that point NPV > 0. IRR is judged against — never used as — the hurdle rate itself."},
+  {q:"A project has cash flows: −₹100, +₹230, −₹132. How many IRRs does it have?",opts:["None","Exactly one","Two","Cannot be determined"],ans:2,exp:"The stream changes sign twice (−,+,−), so by Descartes' Rule of Signs there are up to two positive IRRs. Solving gives IRR = 10% and IRR = 20%. With multiple IRRs, the IRR rule is ambiguous — use NPV."},
+  {q:"IRR implicitly assumes that intermediate cash flows are reinvested at:",opts:["The cost of capital (WACC)","The risk-free rate","The project's own IRR","Zero"],ans:2,exp:"This is IRR's key flaw: it assumes early cash flows are reinvested at the IRR itself (often unrealistically high). NPV assumes reinvestment at WACC — the realistic rate. MIRR fixes this with an explicit reinvestment rate."},
+  {q:"Two mutually exclusive projects: A has IRR 50% and NPV ₹364; B has IRR 20% and NPV ₹909 (WACC 10%). Which should be accepted?",opts:["A, because its IRR is higher","B, because its NPV is higher","Both, since both have positive IRR","Neither, since IRRs differ"],ans:1,exp:"For mutually exclusive projects, rank by NPV, not IRR. B creates more absolute wealth (₹909 > ₹364) despite a lower percentage return. The scale problem makes IRR misrank here."},
+  {q:"Modified IRR (MIRR) was introduced primarily to address:",opts:["The difficulty of computing NPV","IRR's multiple-root problem and unrealistic reinvestment assumption","The fact that IRR ignores the time value of money","The need to express returns in rupees"],ans:1,exp:"MIRR compounds inflows at an explicit reinvestment rate and discounts outflows at a finance rate, yielding a single, economically sensible rate that avoids both the multiple-IRRs issue and the hidden reinvestment-at-IRR assumption."},
+  {q:"XIRR differs from IRR in that it:",opts:["Uses a higher discount rate","Discounts cash flows using exact calendar dates rather than whole periods","Only works for perpetuities","Ignores the initial investment"],ans:1,exp:"XIRR extends IRR to irregularly timed cash flows by discounting using the actual fraction of a year elapsed between dates, making it the standard for PE/VC and irregular investments."},
+  {q:"If all of a project's cash flows are positive (no initial outlay), then:",opts:["IRR equals the WACC","IRR is negative","IRR does not exist (no real root)","IRR is infinite"],ans:2,exp:"With no sign change, NPV(r) > 0 for all r ≥ 0, so there is no discount rate that makes NPV = 0. IRR is undefined. NPV is the reliable metric, and the project is a pure inflow."},
+  {q:"The crossover rate between two projects equals:",opts:["The average of their two IRRs","The IRR of their incremental (B − A) cash flows","The higher of the two WACCs","Zero"],ans:1,exp:"The crossover rate is the discount rate where the two NPV profiles intersect — equivalently, the IRR of the incremental cash flows (B − A). If it exceeds WACC, choose the larger project B; otherwise choose A."},
+  {q:"Which statement is TRUE about NPV additivity and IRR?",opts:["Both NPV and IRR are additive","NPV is additive (NPV(A+B)=NPV(A)+NPV(B)); IRR is not","IRR is additive; NPV is not","Neither is additive"],ans:1,exp:"NPV is additive — a powerful property enabling portfolio and divisional valuation. IRR is NOT additive (IRR(A+B) is not a simple function of IRR(A) and IRR(B)), which is another reason NPV is the theoretically correct primary metric."},
+  {q:"For a single lump-sum cash flow, the IRR equals:",opts:["Cₙ × |C₀| − 1","(|Cₙ|/|C₀|)^(1/n) − 1","Cₙ/|C₀|","1 − (|C₀|/Cₙ)^(1/n)"],ans:1,exp:"Solve |C₀| = Cₙ/(1+IRR)^n → (1+IRR)^n = Cₙ/|C₀| → IRR = (Cₙ/|C₀|)^(1/n) − 1. This is the only closed-form IRR case (along with level annuities)."},
+  {q:"A project's NPV profile crosses the x-axis at 18%. This means:",opts:["The project's WACC is 18%","The project's IRR is 18%","The project's accounting return is 18%","The project should be rejected"],ans:1,exp:"The x-intercept of the NPV profile (where NPV = 0) is, by definition, the IRR. If WACC < 18%, NPV > 0 (accept); if WACC > 18%, NPV < 0 (reject)."}
+];
+function shuffle(arr){return arr.map(v=>({v,s:Math.random()})).sort((a,b)=>a.s-b.s).map(o=>o.v);}
+function pick(arr,n){return shuffle(arr).slice(0,n);}
+function renderMCQs(n){
+  var sel=pick(ALL_MCQ,Math.min(n,ALL_MCQ.length));
+  var html='';
+  sel.forEach((q,i)=>{
+    html+=`<div class="quiz-card" id="mc${i}"><p><b>Q${i+1}.</b> ${q.q}</p>`;
+    q.opts.forEach((o,j)=>html+=`<button class="mcq-opt" data-qi="${i}" data-ji="${j}">${String.fromCharCode(65+j)}. ${o}</button>`);
+    html+='</div>';
+  });
+  $('mcqContainer').innerHTML=html;
+  window._MCQ=sel;
+  document.querySelectorAll('.mcq-opt').forEach(btn=>btn.addEventListener('click',()=>{
+    var qi=+btn.dataset.qi,ji=+btn.dataset.ji,qobj=window._MCQ[qi];
+    var card=$('mc'+qi);
+    card.querySelectorAll('.mcq-opt').forEach((b,j)=>{b.disabled=true;if(j===qobj.ans)b.classList.add('correct');else if(j===ji)b.classList.add('wrong');});
+    if(!card.querySelector('.answer')){var d=document.createElement('div');d.className='answer';d.innerHTML='<b>'+(ji===qobj.ans?'✓ Correct!':'✗ Incorrect.')+'</b> '+qobj.exp;card.appendChild(d);}
+  }));
+}
+window.renderMCQs=renderMCQs;
+
+/* === EXAM GEN === */
+var CALC_QS=[
+  "Flows: ICF ₹1,000; ₹300; ₹420; ₹680. Using trial rates 10% (NPV +33.6) and 15% (NPV −58.9), interpolate to estimate the IRR. Then state the accept/reject decision if WACC = 12%.",
+  "A project requires ₹5,00,000 and returns ₹1,60,000 per year for 5 years. (a) Find the IRR from the PVIFA table. (b) Compute NPV at WACC 12%. (c) State the decision.",
+  "Flows: −₹100; +₹230; −₹132. (a) How many sign changes are there? (b) Find both IRRs algebraically. (c) Explain why the IRR rule fails here and what to use instead.",
+  "Flows: −₹1,000; ₹300; ₹420; ₹680. With finance rate 12% and reinvestment rate 12%, compute the MIRR. Compare it to the IRR and explain the difference.",
+  "Invest ₹10,00,000 on 1 Jan 2024 and receive ₹12,00,000 on 1 Jul 2024 (181 days). Compute the XIRR and explain why it exceeds the naive 20% return.",
+  "Two mutually exclusive projects: A (ICF ₹1,000; ₹1,500 at Yr1) and B (ICF ₹10,000; ₹12,000 at Yr1), WACC 10%. Show the IRR-vs-NPV conflict and use incremental analysis to decide."
+];
+var THEORY_QS=[
+  "Explain what the Internal Rate of Return is and how the accept/reject decision is made using it. Why is IRR called the 'break-even discount rate'?",
+  "Explain the multiple-IRRs problem. When does it arise, how many IRRs can exist, and what should an analyst do when it occurs?",
+  "Critically discuss the reinvestment-rate assumption of IRR and how Modified IRR (MIRR) addresses it.",
+  "Compare IRR and NPV as capital budgeting metrics. In what situations can IRR mislead, and why does NPV always win for mutually exclusive projects?",
+  "Explain XIRR and why it is preferred over IRR for investments with irregularly timed cash flows such as private equity."
+];
+function generateExam(){
+  var nMCQ=+$('eg_mcq').value||0, nCalc=+$('eg_calc').value||0, theory=+$('eg_theory').value;
+  var html='<h3 style="font-family:Playfair Display,serif">Internal Rate of Return — Exam Paper</h3><ol>';
+  pick(ALL_MCQ,nMCQ).forEach(q=>{html+=`<li><b>MCQ.</b> ${q.q}<ol type="A">${q.opts.map(o=>`<li>${o}</li>`).join('')}</ol></li>`;});
+  pick(CALC_QS,nCalc).forEach(q=>{html+=`<li><b>Problem.</b> ${q}</li>`;});
+  if(theory) pick(THEORY_QS,2).forEach(t=>{html+=`<li><b>Theory.</b> ${t}</li>`;});
+  html+='</ol>';$('eg_paper').innerHTML=html;
+}
+window.generateExam=generateExam;
+
+/* === GLOSSARY === */
+var GLOSSARY=[
+  ["Crossover Rate","The discount rate at which two projects' NPV profiles intersect (equal NPV). Equals the IRR of the incremental cash flows (B − A). Decides which mutually exclusive project is better given the actual WACC."],
+  ["Descartes' Rule of Signs","A rule stating the number of positive real roots of a polynomial is at most the number of sign changes in its coefficient sequence. Applied to cash flows: # positive IRRs ≤ # sign changes."],
+  ["Internal Rate of Return (IRR)","The discount rate that makes a project's NPV equal to zero — the break-even rate of return. Accept if IRR > WACC; reject if IRR < WACC."],
+  ["Interpolation (IRR)","A manual IRR method: bracket zero with two rates r₁ (NPV>0) and r₂ (NPV<0), then linearly interpolate: IRR ≈ r₁ + (r₂−r₁)×NPV(r₁)/(NPV(r₁)−NPV(r₂))."],
+  ["Modified IRR (MIRR)","A variant of IRR that compounds inflows at a reinvestment rate and discounts outflows at a finance rate, yielding a single, reinvestment-honest rate. Avoids multiple-IRRs and the reinvest-at-IRR flaw."],
+  ["Multiple IRRs","Two or more IRR values for one project, arising when cash flows change sign more than once. Makes the simple IRR rule ambiguous; resolve with NPV or MIRR."],
+  ["Negative IRR","An IRR below 0%, occurring when the sum of undiscounted inflows is less than the initial outlay — the project loses money even with no time value. Reject."],
+  ["No IRR","The case where no real discount rate sets NPV to zero (e.g., all cash flows share one sign). IRR is undefined; use NPV."],
+  ["NPV Profile","A graph of NPV (y-axis) against discount rate (x-axis). Its x-intercept is the IRR; its shape shows sensitivity to the discount rate."],
+  ["Profitability Index (PI)","PV of inflows divided by initial investment. Used for capital rationing ranking; = 1 + NPV/ICF."],
+  ["Reinvestment Assumption","IRR implicitly reinvests interim cash flows at the IRR; NPV reinvests at WACC. The mismatch is why IRR can overstate true returns and misrank projects."],
+  ["Scale Problem","An IRR conflict where a smaller project has a higher IRR but a larger project has a higher NPV. IRR ignores absolute size; NPV captures it. Rank by NPV."],
+  ["Timing Problem","An IRR conflict where IRR favours the early-returning project while NPV (at a given WACC) favours the later-returning one. Resolved by incremental analysis / crossover rate."],
+  ["XIRR","The IRR for cash flows occurring on specific dates: 0 = Σ Cᵢ/(1+XIRR)^((dᵢ−d₀)/365). The standard return metric for irregularly timed investments (PE/VC)."]
+];
+function renderGlossary(filter){
+  if(!filter)filter=''; var f=filter.toLowerCase();
+  $('gl_list').innerHTML=GLOSSARY
+    .filter(p=>p[0].toLowerCase().includes(f)||p[1].toLowerCase().includes(f))
+    .map(p=>`<div class="quiz-card"><b>${p[0]}</b><div class="muted" style="margin-top:5px;font-size:.91rem">${p[1]}</div></div>`)
+    .join('')||'<p class="muted">No matches.</p>';
+}
+function filterGlossary(){renderGlossary($('gl_search').value);}
+window.filterGlossary=filterGlossary;
+
+/* === DRAW PROFILE (npv_lab-style, supports 2 projects) === */
+function drawProfile(canvas,icf,cfs,wacc,maxR,icf2,cfs2){
+  if(!canvas)return;
+  var W=canvas.offsetWidth||700,H=canvas.height||280; canvas.width=W;
+  var ctx=canvas.getContext('2d');
+  var pl=62,pr=18,pt=22,pb=44,cW=W-pl-pr,cH=H-pt-pb;
+  ctx.clearRect(0,0,W,H);
+  function npvAt(rate,icf0,cfs0){return cfs0.reduce((acc,cf,i)=>acc+cf*Math.pow(1+rate,-(i+1)),-icf0);}
+  var step=maxR/60, rates=[], npvs=[], npvs2=[];
+  for(var pct=0;pct<=maxR;pct+=step){rates.push(pct);npvs.push(npvAt(pct/100,icf,cfs));if(icf2!==undefined&&cfs2)npvs2.push(npvAt(pct/100,icf2,cfs2));}
+  var allV=[...npvs,...(npvs2.length?npvs2:[])];
+  var minV=Math.min(...allV)*1.05,maxV=Math.max(...allV)*1.05;
+  if(maxV===minV){maxV+=1;minV-=1;}
+  function xOf(pct){return pl+cW*pct/maxR;}
+  function yOf(v){return pt+cH*(1-(v-minV)/(maxV-minV));}
+  ctx.strokeStyle='#d4daea';ctx.lineWidth=1;
+  for(var g=0;g<=5;g++){var yg=pt+cH*g/5;ctx.beginPath();ctx.moveTo(pl,yg);ctx.lineTo(pl+cW,yg);ctx.stroke();var yval=maxV-(maxV-minV)*g/5;ctx.fillStyle='#546080';ctx.font='10px Inter,sans-serif';ctx.textAlign='right';ctx.fillText(Math.round(yval/1000)+'K',pl-4,yg+4);}
+  for(var g=0;g<=6;g++){ctx.fillStyle='#546080';ctx.textAlign='center';ctx.fillText((maxR*g/6).toFixed(0)+'%',pl+cW*g/6,H-6);}
+  if(minV<0&&maxV>0){var y0=yOf(0);ctx.strokeStyle='#99aac0';ctx.lineWidth=1.2;ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(pl+cW,y0);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#99aac0';ctx.font='9px Inter,sans-serif';ctx.textAlign='left';ctx.fillText('NPV=0',pl+3,y0-3);}
+  ctx.strokeStyle='#1a3068';ctx.lineWidth=2.5;ctx.beginPath();
+  rates.forEach((r,i)=>{i===0?ctx.moveTo(xOf(r),yOf(npvs[i])):ctx.lineTo(xOf(r),yOf(npvs[i]));});
+  ctx.stroke();
+  function findIRR(icf0,cfs0){if(npvAt(0.001,icf0,cfs0)<=0)return NaN;var lo=0,hi=10;for(var it=0;it<80;it++){var mid=(lo+hi)/2;var v=npvAt(mid,icf0,cfs0);if(Math.abs(v)<1)return mid*100;v>0?lo=mid:hi=mid;}return (lo+hi)/2*100;}
+  var irr1=findIRR(icf,cfs);
+  if(!isNaN(irr1)&&irr1<=maxR){var xi=xOf(irr1),yi=yOf(0);ctx.strokeStyle='#9e2020';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(xi,pt);ctx.lineTo(xi,pt+cH);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#9e2020';ctx.beginPath();ctx.arc(xi,yi,5,0,Math.PI*2);ctx.fill();ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('IRR≈'+irr1.toFixed(1)+'%',xi,pt+cH+14);}
+  if(wacc>=0&&wacc<=maxR){var xw=xOf(wacc);ctx.strokeStyle='#0a6b5a';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(xw,pt);ctx.lineTo(xw,pt+cH);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#0a6b5a';ctx.font='bold 9px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('WACC='+wacc+'%',xw,pt+10);}
+  if(npvs2.length){ctx.strokeStyle='#a86b00';ctx.lineWidth=2;ctx.setLineDash([6,3]);ctx.beginPath();rates.forEach((r,i)=>{i===0?ctx.moveTo(xOf(r),yOf(npvs2[i])):ctx.lineTo(xOf(r),yOf(npvs2[i]));});ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#1a3068';ctx.fillRect(pl+5,pt+5,12,4);ctx.fillStyle='#1a3068';ctx.font='9px Inter,sans-serif';ctx.textAlign='left';ctx.fillText('Project A',pl+20,pt+10);ctx.fillStyle='#a86b00';ctx.fillRect(pl+5,pt+18,12,4);ctx.fillStyle='#a86b00';ctx.fillText('Project B',pl+20,pt+22);}
+  ctx.fillStyle='#546080';ctx.font='9px Inter,sans-serif';ctx.textAlign='right';ctx.fillText('NPV (₹K)',pl+3,pt+8);ctx.textAlign='right';ctx.fillText('Discount Rate →',pl+cW,H-1);
+}
+
+/* === MASTER SEARCH === */
+var SIDX=[];
+function buildIdx(){document.querySelectorAll('.tab').forEach(t=>{var pg=$(t.dataset.page);SIDX.push({page:t.dataset.page,title:t.textContent.trim(),body:pg?pg.textContent.replace(/\s+/g,' ').slice(0,4000):''});});}
+function runSearch(){
+  var q=($('masterSearch').value||'').trim().toLowerCase(),out=$('masterSearchResults');
+  if(!q){out.innerHTML='<p class="muted">Type: interpolation, MIRR, multiple IRR, XIRR, crossover…</p>';return;}
+  var hits=SIDX.map(s=>({s,sc:(s.title.toLowerCase().includes(q)?100:0)+(s.body.toLowerCase().includes(q)?40:0),bi:s.body.toLowerCase().indexOf(q)})).filter(h=>h.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,16);
+  if(!hits.length){out.innerHTML='<p class="muted">No matches.</p>';return;}
+  out.innerHTML=hits.map(h=>`<div class="quiz-card"><button class="btn-sm" data-goto="${h.s.page}">→ ${h.s.title}</button><div class="muted" style="margin-top:5px;font-size:.84rem">${h.bi>=0?'…'+h.s.body.slice(Math.max(0,h.bi-50),h.bi+70)+'…':''}</div></div>`).join('');
+  out.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>activatePage(b.dataset.goto)));
+}
+
+/* === INIT === */
+document.addEventListener('DOMContentLoaded',()=>{
+  handlePattern();
+  renderDCFs();
+  renderIRRCFs();
+  renderMQRows();
+  renderM2CFs();
+  renderProfileCFs();
+  renderCmpA(); renderCmpB();
+  addXirrRow('2024-01-01',-1000000);
+  addXirrRow('2024-07-01',300000);
+  addXirrRow('2025-01-01',1100000);
+  addXirr2Row('2024-01-01',-1000000);
+  addXirr2Row('2024-07-01',300000);
+  addXirr2Row('2025-01-01',1100000);
+  buildIdx();
+  var ms=$('masterSearch');if(ms)ms.addEventListener('input',runSearch);
+  runSearch();
+  renderMCQs(8);
+  renderGlossary();
+  drawIRRProfile($('dashCanvas'),1000000,[300000,300000,300000,200000,200000],0.12,40,findAllIRR(1000000,[300000,300000,300000,200000,200000]));
+  setTimeout(runDash,100);
+});
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

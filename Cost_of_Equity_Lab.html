@@ -1,0 +1,1535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cost of Equity (Ke) — Complete Interactive Lab</title>
+<style>
+:root{--bg:#eef2f7;--card:#fff;--ink:#16202e;--muted:#5c6575;--line:#d8dfe8;--blue:#1a52a0;--blue-d:#0f2d5e;--gold:#b8860b;--gold-l:#f2ead0;--green:#1a7a52;--red:#c0392b;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:1420px;margin:auto;padding:18px}
+.hero{padding:32px;border-radius:20px;background:linear-gradient(135deg,#0f2d5e 0%,#1a7a52 55%,#0d4a30 100%);color:#fff;box-shadow:0 14px 34px #0f2d5e30;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;top:0;right:0;bottom:0;width:5px;background:var(--gold)}
+.hero h1{font-family:Georgia,serif;font-size:clamp(22px,3vw,40px);margin:0 0 8px;line-height:1.1}
+.hero p{margin:0;opacity:.94;font-size:1rem;max-width:1060px}
+.hero .chapref{display:inline-block;margin-bottom:10px;background:#ffffff1f;border:1px solid #ffffff30;padding:4px 13px;border-radius:999px;font-size:.8rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.hero .modewrap{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .modewrap button{background:#ffffff1c;border:1px solid #ffffff3d;color:#fff}
+.hero .modewrap button.on{background:#fff;color:var(--blue-d)}
+.nav{display:flex;flex-wrap:nowrap;gap:6px;padding:10px;margin:14px 0;background:#e2e8f5;border:1px solid var(--line);border-radius:14px;overflow-x:auto;scrollbar-width:thin;position:sticky;top:0;z-index:5}
+.tab{border:1px solid #c9d4e4;background:#fff;color:#2b3650;padding:7px 10px;border-radius:9px;font-weight:700;font-size:.81rem;white-space:nowrap;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-1px)}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.navsep{align-self:center;padding:0 2px;font-size:.57rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#6878a0;white-space:nowrap;user-select:none}
+.page{display:none}.page.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:.3}to{opacity:1}}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 3px 12px #16202e0a}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+h2,h3{margin-top:0}h2{font-family:Georgia,serif}.muted{color:var(--muted)}
+label{display:block;font-weight:700;margin:9px 0 3px;font-size:.92rem}
+input,select,button{font:inherit}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font-size:.95rem}
+input:focus,select:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+button{border:0;border-radius:9px;padding:9px 14px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer;font-size:.95rem}
+button:hover{filter:brightness(1.08)}.secondary{background:#e4eaf5;color:var(--ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.metric{padding:12px;border-radius:12px;background:#eef3fb;border:1px solid #d3ddef}
+.metric small{color:var(--muted);font-size:.76rem}.metric strong{display:block;font-size:1.18rem;margin-top:2px}
+.formula{background:var(--blue-d);color:#e9eeff;border-radius:12px;padding:15px;font:1rem/1.65 ui-monospace,Menlo,monospace;overflow:auto;white-space:pre-wrap;margin:8px 0}
+.callout{padding:13px;border-left:4px solid var(--blue);background:#eef3fb;border-radius:9px;font-size:.96rem;margin:8px 0}
+.good{color:var(--green);font-weight:800}.bad{color:var(--red);font-weight:800}.warn{color:var(--gold);font-weight:800}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:.91rem}
+th:first-child,td:first-child{text-align:left}th{background:#eef2f8}
+.scroll{overflow:auto;max-height:460px}
+.quiz-card{padding:14px;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.answer{margin-top:8px;padding:10px;border-radius:9px;background:#eef2f8;font-size:.95rem}
+.mcq-option{display:block;width:100%;text-align:left;padding:8px 11px;margin:4px 0;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:.94rem}
+.mcq-option:hover{background:#eef3fb}.mcq-option.correct{background:#e3f3ea;border-color:var(--green)}.mcq-option.wrong{background:#f8e6e3;border-color:var(--red)}
+.pillrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stepflow{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:8px 0}
+.step{background:#eef3fb;border:1px solid #d3ddef;color:#0f3d8e;padding:6px 12px;border-radius:9px;font-weight:700;font-size:.87rem}
+.arrow{color:var(--muted)}
+ul,ol{padding-left:20px}li{margin-bottom:4px}
+.adv{border-left:4px solid var(--green);background:#e3f3ea;padding:11px 13px;border-radius:9px;margin-bottom:7px}
+.lim{border-left:4px solid var(--red);background:#fbeae7;padding:11px 13px;border-radius:9px;margin-bottom:7px}
+canvas{display:block;width:100%;height:250px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.note{font-size:.9rem;color:var(--muted)}
+.alert{padding:11px 13px;border-radius:10px;background:var(--gold-l);border-left:4px solid var(--gold);margin:8px 0}
+.sk{font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:var(--gold);margin-bottom:4px}
+.teacher-note{display:none;border-left:4px solid var(--gold);background:var(--gold-l);padding:11px 13px;border-radius:9px;margin-top:9px}
+body.teacher .teacher-note{display:block}
+.small-btn{padding:6px 10px;font-size:.85rem}
+.hl-row{background:#e3f3ea!important;font-weight:700}
+.method-card{border-radius:14px;padding:16px;margin-bottom:10px}
+.ddm-card{background:#eaf4ee;border:1px solid #a8d5bc}
+.capm-card{background:#eaf0fb;border:1px solid #b3c8e8}
+.bond-card{background:var(--gold-l);border:1px solid #d4ae5a}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,1fr)}.s4,.s5,.s6,.s7,.s8{grid-column:span 6}}
+@media(max-width:700px){.s4,.s5,.s6,.s7,.s8,.s12{grid-column:span 12}.wrap{padding:10px}}
+@media print{.nav,.hero .modewrap,button,input,select{display:none!important}.page{display:block!important}.card{box-shadow:none;break-inside:avoid}body{background:#fff}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<span class="chapref">Financial Management · Cost of Capital</span>
+<h1>Cost of Equity (Ke) — Complete Interactive Lab</h1>
+<p>A comprehensive, fully offline lab on the cost of equity covering every method tested in Indian FM examinations: Dividend Discount Model (DDM) — zero growth, constant growth (Gordon Model), and two-stage growth; CAPM — Security Market Line, Beta, Market Risk Premium, adjusting Beta for leverage; Bond Yield Plus Risk Premium; cost of retained earnings (Kr) vs new equity (Ke); effect of flotation costs; growth rate estimation (g = b×ROE); and a full comparison of all three methods. All calculations live in your browser, in Indian ₹.</p>
+<div class="modewrap">
+<button id="modeStudent" class="on" onclick="setMode('student')">Student Mode</button>
+<button id="modeTeacher" onclick="setMode('teacher')">Teacher Mode</button>
+<button onclick="window.print()">Print / Save PDF</button>
+</div>
+</header>
+
+<nav class="nav">
+<span class="navsep">Concept</span>
+<button class="tab active" data-page="dashboard">Dashboard</button>
+<button class="tab" data-page="intro">Introduction</button>
+<button class="tab" data-page="why_highest">Why Ke is Highest</button>
+<span class="navsep">DDM Approach</span>
+<button class="tab" data-page="ddm_zero">Zero Growth DDM</button>
+<button class="tab" data-page="ddm_gordon">Gordon Model (Const. Growth)</button>
+<button class="tab" data-page="ddm_twostage">Two-Stage Growth</button>
+<button class="tab" data-page="growth_rate">Estimating g</button>
+<button class="tab" data-page="flotation">Flotation Costs</button>
+<button class="tab" data-page="kr_vs_ke">Kr vs Ke (New Issue)</button>
+<span class="navsep">CAPM Approach</span>
+<button class="tab" data-page="capm_concept">CAPM Concept</button>
+<button class="tab" data-page="sml">Security Market Line</button>
+<button class="tab" data-page="beta">Beta (β) — Explained</button>
+<button class="tab" data-page="beta_leverage">Levered vs Unlevered Beta</button>
+<button class="tab" data-page="capm_inputs">CAPM Inputs</button>
+<span class="navsep">Other Methods</span>
+<button class="tab" data-page="bond_yield">Bond Yield + Risk Premium</button>
+<button class="tab" data-page="method_compare">Method Comparison</button>
+<span class="navsep">Calculators</span>
+<button class="tab" data-page="calc_ddm">DDM Calculator</button>
+<button class="tab" data-page="calc_capm">CAPM Calculator</button>
+<button class="tab" data-page="calc_sml">SML Chart</button>
+<button class="tab" data-page="calc_g">Growth Rate (g) Calc</button>
+<span class="navsep">Practice</span>
+<button class="tab" data-page="examples">Worked Examples</button>
+<button class="tab" data-page="mcq">MCQ Bank</button>
+<button class="tab" data-page="exam_gen">Exam Generator</button>
+<span class="navsep">Reference</span>
+<button class="tab" data-page="formula_bank">Formula Bank</button>
+<button class="tab" data-page="glossary">Glossary</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+<div class="grid">
+<div class="card s12" style="background:linear-gradient(135deg,#eef8f2,#e3f3ea);border-color:#a8d5bc">
+<div class="sk">Signature Tool — Dual Method Ke Calculator</div>
+<h2>Cost of Equity: DDM vs CAPM — Live Comparison</h2>
+<div class="grid" style="margin-top:8px">
+<div class="s4">
+  <div class="method-card ddm-card">
+  <b style="color:var(--green)">DDM / Gordon Model</b>
+  <label>Current Dividend D₀ (₹)</label><input id="dD0" type="number" value="6" step="0.5">
+  <label>Growth Rate g (%)</label><input id="dG" type="number" value="7" step="0.5">
+  <label>Market Price P₀ (₹)</label><input id="dP0" type="number" value="120">
+  <label>Flotation Cost per share (₹) — 0 for existing</label><input id="dFlot" type="number" value="0">
+  </div>
+  <div class="method-card capm-card" style="margin-top:8px">
+  <b style="color:var(--blue)">CAPM</b>
+  <label>Risk-Free Rate Rf (%)</label><input id="cRf" type="number" value="7" step="0.5">
+  <label>Beta (β)</label><input id="cBeta" type="number" value="1.2" step="0.1">
+  <label>Market Return Rm (%)</label><input id="cRm" type="number" value="14" step="0.5">
+  </div>
+  <button onclick="runDash()" style="margin-top:10px;width:100%">Compare Both Methods</button>
+</div>
+<div class="s8">
+  <div id="dashMetrics" class="metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px"></div>
+  <div id="dashWorking"></div>
+  <canvas id="dashSMLChart"></canvas>
+</div>
+</div>
+</div>
+<div class="card s5">
+<div class="sk">Find anything</div>
+<h3>Master Search</h3>
+<input id="masterSearch" type="text" placeholder="Search: CAPM, Beta, Gordon, flotation, g = b×ROE…">
+<div id="masterResults" style="margin-top:10px"></div>
+</div>
+<div class="card s7">
+<div class="sk">Learning Path</div>
+<h3>Suggested sequence</h3>
+<div class="stepflow">
+<span class="step">1·Introduction</span><span class="arrow">→</span>
+<span class="step">2·Why Ke is Highest</span><span class="arrow">→</span>
+<span class="step">3·Zero Growth DDM</span><span class="arrow">→</span>
+<span class="step">4·Gordon Model</span><span class="arrow">→</span>
+<span class="step">5·Estimating g</span><span class="arrow">→</span>
+<span class="step">6·Flotation &amp; Kr vs Ke</span><span class="arrow">→</span>
+<span class="step">7·CAPM &amp; SML</span><span class="arrow">→</span>
+<span class="step">8·Beta &amp; Leverage</span>
+</div>
+<div class="pillrow" style="margin-top:10px">
+<button class="small-btn secondary" onclick="activatePage('calc_ddm')">DDM Calc</button>
+<button class="small-btn secondary" onclick="activatePage('calc_capm')">CAPM Calc</button>
+<button class="small-btn secondary" onclick="activatePage('calc_sml')">SML Chart</button>
+<button class="small-btn secondary" onclick="activatePage('calc_g')">Growth Rate Calc</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- INTRODUCTION -->
+<section id="intro" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Foundations</div>
+<h2>Cost of Equity — Introduction</h2>
+<p>The <b>cost of equity (Ke)</b> is the minimum rate of return that equity shareholders require to compensate them for the risk of investing in the firm's shares. It is the opportunity cost of equity capital — what shareholders could earn by investing in alternative investments of equivalent risk.</p>
+<h3>Why cost of equity is difficult to measure</h3>
+<p>Unlike debt (where the interest rate is contractually specified) or preference shares (where the dividend rate is fixed), equity carries <b>no contractual obligation</b>. The dividend is at the discretion of the Board. There is no stated rate. Ke must therefore be <b>inferred</b> from observable market data using financial models.</p>
+<h3>Three main approaches</h3>
+<div class="method-card ddm-card">
+<b>1. Dividend Discount Model (DDM) / Gordon Model</b><br>
+Infers Ke from the current market price, current/expected dividend, and the expected growth rate. Based on the principle that price = PV of all future dividends.
+</div>
+<div class="method-card capm-card" style="margin-top:8px">
+<b>2. Capital Asset Pricing Model (CAPM)</b><br>
+Estimates Ke using the stock's systematic risk (Beta), the risk-free rate, and the market risk premium. Theoretically most rigorous — accounts for risk explicitly.
+</div>
+<div class="method-card bond-card" style="margin-top:8px">
+<b>3. Bond Yield Plus Risk Premium</b><br>
+Adds a subjective risk premium to the firm's own cost of debt (YTM on bonds). Simple heuristic — less precise but quick.
+</div>
+</div>
+<div class="card s4">
+<h3>Key symbols</h3>
+<table>
+<tr><th>Symbol</th><th>Meaning</th></tr>
+<tr><td><b>Ke</b></td><td>Cost of equity (existing shares)</td></tr>
+<tr><td><b>Kr</b></td><td>Cost of retained earnings</td></tr>
+<tr><td><b>D₀</b></td><td>Current / most recent dividend</td></tr>
+<tr><td><b>D₁</b></td><td>Next expected dividend = D₀(1+g)</td></tr>
+<tr><td><b>P₀</b></td><td>Current market price per share</td></tr>
+<tr><td><b>NP</b></td><td>Net proceeds = P₀ − Flotation</td></tr>
+<tr><td><b>g</b></td><td>Constant dividend growth rate</td></tr>
+<tr><td><b>Rf</b></td><td>Risk-free rate</td></tr>
+<tr><td><b>Rm</b></td><td>Expected market return</td></tr>
+<tr><td><b>β</b></td><td>Beta — systematic risk measure</td></tr>
+<tr><td><b>MRP</b></td><td>Market Risk Premium = Rm − Rf</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<!-- WHY KE IS HIGHEST -->
+<section id="why_highest" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Foundations</div>
+<h2>Why Ke is the Highest Cost of Capital</h2>
+<p>In a firm's capital structure, the cost of capital follows a clear hierarchy: <b>Kd (after-tax) &lt; Kp &lt; Kr &lt; Ke (new issue)</b>. Understanding why is fundamental to capital structure theory.</p>
+<table>
+<tr><th>Source</th><th>Risk to Investor</th><th>Tax Benefit</th><th>Result</th></tr>
+<tr><td>Debt (Kd)</td><td>Lowest — secured, priority in liquidation, fixed return</td><td class="good">Yes — interest tax-deductible</td><td class="good">Cheapest</td></tr>
+<tr><td>Preference (Kp)</td><td>Medium — priority over equity, fixed dividend</td><td class="bad">No — dividend not deductible</td><td>Middle</td></tr>
+<tr><td>Retained Earnings (Kr)</td><td>High — residual claim, no guarantee</td><td class="bad">No tax benefit</td><td>High</td></tr>
+<tr><td>New Equity (Ke)</td><td>Highest — residual, plus flotation cost burden</td><td class="bad">No tax benefit + flotation cost</td><td class="bad">Highest</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>The two reasons Ke exceeds Kr:</b><br>
+1. <b>No tax shield:</b> Dividends are paid from after-tax profits — unlike interest, they are not deductible. The government does not subsidise equity finance.<br>
+2. <b>Flotation costs (for new issue):</b> Issuing new shares incurs brokerage, underwriting, and legal costs that reduce net proceeds below market price, raising the effective cost above Kr.</div>
+<div class="callout" style="margin-top:8px"><b>Why equity investors demand more:</b> Equity shareholders are <i>residual claimants</i> — they receive whatever is left after all creditors, employees, and preference holders are paid. In a bankruptcy, they may receive nothing. This extreme downside risk demands a commensurately high expected return.</div>
+</div>
+<div class="card s4">
+<h3>Cost hierarchy visualised</h3>
+<canvas id="hierarchyChart"></canvas>
+<p class="note" style="margin-top:4px">Typical cost hierarchy for a firm with 30% tax rate. Exact values vary by firm and market conditions.</p>
+</div>
+</div>
+</section>
+
+<!-- ZERO GROWTH DDM -->
+<section id="ddm_zero" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">DDM Approach</div>
+<h2>Zero Growth DDM — No Dividend Growth</h2>
+<p>The simplest case: dividends are expected to remain constant at D forever (a perpetuity). This is the Gordon Model with g = 0.</p>
+<div class="formula">If dividends are constant: D₁ = D₂ = D₃ = … = D
+
+Price: P₀ = D / Ke
+
+Rearranging:
+  Ke  = D / P₀       (existing shares — no flotation cost)
+  Ke  = D / NP       (new issue — NP = P₀ − Flotation Costs)
+
+where D = Annual dividend per share (constant forever)</div>
+<h3 style="margin-top:14px">When is zero growth appropriate?</h3>
+<ul>
+<li>Mature, stable companies in regulated industries (utilities, PSUs) where dividends are fixed by policy.</li>
+<li>Preference shares (which pay a fixed dividend — though called Kp, the formula is identical).</li>
+<li>As an approximation for very low-growth firms.</li>
+</ul>
+<h3 style="margin-top:12px">Illustration</h3>
+<p class="note">A company pays a constant dividend of ₹8 per share. Current market price ₹80. Flotation on new issue ₹8.</p>
+<div class="formula">Ke (existing shares) = D / P₀ = 8/80 = 10.00%
+
+Ke (new issue):
+  NP = 80 − 8 = ₹72
+  Ke = D / NP = 8/72 = 11.11%
+
+Interpretation: Existing shareholders earn 10% on
+their investment; new shares cost 11.11% due to
+flotation reducing proceeds.</div>
+</div>
+<div class="card s5">
+<h3>Quick Calculator — Zero Growth</h3>
+<label>Annual Dividend D (₹)</label><input id="zgD" type="number" value="8" step="0.5">
+<label>Market Price P₀ (₹)</label><input id="zgP0" type="number" value="80">
+<label>Flotation Cost per share (₹) — 0 for existing</label><input id="zgFlot" type="number" value="0">
+<button onclick="calcZeroGrowth()" style="margin-top:10px;width:100%">Compute Ke</button>
+<div id="zgResult" style="margin-top:12px"></div>
+<div class="callout" style="margin-top:14px"><b>Zero growth Ke = Dividend Yield</b><br>Since there is no capital appreciation (no growth), the entire return comes from dividends. Ke equals the current dividend yield — the ratio of dividend to price.</div>
+<div class="teacher-note"><b>Teaching note:</b> Contrast with the Gordon Model — zero growth means the share price never changes (P₀ = P₁ = P₂), so the investor's return is purely dividend income. The moment g &gt; 0, there is also capital appreciation.</div>
+</div>
+</div>
+</section>
+
+<!-- GORDON MODEL -->
+<section id="ddm_gordon" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">DDM Approach</div>
+<h2>Gordon Model — Constant Growth DDM</h2>
+<p>The Gordon Constant Growth Model is the most widely used DDM variant in Indian FM examinations. It assumes dividends grow at a constant rate g forever.</p>
+<div class="formula">The current price is the PV of all future dividends:
+  P₀ = D₁/(1+Ke) + D₁(1+g)/(1+Ke)² + D₁(1+g)²/(1+Ke)³ + …
+
+This infinite geometric series converges to:
+  P₀ = D₁ / (Ke − g)    [requires Ke > g]
+
+Rearranging to get cost of equity:
+
+  Ke = D₁/P₀ + g        (existing shares, no flotation)
+  Ke = D₁/NP + g        (new issue, with flotation cost)
+
+where:
+  D₁ = D₀ × (1 + g)    (next year's expected dividend)
+  D₀ = Current / most recent dividend paid
+  g  = Constant annual growth rate of dividends
+  P₀ = Current market price per share
+  NP = Net Proceeds = P₀ − Flotation Costs per share</div>
+<h3 style="margin-top:12px">Interpretation: two-part return</h3>
+<div class="callout"><b>Ke = Dividend Yield + Capital Gain Yield</b><br>D₁/P₀ = the expected dividend yield (income return)<br>g = the expected rate of capital appreciation (growth in share price)<br><br>In a constant-growth world, the share price grows at exactly g — so the capital gain yield = g. The total return Ke = dividend yield + g.</div>
+</div>
+<div class="card s5">
+<h3>Illustration</h3>
+<p class="note">Share price ₹150. Most recent dividend ₹9. Growth rate 8% p.a. New issue flotation ₹12.</p>
+<div class="formula">D₁ = 9 × 1.08 = ₹9.72
+
+Ke (existing shares / Kr):
+  = D₁/P₀ + g
+  = 9.72/150 + 0.08
+  = 6.48% + 8.00%
+  = 14.48%
+
+Ke (new issue):
+  NP = 150 − 12 = ₹138
+  = D₁/NP + g
+  = 9.72/138 + 0.08
+  = 7.04% + 8.00%
+  = 15.04%</div>
+<div class="alert"><b>Key condition: Ke &gt; g</b><br>The Gordon Model only works when Ke &gt; g. If g ≥ Ke, the formula gives a negative or undefined price — economically, a stock cannot grow faster than the discount rate forever.</div>
+<h3 style="margin-top:12px">Sensitivity to g</h3>
+<p class="note">At D₁=₹10, P₀=₹100: if g rises from 5% to 7%, Ke rises from 15% to 17% — the same dividend yield but higher total return requirement.</p>
+</div>
+</div>
+</section>
+
+<!-- TWO-STAGE GROWTH -->
+<section id="ddm_twostage" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">DDM Approach</div>
+<h2>Two-Stage Growth DDM</h2>
+<p>The two-stage model relaxes the constant-growth assumption. It recognises that many firms have two phases: a high-growth phase (years 1 to n) followed by a stable, constant-growth phase (year n+1 onwards forever).</p>
+<div class="formula">P₀ = Σ[D_t/(1+Ke)ᵗ] + Pₙ/(1+Ke)ⁿ
+      t=1 to n
+
+where:
+  D_t = Dividend in year t (growing at g₁ for t = 1..n)
+  Pₙ  = Terminal (horizon) price at end of phase 1
+       = D_(n+1) / (Ke − g₂)
+  g₁  = High growth rate during phase 1
+  g₂  = Stable (terminal) growth rate from year n+1
+
+Step-by-step procedure:
+  1. Project dividends D₁ to Dₙ using g₁
+  2. Compute terminal price: Pₙ = Dₙ×(1+g₂)/(Ke−g₂)
+  3. Discount all cash flows back at Ke
+  4. Set sum = P₀ and solve for Ke by trial and error / IRR</div>
+<h3 style="margin-top:12px">Illustration</h3>
+<p class="note">D₀ = ₹5. High growth g₁ = 20% for 3 years, then stable g₂ = 7% forever. P₀ = ₹120. Find Ke.</p>
+<div class="formula">Phase 1 dividends:
+  D₁ = 5×1.20 = ₹6.00
+  D₂ = 6×1.20 = ₹7.20
+  D₃ = 7.20×1.20 = ₹8.64
+
+Terminal price at Year 3:
+  P₃ = D₄/(Ke−g₂) = 8.64×1.07/(Ke−0.07)
+     = 9.24/(Ke−0.07)
+
+Set P₀ = PV(D₁)+PV(D₂)+PV(D₃)+PV(P₃) = ₹120
+Solve for Ke by trial: Ke ≈ 14.8% (solved numerically)</div>
+</div>
+<div class="card s5">
+<h3>Two-Stage DDM Calculator</h3>
+<label>Current Dividend D₀ (₹)</label><input id="tsD0" type="number" value="5" step="0.5">
+<label>High Growth Rate g₁ (%)</label><input id="tsG1" type="number" value="20" step="0.5">
+<label>High Growth Period (years)</label><input id="tsN" type="number" value="3" min="1">
+<label>Stable Growth Rate g₂ (%) — after phase 1</label><input id="tsG2" type="number" value="7" step="0.5">
+<label>Current Market Price P₀ (₹)</label><input id="tsP0" type="number" value="120">
+<button onclick="calcTwoStage()" style="margin-top:10px;width:100%">Compute Ke (Two-Stage)</button>
+<div id="tsResult" style="margin-top:12px"></div>
+<div class="callout" style="margin-top:10px">The two-stage model is more realistic but requires solving for Ke by trial and error (it is the IRR of the cash flow stream). The calculator uses numerical bisection for an exact result.</div>
+</div>
+</div>
+</section>
+
+<!-- ESTIMATING g -->
+<section id="growth_rate" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">DDM Approach</div>
+<h2>Estimating the Growth Rate (g)</h2>
+<p>The growth rate g in the Gordon Model is the most sensitive and difficult input to estimate. Three methods are commonly used:</p>
+<h3>Method 1 — Sustainable Growth Rate (Gordon's formula)</h3>
+<div class="formula">g = b × ROE
+
+where:
+  b   = Retention ratio = 1 − Dividend Payout Ratio
+      = (EPS − DPS) / EPS
+  ROE = Return on Equity = Net Profit / Shareholders Equity
+
+Intuition: A firm retains a fraction b of its earnings and
+reinvests it at a return of ROE. The growth in equity (and
+therefore dividends, assuming constant payout) = b × ROE.
+
+Example: EPS = ₹20, DPS = ₹8, Net Worth = ₹200 per share
+  b   = (20−8)/20 = 12/20 = 0.60
+  ROE = 20/200 = 10%
+  g   = 0.60 × 10% = 6%</div>
+<h3 style="margin-top:14px">Method 2 — Historical Dividend CAGR</h3>
+<div class="formula">g = (Dₙ / D₀)^(1/n) − 1
+
+where Dₙ = dividend n years ago, D₀ = current dividend
+
+Example: Dividends over 4 years: ₹4, ₹5, ₹6, ₹7, ₹8
+  g = (8/4)^(1/4) − 1 = (2)^0.25 − 1 = 1.189−1 = 18.9%
+
+Or using the last and first: g = (8/4)^(1/4)−1</div>
+<h3 style="margin-top:14px">Method 3 — Analyst / Forecasted Growth Rate</h3>
+<p>Use equity research analyst consensus forecasts for EPS / dividend growth — practical but requires access to research databases.</p>
+</div>
+<div class="card s5">
+<h3>Growth Rate Calculator</h3>
+<label>Method</label>
+<select id="gMethod" onchange="toggleGMethod()">
+<option value="roe">g = b × ROE</option>
+<option value="cagr">Historical Dividend CAGR</option>
+</select>
+<div id="gROEInputs">
+<label>Earnings Per Share EPS (₹)</label><input id="gEPS" type="number" value="20" step="0.5">
+<label>Dividend Per Share DPS (₹)</label><input id="gDPS" type="number" value="8" step="0.5">
+<label>Net Worth / Book Value per share (₹)</label><input id="gBV" type="number" value="200">
+</div>
+<div id="gCAGRInputs" style="display:none">
+<label>Earliest Dividend D₀ (₹)</label><input id="gD0" type="number" value="4" step="0.5">
+<label>Latest Dividend Dₙ (₹)</label><input id="gDn" type="number" value="8" step="0.5">
+<label>Number of years, n</label><input id="gN" type="number" value="4" min="1">
+</div>
+<button onclick="calcGrowthRate()" style="margin-top:10px;width:100%">Compute g</button>
+<div id="gResult" style="margin-top:12px"></div>
+<div class="alert" style="margin-top:10px"><b>Exam tip:</b> When the question gives EPS, DPS, and book value per share — use g = b×ROE. When it gives a history of dividends — use the CAGR formula. When it explicitly states the growth rate — use it directly.</div>
+</div>
+</div>
+</section>
+
+<!-- FLOTATION COSTS -->
+<section id="flotation" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">DDM Approach</div>
+<h2>Flotation Costs — Effect on Ke</h2>
+<p>Flotation costs (underwriting, brokerage, legal, printing fees) reduce the net proceeds from a new equity issue below the current market price, raising the effective cost of new equity above the cost of existing equity / retained earnings.</p>
+<div class="formula">With flotation cost f (₹ per share):
+  NP = P₀ − f
+
+With flotation cost f% (percentage of issue price):
+  NP = P₀ × (1 − f%)
+
+Effect on Ke:
+  Ke (existing) = D₁/P₀ + g    (uses P₀)
+  Ke (new)      = D₁/NP + g    (uses NP &lt; P₀)
+  → Ke (new) &gt; Ke (existing) always</div>
+<h3 style="margin-top:12px">Detailed illustration</h3>
+<p class="note">P₀ = ₹200, D₀ = ₹10, g = 6%, Flotation = 5% of market price.</p>
+<div class="formula">D₁ = 10 × 1.06 = ₹10.60
+NP = 200 × (1 − 0.05) = 200 × 0.95 = ₹190
+
+Ke (existing / Kr) = 10.60/200 + 0.06 = 5.30% + 6% = 11.30%
+Ke (new issue)     = 10.60/190 + 0.06 = 5.58% + 6% = 11.58%
+
+Flotation premium = 11.58% − 11.30% = 0.28 percentage points
+
+At scale: for ₹10 crore new equity issue, this 0.28%
+difference costs ₹2.8 lakh per year in extra cost of capital.</div>
+<div class="callout" style="margin-top:10px"><b>Pecking Order implication:</b> Because flotation costs make new equity more expensive than retained earnings, firms prefer internal finance (retained earnings) over new equity issuance. This is one of the key insights of the Pecking Order Theory of capital structure.</div>
+</div>
+<div class="card s5">
+<canvas id="flotChart"></canvas>
+<p class="note" style="margin-top:4px">Ke rises as flotation cost % increases. The gap between Ke (new) and Kr widens with higher flotation costs.</p>
+<div class="callout" style="margin-top:10px"><b>Two methods to handle flotation in project evaluation:</b><br>
+<b>Method 1 (Adjust Ke):</b> Use NP instead of P₀ → higher Ke → higher WACC → lower NPV<br>
+<b>Method 2 (Adjust C₀):</b> Add flotation costs to project's initial outlay; use unadjusted Ke in WACC<br><br>
+Method 2 is theoretically preferred — flotation is a one-time cash outflow, not a permanent increase in cost.</div>
+</div>
+</div>
+</section>
+
+<!-- Kr vs Ke -->
+<section id="kr_vs_ke" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">DDM Approach</div>
+<h2>Cost of Retained Earnings (Kr) vs Cost of New Equity (Ke)</h2>
+<p>Retained earnings are profits NOT paid as dividends. They belong to equity shareholders — who could have received them and invested elsewhere at Ke. Retaining them imposes an opportunity cost of Kr on the firm.</p>
+<div class="formula">Kr = D₁/P₀ + g    (no flotation cost — no new issue)
+Ke = D₁/NP + g    (with flotation cost — NP &lt; P₀)
+
+Since NP &lt; P₀:  D₁/NP &gt; D₁/P₀  →  Ke &gt; Kr always
+
+Kr is the cost of using existing equity funds (retained earnings).
+Ke is the cost of raising new equity (fresh issue of shares).
+
+Kr = Ke only when flotation costs are zero.</div>
+<h3 style="margin-top:12px">Three approaches to estimate Kr</h3>
+<table>
+<tr><th>Approach</th><th>Formula</th><th>Logic</th></tr>
+<tr><td>Opportunity Cost (most common)</td><td>Kr = D₁/P₀ + g</td><td>Shareholders could earn Ke on equivalent-risk investments</td></tr>
+<tr><td>CAPM</td><td>Kr = Rf + β×(Rm−Rf)</td><td>Same systematic risk as equity; no new issue cost</td></tr>
+<tr><td>External Yield Criterion</td><td>Kr = Ke (external)</td><td>Use new equity Ke as upper bound; conservatively treat Kr = Ke</td></tr>
+</table>
+<div class="callout" style="margin-top:10px"><b>In WACC — which to use?</b> Use Kr for the equity already in the firm's balance sheet (retained earnings, reserves). Use Ke (with flotation) only if the firm is actively raising new equity. In most WACC problems, unless new equity is specified, use Kr = D₁/P₀ + g with the current market price.</div>
+</div>
+<div class="card s5">
+<h3>Illustration</h3>
+<p class="note">P₀=₹100, D₀=₹6, g=8%, Flotation=₹7 per share.</p>
+<div class="formula">D₁ = 6 × 1.08 = ₹6.48
+
+Kr = 6.48/100 + 0.08 = 6.48% + 8% = 14.48%
+
+Ke (new) = 6.48/(100−7) + 0.08
+         = 6.48/93 + 0.08
+         = 6.97% + 8%
+         = 14.97%
+
+Kr &lt; Ke (new): 14.48% &lt; 14.97%
+Difference = 0.49% due to flotation cost</div>
+<h3 style="margin-top:12px">Why retained earnings are not free</h3>
+<div class="adv"><b>Opportunity cost argument:</b> If the firm retained ₹100 of profits, shareholders forgo the opportunity to invest that ₹100 elsewhere at an equivalent rate of return (Ke = 14.48%). Retaining earnings therefore has an implicit cost — even though no cheque is written.</div>
+<div class="teacher-note"><b>Teaching note:</b> Students often think retained earnings are free. Emphasise: retained earnings are not owned by the firm — they belong to shareholders. The cost is the return shareholders sacrifice by not receiving dividends.</div>
+</div>
+</div>
+</section>
+
+<!-- CAPM CONCEPT -->
+<section id="capm_concept" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">CAPM Approach</div>
+<h2>Capital Asset Pricing Model (CAPM)</h2>
+<p>CAPM is the most theoretically rigorous method for estimating Ke. It recognises that investors in a well-diversified portfolio only care about <b>systematic (market) risk</b> — risk that cannot be diversified away. This risk is measured by <b>Beta (β)</b>.</p>
+<div class="formula">CAPM:  Ke = Rf + β × (Rm − Rf)
+              = Rf + β × MRP
+
+where:
+  Ke       = Required return on equity (cost of equity)
+  Rf       = Risk-free rate (yield on govt. T-bills / bonds)
+  β (Beta) = Systematic risk of the stock
+             β &gt; 1 → more volatile than market (aggressive)
+             β = 1 → moves exactly with the market
+             β &lt; 1 → less volatile (defensive)
+             β = 0 → risk-free asset (no systematic risk)
+  Rm       = Expected return on the market portfolio
+  MRP      = Market Risk Premium = Rm − Rf</div>
+<h3 style="margin-top:12px">The logic of CAPM</h3>
+<ul>
+<li>Investors can eliminate <b>unsystematic (firm-specific) risk</b> through diversification — so they receive no compensation for it.</li>
+<li>Investors cannot diversify away <b>systematic (market) risk</b> — they demand a premium for bearing it.</li>
+<li>Beta measures how much systematic risk a stock has. Higher Beta → higher required return.</li>
+<li>The required return rises linearly with Beta — this relationship is the Security Market Line (SML).</li>
+</ul>
+</div>
+<div class="card s5">
+<h3>CAPM — Illustration</h3>
+<p class="note">Rf = 7%, Rm = 14%, β = 1.3.</p>
+<div class="formula">MRP = 14% − 7% = 7%
+
+Ke = 7% + 1.3 × 7%
+   = 7% + 9.1%
+   = 16.1%
+
+Interpretation: A stock with β = 1.3 (30% more volatile
+than the market) must offer a return of 16.1% to
+compensate investors for its systematic risk.
+
+At β = 0: Ke = 7% = Rf (risk-free)
+At β = 1: Ke = 14% = Rm (market return)
+At β = 1.3: Ke = 16.1% (above-market return)</div>
+<div class="callout" style="margin-top:10px"><b>CAPM vs DDM:</b> CAPM gives a Ke based purely on risk (Beta). DDM gives a Ke based on price and dividend expectations. They often give different results — both are valid; using both and averaging is common in practice.</div>
+</div>
+</div>
+</section>
+
+<!-- SML -->
+<section id="sml" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">CAPM Approach</div>
+<h2>Security Market Line (SML)</h2>
+<p>The SML is the graphical representation of CAPM — a straight line plotting the required return (Ke) against Beta (β). Every asset correctly priced in equilibrium lies exactly on the SML.</p>
+<div class="formula">SML equation:  Ke = Rf + β × MRP
+
+This is a straight line with:
+  y-intercept = Rf  (at β = 0: risk-free return)
+  slope       = MRP = Rm − Rf  (each unit of β adds MRP to Ke)
+
+At β = 0:  Ke = Rf
+At β = 1:  Ke = Rm
+For β &gt; 1: Ke &gt; Rm (aggressive stock — more than market risk)
+For β &lt; 1: Rf &lt; Ke &lt; Rm (defensive stock)</div>
+<h3 style="margin-top:12px">SML vs CML</h3>
+<table>
+<tr><th>Feature</th><th>SML</th><th>CML (Capital Market Line)</th></tr>
+<tr><td>x-axis</td><td>Beta (systematic risk)</td><td>Total risk (standard deviation)</td></tr>
+<tr><td>Applies to</td><td>Individual assets and portfolios</td><td>Efficient portfolios only</td></tr>
+<tr><td>Use</td><td>Estimating Ke for any asset</td><td>Optimal portfolio construction</td></tr>
+<tr><td>For well-diversified portfolio</td><td>Same result as CML</td><td>Optimal</td></tr>
+</table>
+<canvas id="smlStaticChart" style="height:280px;margin-top:12px"></canvas>
+</div>
+<div class="card s5">
+<h3>Assets above and below the SML</h3>
+<div class="adv"><b>Asset above SML (Ke actual &gt; SML Ke):</b><br>Undervalued — offering more return than required for its risk. Investors buy → price rises → Ke falls → asset moves back to SML.</div>
+<div class="lim" style="margin-top:8px"><b>Asset below SML (Ke actual &lt; SML Ke):</b><br>Overvalued — offering less return than required. Investors sell → price falls → Ke rises → asset moves back to SML.</div>
+<div class="callout" style="margin-top:10px"><b>Shifts in the SML:</b><br>
+• If <b>Rf rises</b> (e.g., RBI hikes rates) → SML shifts up parallel → all Ke values rise<br>
+• If <b>MRP rises</b> (increased market risk aversion) → SML rotates upward (steeper) → higher-Beta stocks are more affected<br>
+• Individual stock's <b>Beta changes</b> → stock moves along the SML</div>
+</div>
+</div>
+</section>
+
+<!-- BETA -->
+<section id="beta" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">CAPM Approach</div>
+<h2>Beta (β) — Systematic Risk Explained</h2>
+<p>Beta measures the sensitivity of a stock's returns to market returns — the degree to which the stock moves with the overall market.</p>
+<div class="formula">β = Cov(Rᵢ, Rₘ) / Var(Rₘ)
+  = ρᵢₘ × σᵢ / σₘ
+
+where:
+  Cov(Rᵢ, Rₘ) = Covariance of stock with market
+  Var(Rₘ)     = Variance of market return
+  ρᵢₘ         = Correlation between stock and market
+  σᵢ          = Standard deviation of stock returns
+  σₘ          = Standard deviation of market returns</div>
+<h3 style="margin-top:12px">Beta interpretation table</h3>
+<table>
+<tr><th>Beta Value</th><th>Type</th><th>Meaning</th><th>Example sectors</th></tr>
+<tr><td>β &lt; 0</td><td>Inverse</td><td>Moves opposite to market (very rare)</td><td>Gold in some markets</td></tr>
+<tr><td>β = 0</td><td>Risk-free</td><td>No systematic risk</td><td>T-bills, cash</td></tr>
+<tr><td>0 &lt; β &lt; 1</td><td>Defensive</td><td>Less volatile than market</td><td>FMCG, utilities, pharma</td></tr>
+<tr><td>β = 1</td><td>Market</td><td>Moves exactly with market</td><td>Index fund / ETF</td></tr>
+<tr><td>β &gt; 1</td><td>Aggressive</td><td>More volatile than market</td><td>Banks, metals, tech, real estate</td></tr>
+</table>
+<h3 style="margin-top:12px">Portfolio Beta</h3>
+<div class="formula">β_portfolio = Σ(wᵢ × βᵢ)
+
+where wᵢ = weight of stock i in the portfolio
+
+Example: 60% in stock A (β=1.4) + 40% in stock B (β=0.8):
+  β_portfolio = 0.60×1.4 + 0.40×0.8 = 0.84 + 0.32 = 1.16</div>
+</div>
+<div class="card s5">
+<h3>Beta Calculator</h3>
+<label>Standard Deviation of Stock (σᵢ) (%)</label><input id="betaSi" type="number" value="18" step="0.5">
+<label>Standard Deviation of Market (σₘ) (%)</label><input id="betaSm" type="number" value="12" step="0.5">
+<label>Correlation with Market (ρ)</label><input id="betaRho" type="number" value="0.8" step="0.05" min="-1" max="1">
+<button onclick="calcBeta()" style="margin-top:10px;width:100%">Compute Beta</button>
+<div id="betaResult" style="margin-top:12px"></div>
+<h3 style="margin-top:14px">Portfolio Beta Calculator</h3>
+<label>Stock A Beta</label><input id="pBetaA" type="number" value="1.4" step="0.1">
+<label>Stock A Weight (%)</label><input id="pWtA" type="number" value="60" step="5">
+<label>Stock B Beta</label><input id="pBetaB" type="number" value="0.8" step="0.1">
+<label>Stock B Weight (%)</label><input id="pWtB" type="number" value="40" step="5">
+<button onclick="calcPortBeta()" style="margin-top:10px;width:100%">Compute Portfolio Beta</button>
+<div id="pBetaResult" style="margin-top:12px"></div>
+</div>
+</div>
+</section>
+
+<!-- LEVERED VS UNLEVERED BETA -->
+<section id="beta_leverage" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">CAPM Approach</div>
+<h2>Levered vs Unlevered Beta — Adjusting Beta for Capital Structure</h2>
+<p>A firm's observed (levered) Beta (βₗ) reflects both its business risk AND financial risk (from debt). When comparing firms with different capital structures, or when using a proxy firm's Beta for a different target structure, we need to strip out the financial risk effect using the <b>Hamada Equation</b>.</p>
+<div class="formula">Hamada Equation (with corporate tax):
+
+  βₗ = βᵤ × [1 + (1−Tc) × D/E]
+
+Unlevering (removing financial risk):
+  βᵤ = βₗ / [1 + (1−Tc) × D/E]
+
+Re-levering (applying new D/E ratio):
+  βₗ_new = βᵤ × [1 + (1−Tc) × D_new/E_new]
+
+where:
+  βₗ = Observed (levered) Beta — reflects total risk
+  βᵤ = Unlevered (asset) Beta — pure business risk
+  Tc = Corporate tax rate
+  D/E = Debt-to-Equity ratio (market values)</div>
+<h3 style="margin-top:12px">Practical application — Pure Play Method</h3>
+<p>When a firm enters a new industry and needs Ke for a project, it finds a <b>pure-play comparable firm</b> in that industry, unlever the comparable's Beta, then re-lever at its own target D/E to get the project Beta.</p>
+<div class="formula">Step 1: Find comparable firm's βₗ_comp
+Step 2: Unlever: βᵤ = βₗ_comp / [1+(1−Tc)×(D/E)_comp]
+Step 3: Re-lever: βₗ_target = βᵤ × [1+(1−Tc)×(D/E)_target]
+Step 4: Apply CAPM: Ke = Rf + βₗ_target × MRP</div>
+</div>
+<div class="card s5">
+<h3>Hamada Equation Calculator</h3>
+<label>Observed Levered Beta (βₗ)</label><input id="hamBL" type="number" value="1.5" step="0.1">
+<label>Debt-to-Equity Ratio D/E</label><input id="hamDE" type="number" value="0.6" step="0.05">
+<label>Tax Rate Tc (%)</label><input id="hamTc" type="number" value="30" step="1">
+<button onclick="calcHamada()" style="margin-top:10px;width:100%">Unlever Beta → βᵤ</button>
+<div id="hamResult" style="margin-top:12px"></div>
+<h3 style="margin-top:14px">Re-lever at new D/E</h3>
+<label>New D/E Ratio (for target firm)</label><input id="hamDEnew" type="number" value="0.4" step="0.05">
+<button onclick="releverBeta()" style="margin-top:8px;width:100%">Re-lever Beta</button>
+<div id="hamResult2" style="margin-top:10px"></div>
+<div class="alert" style="margin-top:10px"><b>Exam tip:</b> When a question asks you to use a "proxy" or "comparable" firm's Beta for a project in a different industry or with a different D/E — always unlever first, then re-lever at the target capital structure.</div>
+</div>
+</div>
+</section>
+
+<!-- CAPM INPUTS -->
+<section id="capm_inputs" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">CAPM Approach</div>
+<h2>Estimating CAPM Inputs — Rf, β, and MRP</h2>
+<table>
+<tr><th>Input</th><th>What it is</th><th>How to estimate</th><th>Issues</th></tr>
+<tr><td><b>Risk-Free Rate (Rf)</b></td><td>Return on a zero-risk investment</td><td>Yield on short-term T-bills or long-term government bonds (10-year G-Sec in India)</td><td>Short vs long term; current vs average; real vs nominal</td></tr>
+<tr><td><b>Beta (β)</b></td><td>Systematic risk relative to market</td><td>Regression of stock returns on market index (Nifty 50, Sensex) returns; or use published estimates from BSE/NSE/Bloomberg</td><td>Instability over time; depends on index chosen; levered Beta needs adjustment</td></tr>
+<tr><td><b>Market Risk Premium (MRP = Rm−Rf)</b></td><td>Extra return for bearing market risk</td><td>Historical average of (equity market return − T-bill rate); survey-based estimates; implied from current valuations</td><td>Historical vs forward-looking; varies widely (3%–9% for India)</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>Typical Indian market values (illustrative):</b><br>Rf ≈ 6.5–7.5% (10-year G-Sec yield)<br>MRP ≈ 5–8% (historical equity premium for India)<br>→ Rm ≈ 12–15% for large-cap Indian equities<br><br>These are constantly changing — exam questions will specify the values to use.</div>
+<div class="teacher-note"><b>Teaching note:</b> The difficulty of estimating these inputs is the main practical limitation of CAPM. In Indian exams, inputs are always given — the challenge is the formula and interpretation. In practice, analysts use market data services (Bloomberg, Capitaline) for Beta and published G-Sec yields for Rf.</div>
+</div>
+<div class="card s4">
+<h3>Limitations of CAPM</h3>
+<div class="lim">Beta is estimated from <b>historical data</b> but used to predict future returns — Beta is not stable over time.</div>
+<div class="lim" style="margin-top:7px">Assumes a <b>single factor</b> (market risk) drives returns — ignores size, value, momentum effects (Fama-French).</div>
+<div class="lim" style="margin-top:7px">Requires a <b>well-diversified market portfolio</b> — in practice, market indices are imperfect proxies.</div>
+<div class="lim" style="margin-top:7px">The <b>risk-free rate</b> is not truly risk-free (government bonds carry inflation risk).</div>
+<div class="lim" style="margin-top:7px">Assumes investors have <b>homogeneous expectations</b> — not realistic.</div>
+</div>
+</div>
+</section>
+
+<!-- BOND YIELD + RISK PREMIUM -->
+<section id="bond_yield" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Other Methods</div>
+<h2>Bond Yield Plus Risk Premium Method</h2>
+<p>The simplest approach to estimating Ke: add a judgemental equity risk premium to the firm's own cost of long-term debt (yield on its bonds).</p>
+<div class="formula">Ke = YTM on firm's long-term debt + Equity Risk Premium
+
+Equity Risk Premium = 3% to 6% (typical range — judgemental)
+
+Example: A firm's 10-year debentures yield 11% (pre-tax).
+  Ke = 11% + 4% = 15%
+
+Or using after-tax Kd as base:
+  Ke = Kd(after-tax) + Equity Risk Premium (adjusted)</div>
+<h3 style="margin-top:12px">Rationale</h3>
+<p>The firm's own bond yield captures its credit risk and the current level of interest rates. Since equity is riskier than debt (residual claim), equity investors must earn more — the additional return is the equity risk premium.</p>
+<h3 style="margin-top:12px">Advantages and Disadvantages</h3>
+<div class="adv"><b>Advantages:</b> Simple and quick; uses current market data (bond yield); useful when dividend history is erratic or Beta is unreliable.</div>
+<div class="lim" style="margin-top:8px"><b>Disadvantages:</b> The risk premium is entirely subjective — different analysts will add different premiums. Less theoretically grounded than CAPM. Not useful for firms with no publicly traded bonds.</div>
+</div>
+<div class="card s5">
+<h3>Bond Yield + Risk Premium Calculator</h3>
+<label>YTM on firm's bonds / Kd pre-tax (%)</label><input id="byYTM" type="number" value="11" step="0.5">
+<label>Equity Risk Premium (%)</label><input id="byPrem" type="number" value="4" step="0.5">
+<button onclick="calcBondYield()" style="margin-top:10px;width:100%">Compute Ke</button>
+<div id="byResult" style="margin-top:12px"></div>
+<div class="callout" style="margin-top:14px"><b>When to use this method:</b><br>Use when a firm has publicly traded bonds but either pays no dividends (making DDM impossible) or is newly listed (making Beta estimation unreliable). It provides a quick sanity check on CAPM and DDM estimates.</div>
+</div>
+</div>
+</section>
+
+<!-- METHOD COMPARISON -->
+<section id="method_compare" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Comparison</div>
+<h2>DDM vs CAPM vs Bond Yield + Risk Premium</h2>
+<table>
+<tr><th>Criterion</th><th>DDM (Gordon Model)</th><th>CAPM</th><th>Bond Yield + RP</th></tr>
+<tr><td>Key inputs</td><td>D₁, P₀, g</td><td>Rf, β, Rm</td><td>Bond YTM, Risk Premium</td></tr>
+<tr><td>Works for non-dividend firms?</td><td class="bad">No</td><td class="good">Yes</td><td class="good">Yes (if bonds exist)</td></tr>
+<tr><td>Accounts for risk explicitly?</td><td class="bad">Implicitly (via P₀)</td><td class="good">Yes — via Beta</td><td class="warn">Partially (via risk premium)</td></tr>
+<tr><td>Sensitivity to growth estimate</td><td class="bad">High — g is critical</td><td class="good">Low — no growth input</td><td class="good">Low</td></tr>
+<tr><td>Theoretical foundation</td><td>Dividend valuation theory</td><td>Modern Portfolio Theory</td><td>Heuristic / judgement</td></tr>
+<tr><td>Suitable for</td><td>Stable, dividend-paying firms</td><td>Listed firms with observable β</td><td>Bond-issuing firms</td></tr>
+<tr><td>Objective / Subjective</td><td class="warn">Semi-objective (g subjective)</td><td class="warn">Semi-objective (MRP subjective)</td><td class="bad">Highly subjective</td></tr>
+<tr><td>Complexity</td><td>Low–Medium</td><td>Medium</td><td>Low</td></tr>
+<tr><td>Most common in Indian exams</td><td class="good">Very common</td><td class="good">Very common</td><td class="warn">Occasionally tested</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>Practical recommendation:</b> Use all three methods when possible and compare results. If they give similar answers, confidence is higher. If they diverge significantly, investigate why — the divergence itself is informative. In practice, most financial analysts average DDM and CAPM estimates or use judgment to select the most appropriate one for the firm's characteristics.</div>
+</div>
+</div>
+</section>
+
+<!-- CALC DDM -->
+<section id="calc_ddm" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>DDM / Gordon Model Calculator</h2>
+<label>Growth Model</label>
+<select id="ddmType" onchange="toggleDDMType()">
+<option value="zero">Zero Growth (g = 0)</option>
+<option value="const" selected>Constant Growth (Gordon)</option>
+</select>
+<label>Current Dividend D₀ (₹)</label><input id="ddmD0" type="number" value="8" step="0.5">
+<div id="ddmGInput">
+<label>Growth Rate g (%)</label><input id="ddmG" type="number" value="7" step="0.5">
+</div>
+<label>Current Market Price P₀ (₹)</label><input id="ddmP0" type="number" value="140">
+<label>Flotation Cost (₹ per share) — 0 for existing shares / Kr</label><input id="ddmFlot" type="number" value="0">
+<button onclick="calcDDMFull()" style="margin-top:12px;width:100%">Compute Ke / Kr</button>
+</div>
+<div class="card s7" id="ddmResult">
+<h3>Results will appear here</h3>
+<p class="muted">Enter details and click Compute.</p>
+</div>
+</div>
+</section>
+
+<!-- CALC CAPM -->
+<section id="calc_capm" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>CAPM Calculator</h2>
+<label>Risk-Free Rate Rf (%)</label><input id="cpRf" type="number" value="7" step="0.5">
+<label>Beta (β)</label><input id="cpBeta" type="number" value="1.3" step="0.05">
+<label>Market Return Rm (%)</label><input id="cpRm" type="number" value="14" step="0.5">
+<button onclick="calcCAPMFull()" style="margin-top:12px;width:100%">Compute Ke (CAPM)</button>
+<div id="cpResult" style="margin-top:12px"></div>
+<h3 style="margin-top:16px">Sensitivity: Ke vs Beta</h3>
+<label>Beta range: 0 to</label><input id="cpBetaMax" type="number" value="2.5" step="0.5">
+<button onclick="plotCAPMSens()" style="margin-top:8px;width:100%">Plot SML</button>
+</div>
+<div class="card s7">
+<canvas id="capmSensChart" style="height:300px"></canvas>
+<div id="capmSensResult" class="callout" style="margin-top:10px">Configure and click Plot SML.</div>
+</div>
+</div>
+</section>
+
+<!-- CALC SML CHART -->
+<section id="calc_sml" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>SML Chart — Interactive</h2>
+<label>Risk-Free Rate Rf (%)</label><input id="smlRf" type="number" value="7" step="0.5">
+<label>Market Return Rm (%)</label><input id="smlRm" type="number" value="14" step="0.5">
+<label>Plot up to Beta</label><input id="smlBmax" type="number" value="2.5" step="0.5">
+<p class="note" style="margin-top:8px">Mark up to 3 stocks on the SML:</p>
+<label>Stock A — Beta</label><input id="smlA" type="number" value="0.8" step="0.1">
+<label>Stock B — Beta</label><input id="smlB" type="number" value="1.2" step="0.1">
+<label>Stock C — Beta</label><input id="smlC" type="number" value="1.8" step="0.1">
+<button onclick="drawSMLChart()" style="margin-top:10px;width:100%">Draw SML</button>
+</div>
+<div class="card s7">
+<canvas id="smlInteractChart" style="height:320px"></canvas>
+<div id="smlResult" style="margin-top:10px"></div>
+</div>
+</div>
+</section>
+
+<!-- CALC GROWTH RATE -->
+<section id="calc_g" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Growth Rate (g) Calculator</h2>
+<label>Method</label>
+<select id="gcMethod" onchange="toggleGCMethod()">
+<option value="roe">g = b × ROE (Sustainable Growth Rate)</option>
+<option value="cagr">Historical Dividend CAGR</option>
+</select>
+<div id="gcROE">
+<label>Earnings Per Share EPS (₹)</label><input id="gcEPS" type="number" value="25" step="0.5">
+<label>Dividend Per Share DPS (₹)</label><input id="gcDPS" type="number" value="10" step="0.5">
+<label>Book Value per share / Net Worth (₹)</label><input id="gcBV" type="number" value="200">
+</div>
+<div id="gcCAGR" style="display:none">
+<label>Earliest Dividend D_old (₹)</label><input id="gcD0" type="number" value="3" step="0.5">
+<label>Latest Dividend D_new (₹)</label><input id="gcDn" type="number" value="8" step="0.5">
+<label>Number of years, n</label><input id="gcN" type="number" value="5" min="1">
+</div>
+<button onclick="calcGC()" style="margin-top:10px;width:100%">Compute g</button>
+<div id="gcResult" style="margin-top:12px"></div>
+</div>
+<div class="card s7">
+<h3>Apply g to Gordon Model</h3>
+<label>Market Price P₀ (₹)</label><input id="gcP0" type="number" value="180">
+<label>Current Dividend D₀ (₹)</label><input id="gcDD0" type="number" value="10" step="0.5">
+<label>Flotation Cost (₹) — 0 for existing / Kr</label><input id="gcFlot" type="number" value="0">
+<button onclick="applyGtoKe()" style="margin-top:10px;width:100%">Compute Ke using this g</button>
+<div id="gcKeResult" style="margin-top:12px"></div>
+</div>
+</div>
+</section>
+
+<!-- WORKED EXAMPLES -->
+<section id="examples" class="page">
+<div class="grid">
+<div class="card s6">
+<h3>Example 1 — Zero Growth Ke</h3>
+<p>A company pays a constant annual dividend of ₹12 per share. Current market price ₹96. Flotation on new issue ₹8. Compute Ke for existing shares and new issue.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex1a')">Show / Hide Solution</button>
+<div id="ex1a" class="answer" style="display:none">
+<p>Ke (existing / Kr) = D/P₀ = 12/96 = <b class="good">12.50%</b></p>
+<p>NP = 96 − 8 = ₹88</p>
+<p>Ke (new issue) = D/NP = 12/88 = <b class="good">13.64%</b></p>
+<p class="note">Difference of 1.14% purely due to flotation cost reducing net proceeds.</p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 2 — Gordon Model with g</h3>
+<p>Share price ₹180. Last dividend ₹9. Growth rate 8%. Flotation on new issue ₹15. Compute Kr (retained earnings) and Ke (new issue).</p>
+<button class="small-btn secondary" onclick="toggleAns('ex2a')">Show / Hide Solution</button>
+<div id="ex2a" class="answer" style="display:none">
+<p>D₁ = 9 × 1.08 = ₹9.72</p>
+<p>Kr = 9.72/180 + 0.08 = 5.40% + 8% = <b class="good">13.40%</b></p>
+<p>NP = 180 − 15 = ₹165</p>
+<p>Ke = 9.72/165 + 0.08 = 5.89% + 8% = <b class="good">13.89%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 3 — Estimating g and then Ke</h3>
+<p>EPS = ₹30, DPS = ₹12, Book Value per share = ₹250. Market price ₹300. Compute g (using b×ROE) and then Ke.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex3a')">Show / Hide Solution</button>
+<div id="ex3a" class="answer" style="display:none">
+<p>b = (30−12)/30 = 18/30 = 0.60</p>
+<p>ROE = EPS/BV = 30/250 = 12%</p>
+<p>g = b × ROE = 0.60 × 12% = <b>7.20%</b></p>
+<p>D₁ = 12 × 1.072 = ₹12.864</p>
+<p>Ke = 12.864/300 + 0.072 = 4.29% + 7.20% = <b class="good">11.49%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 4 — CAPM</h3>
+<p>Rf = 7.5%, Rm = 15%, Beta = 1.4. Compute Ke using CAPM. Also compute Ke if Beta falls to 0.9 (after the firm deleverages).</p>
+<button class="small-btn secondary" onclick="toggleAns('ex4a')">Show / Hide Solution</button>
+<div id="ex4a" class="answer" style="display:none">
+<p>MRP = 15% − 7.5% = 7.5%</p>
+<p>Ke (β=1.4) = 7.5% + 1.4 × 7.5% = 7.5% + 10.5% = <b class="good">18.0%</b></p>
+<p>Ke (β=0.9) = 7.5% + 0.9 × 7.5% = 7.5% + 6.75% = <b class="good">14.25%</b></p>
+<div class="alert">Reducing Beta from 1.4 to 0.9 (deleveraging) reduces Ke by 3.75% — a significant reduction in cost of equity capital.</div>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 5 — Hamada Equation (Beta Adjustment)</h3>
+<p>Comparable firm: βₗ = 1.6, D/E = 0.8, Tax 30%. Target firm: D/E = 0.4. Rf = 7%, Rm = 13%. Compute target firm's Ke.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex5a')">Show / Hide Solution</button>
+<div id="ex5a" class="answer" style="display:none">
+<p>Unlever: βᵤ = 1.6 / [1 + (1−0.30) × 0.8] = 1.6 / [1 + 0.56] = 1.6/1.56 = <b>1.026</b></p>
+<p>Re-lever at D/E=0.4: βₗ_target = 1.026 × [1 + 0.70×0.4] = 1.026 × 1.28 = <b>1.313</b></p>
+<p>Ke = 7% + 1.313 × (13%−7%) = 7% + 1.313×6% = 7% + 7.88% = <b class="good">14.88%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 6 — DDM vs CAPM Comparison</h3>
+<p>P₀ = ₹200, D₀ = ₹10, g = 7%. Rf = 8%, Rm = 15%, β = 1.1. Compute Ke by both methods and comment.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex6a')">Show / Hide Solution</button>
+<div id="ex6a" class="answer" style="display:none">
+<p><b>DDM:</b> D₁ = 10×1.07 = ₹10.70; Ke = 10.70/200 + 0.07 = 5.35% + 7% = <b class="good">12.35%</b></p>
+<p><b>CAPM:</b> MRP = 7%; Ke = 8% + 1.1×7% = 8% + 7.7% = <b class="good">15.70%</b></p>
+<div class="alert">DDM gives 12.35%; CAPM gives 15.70% — a significant divergence of 3.35%. Possible reasons: the assumed growth rate g=7% may be too optimistic (overvaluing the stock), or the stock's Beta may overstate its true systematic risk. In practice, analysts would investigate this divergence before selecting a Ke estimate, or use the average: (12.35+15.70)/2 = 14.03%.</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MCQ BANK -->
+<section id="mcq" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Practice</div>
+<h2>MCQ Bank — Cost of Equity</h2>
+<div id="mcqContainer"></div>
+<button onclick="renderMCQs(8)" class="secondary" style="margin-top:12px">Shuffle &amp; Reload 8 Questions</button>
+</div>
+</div>
+</section>
+
+<!-- EXAM GENERATOR -->
+<section id="exam_gen" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Practice</div>
+<h2>Exam Paper Generator</h2>
+<label>Number of MCQs</label><input id="egMCQ" type="number" value="5" min="0" max="18">
+<label>Number of calculation problems</label><input id="egCalc" type="number" value="2" min="0" max="6">
+<label>Include theory questions?</label>
+<select id="egTheory"><option value="1">Yes</option><option value="0">No</option></select>
+<button onclick="generateExam()" style="margin-top:14px;width:100%">Generate Exam Paper</button>
+</div>
+<div class="card s7"><div id="egPaper"><p class="muted">Configure and click Generate.</p></div></div>
+</div>
+</section>
+
+<!-- FORMULA BANK -->
+<section id="formula_bank" class="page">
+<div class="grid">
+<div class="card s6">
+<div class="sk">Reference</div>
+<h2>Formula Bank — Cost of Equity</h2>
+<h3>Zero Growth DDM</h3>
+<div class="formula">Ke = D / P₀    (existing shares)
+Ke = D / NP   (new issue; NP = P₀ − flotation)</div>
+<h3 style="margin-top:12px">Gordon Constant Growth DDM</h3>
+<div class="formula">D₁ = D₀ × (1 + g)
+Kr = D₁/P₀ + g    (retained earnings / existing)
+Ke = D₁/NP + g    (new equity issue)
+NP = P₀ − Flotation Cost</div>
+<h3 style="margin-top:12px">Growth Rate Estimation</h3>
+<div class="formula">g = b × ROE
+b = 1 − DPS/EPS = Retention Ratio
+ROE = EPS / Book Value per share
+
+g (CAGR) = (Dₙ/D₀)^(1/n) − 1</div>
+</div>
+<div class="card s6">
+<h3>CAPM</h3>
+<div class="formula">Ke = Rf + β × (Rm − Rf)
+   = Rf + β × MRP
+MRP = Rm − Rf
+SML: y-intercept = Rf; slope = MRP</div>
+<h3 style="margin-top:12px">Beta</h3>
+<div class="formula">β = Cov(Ri,Rm) / Var(Rm)
+  = ρ × σᵢ/σₘ
+β_portfolio = Σ(wᵢ × βᵢ)</div>
+<h3 style="margin-top:12px">Hamada Equation</h3>
+<div class="formula">βₗ = βᵤ × [1 + (1−Tc) × D/E]
+βᵤ = βₗ / [1 + (1−Tc) × D/E]</div>
+<h3 style="margin-top:12px">Bond Yield + Risk Premium</h3>
+<div class="formula">Ke = YTM on bonds + Equity Risk Premium</div>
+<h3 style="margin-top:12px">Cost Hierarchy</h3>
+<div class="formula">Kd(after-tax) &lt; Kp &lt; Kr &lt; Ke (new issue)</div>
+</div>
+</div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="glossary" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Reference</div>
+<h2>Glossary — Cost of Equity</h2>
+<input id="glSearch" type="text" placeholder="Search terms…" oninput="filterGlossary()">
+<div id="glList" style="margin-top:14px"></div>
+</div>
+</div>
+</section>
+
+</div>
+<script>
+function $(i){return document.getElementById(i);}
+function activatePage(p){
+  document.querySelectorAll('.page').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  var pg=$(p);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t){if(t.dataset.page===p)t.classList.add('active');});
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='why_highest')drawHierarchy();
+  if(p==='sml')drawSMLStatic();
+  if(p==='flotation')drawFlotChart();
+}
+window.activatePage=activatePage;
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){activatePage(t.dataset.page);});});
+function setMode(m){document.body.classList.toggle('teacher',m==='teacher');$('modeStudent').classList.toggle('on',m==='student');$('modeTeacher').classList.toggle('on',m==='teacher');}
+window.setMode=setMode;
+
+function fmt(n,d){if(d===undefined)d=2;return(!isFinite(n)||isNaN(n))?'—':n.toFixed(d);}
+function fmtR(n){return(!isFinite(n)||isNaN(n))?'—':'Rs.'+n.toLocaleString('en-IN',{maximumFractionDigits:2});}
+function fmtP(n,d){return fmt(n,d===undefined?2:d)+'%';}
+
+function setupCanvas(id,H){
+  var c=$(id);if(!c)return null;
+  var r=window.devicePixelRatio||1,W=c.clientWidth||600;
+  H=H||250;c.style.height=H+'px';c.width=W*r;c.height=H*r;
+  var ctx=c.getContext('2d');ctx.setTransform(r,0,0,r,0,0);ctx.clearRect(0,0,W,H);
+  return{ctx:ctx,W:W,H:H};
+}
+
+function drawLineChart(id,H,xArr,series,xLab,markPt){
+  var s=setupCanvas(id,H);if(!s)return;
+  var ctx=s.ctx,W=s.W;
+  var pad={l:60,r:20,t:28,b:38};
+  var allY=[];series.forEach(function(sr){sr.data.forEach(function(v){if(isFinite(v))allY.push(v);});});
+  if(!allY.length)return;
+  var maxY=Math.max.apply(null,allY),minY=Math.min.apply(null,allY);
+  var py=(maxY-minY)*0.15||1;maxY+=py;minY=Math.max(0,minY-py);
+  var minX=xArr[0],maxX=xArr[xArr.length-1];
+  function xp(x){return pad.l+((x-minX)/(maxX-minX||1))*(W-pad.l-pad.r);}
+  function yp(v){return pad.t+(maxY-v)/(maxY-minY)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';
+  if(xLab)ctx.fillText(xLab,W-pad.r-60,H-6);
+  series.forEach(function(sr){
+    ctx.strokeStyle=sr.color;ctx.lineWidth=2.2;ctx.setLineDash(sr.dash||[]);
+    ctx.beginPath();var st=false;
+    xArr.forEach(function(x,i){var v=sr.data[i];if(!isFinite(v)){st=false;return;}var X=xp(x),Y=yp(v);if(!st){ctx.moveTo(X,Y);st=true;}else ctx.lineTo(X,Y);});
+    ctx.stroke();ctx.setLineDash([]);
+  });
+  if(markPt){ctx.fillStyle=markPt.color||'#b8860b';ctx.beginPath();ctx.arc(xp(markPt.x),yp(markPt.y),7,0,7);ctx.fill();ctx.fillStyle='#16202e';ctx.font='bold 11px Inter,sans-serif';ctx.fillText(markPt.label,xp(markPt.x)+10,yp(markPt.y)+4);}
+  var lx=pad.l;
+  series.forEach(function(sr){ctx.fillStyle=sr.color;ctx.fillRect(lx,6,10,10);ctx.fillStyle='#5c6575';ctx.font='11px Inter,sans-serif';ctx.fillText(sr.label,lx+14,15);lx+=14+ctx.measureText(sr.label).width+18;});
+}
+
+function drawHierarchy(){
+  var s=setupCanvas('hierarchyChart',220);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var items=[{label:'Kd (after-tax)',val:7.0,color:'#1a7a52'},{label:'Kp',val:10.5,color:'#1a52a0'},{label:'Kr',val:13.5,color:'#b8860b'},{label:'Ke (new)',val:15.2,color:'#c0392b'}];
+  var maxV=17,pad={l:80,r:24,t:20,b:30};
+  var bw=(W-pad.l-pad.r)/items.length;
+  function yp(v){return pad.t+(maxV-v)/maxV*(H-pad.t-pad.b);}
+  function yh(v){return (v/maxV)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.stroke();
+  items.forEach(function(it,i){
+    var x=pad.l+i*bw+bw*0.15,w=bw*0.7;
+    ctx.fillStyle=it.color;ctx.fillRect(x,yp(it.val),w,yh(it.val));
+    ctx.fillStyle='#fff';ctx.font='bold 11px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(fmt(it.val,1)+'%',x+w/2,yp(it.val)+14);
+    ctx.fillStyle='#5c6575';ctx.font='10px Inter,sans-serif';
+    ctx.fillText(it.label,x+w/2,H-pad.b+14);ctx.textAlign='left';
+  });
+}
+window.drawHierarchy=drawHierarchy;
+
+function drawSMLStatic(){
+  var s=setupCanvas('smlStaticChart',280);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var pad={l:60,r:20,t:24,b:36};
+  var rf=7,rm=14,bMax=2.5;
+  var kMax=rf+bMax*(rm-rf)+2,kMin=rf-2;
+  function xp(b){return pad.l+(b/bMax)*(W-pad.l-pad.r);}
+  function yp(k){return pad.t+(kMax-k)/(kMax-kMin)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';
+  ctx.fillText('Beta →',W-pad.r-36,H-pad.b+14);
+  ctx.fillText('Ke %',2,pad.t+10);
+  [0,0.5,1,1.5,2,2.5].forEach(function(b){ctx.fillStyle='#bbb';ctx.fillText(b,xp(b)-6,H-pad.b+14);});
+  [7,9,11,13,15,17,19,21].forEach(function(k){if(k>=kMin&&k<=kMax){ctx.fillStyle='#bbb';ctx.fillText(k+'%',0,yp(k)+4);}});
+  ctx.strokeStyle='#1a52a0';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(xp(0),yp(rf));ctx.lineTo(xp(bMax),yp(rf+bMax*(rm-rf)));ctx.stroke();
+  ctx.fillStyle='#c0392b';ctx.beginPath();ctx.arc(xp(0),yp(rf),5,0,7);ctx.fill();
+  ctx.fillStyle='#c0392b';ctx.font='11px Inter,sans-serif';ctx.fillText('Rf='+rf+'%',xp(0)+7,yp(rf)-4);
+  ctx.fillStyle='#1a7a52';ctx.beginPath();ctx.arc(xp(1),yp(rm),5,0,7);ctx.fill();
+  ctx.fillStyle='#1a7a52';ctx.fillText('Rm='+rm+'%',xp(1)+7,yp(rm)-4);
+  [[0.7,12,'Defensive'],[1.3,16.1,'β=1.3']].forEach(function(pt){
+    var bv=pt[0],ke=rf+bv*(rm-rf);
+    ctx.fillStyle='#b8860b';ctx.beginPath();ctx.arc(xp(bv),yp(ke),5,0,7);ctx.fill();
+    ctx.fillStyle='#b8860b';ctx.font='10px Inter,sans-serif';ctx.fillText(pt[2]+' (β='+bv+')',xp(bv)+7,yp(ke)+4);
+  });
+  ctx.fillStyle='#1a52a0';ctx.font='bold 12px Inter,sans-serif';ctx.fillText('Security Market Line (SML)',pad.l+8,pad.t+16);
+}
+window.drawSMLStatic=drawSMLStatic;
+
+function drawFlotChart(){
+  var s=setupCanvas('flotChart',220);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var pad={l:60,r:20,t:24,b:36};
+  var d0=10,p0=200,g=0.07;var d1=d0*(1+g);
+  var flots=[];for(var f=0;f<=30;f+=1)flots.push(f);
+  var keNew=flots.map(function(f){return(d1/(p0-f)+g)*100;});
+  var kr=(d1/p0+g)*100;
+  var maxY=Math.max.apply(null,keNew)*1.05,minY=kr*0.95;
+  function xp(f){return pad.l+(f/30)*(W-pad.l-pad.r);}
+  function yp(k){return pad.t+(maxY-k)/(maxY-minY)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';ctx.fillText('Flotation Cost (₹) →',W-pad.r-110,H-6);
+  ctx.strokeStyle='#1a7a52';ctx.lineWidth=1.5;ctx.setLineDash([5,3]);
+  ctx.beginPath();ctx.moveTo(pad.l,yp(kr));ctx.lineTo(W-pad.r,yp(kr));ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a7a52';ctx.fillText('Kr='+fmt(kr,2)+'%',pad.l+4,yp(kr)-5);
+  ctx.strokeStyle='#c0392b';ctx.lineWidth=2.2;
+  ctx.beginPath();flots.forEach(function(f,i){if(i===0)ctx.moveTo(xp(f),yp(keNew[i]));else ctx.lineTo(xp(f),yp(keNew[i]));});ctx.stroke();
+  ctx.fillStyle='#c0392b';ctx.fillText('Ke (new issue)',pad.l+4,yp(keNew[10])-5);
+}
+window.drawFlotChart=drawFlotChart;
+
+function calcZeroGrowth(){
+  var D=+$('zgD').value||0,P0=+$('zgP0').value||0,flot=+$('zgFlot').value||0;
+  var kr=P0>0?D/P0:null,NP=P0-flot,ke=NP>0?D/NP:null;
+  $('zgResult').innerHTML='<div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><small>Ke / Kr (existing)</small><strong class="good">'+fmt((kr||0)*100,2)+'%</strong></div><div class="metric"><small>Ke (new issue)</small><strong class="'+(flot>0?'bad':'good')+'">'+fmt((ke||0)*100,2)+'%</strong></div></div><div class="formula">Kr = D/P₀ = '+fmtR(D)+'/'+fmtR(P0)+' = '+fmt((kr||0)*100,2)+'%'+(flot>0?'\nKe = D/NP = '+fmtR(D)+'/'+fmtR(NP)+' = '+fmt((ke||0)*100,2)+'%':'')+'</div>';
+}
+window.calcZeroGrowth=calcZeroGrowth;
+
+function toggleDDMType(){var t=$('ddmType').value;$('ddmGInput').style.display=t==='zero'?'none':'block';}
+window.toggleDDMType=toggleDDMType;
+function calcDDMFull(){
+  var d0=+$('ddmD0').value||0,g=(+$('ddmG').value||0)/100;
+  var p0=+$('ddmP0').value||0,flot=+$('ddmFlot').value||0;
+  var isZero=$('ddmType').value==='zero';
+  var d1=isZero?d0:d0*(1+g);
+  var NP=p0-flot;
+  var kr=p0>0?(isZero?d0/p0:d1/p0+(isZero?0:g)):null;
+  var ke=NP>0?(isZero?d0/NP:d1/NP+(isZero?0:g)):null;
+  $('ddmResult').innerHTML='<h3>DDM Results</h3><div class="formula">'+
+    (isZero?'D = '+fmtR(d0)+'\n':('D₀ = '+fmtR(d0)+'; D₁ = D₀×(1+g) = '+fmtR(d1)+'\n'))+
+    'P₀ = '+fmtR(p0)+(flot>0?'; NP = '+fmtR(p0)+'−'+fmtR(flot)+' = '+fmtR(NP):'')+
+    '\n\nKr (existing) = '+(isZero?'D/P₀ = '+fmtR(d0)+'/'+fmtR(p0):'D₁/P₀ + g = '+fmtR(d1)+'/'+fmtR(p0)+' + '+fmt(g*100,1)+'%')+' = '+fmt((kr||0)*100,2)+'%'+
+    (flot>0?'\nKe (new issue) = '+(isZero?'D/NP = '+fmtR(d0)+'/'+fmtR(NP):'D₁/NP + g = '+fmtR(d1)+'/'+fmtR(NP)+' + '+fmt(g*100,1)+'%')+' = '+fmt((ke||0)*100,2)+'%':'')+'</div>'+
+    '<div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:10px"><div class="metric"><small>Kr (existing / retained earnings)</small><strong class="good">'+fmt((kr||0)*100,2)+'%</strong></div><div class="metric"><small>Ke (new issue)</small><strong class="'+(flot>0?'bad':'muted')+'">'+fmt((ke||0)*100,2)+'%</strong></div></div>';
+}
+window.calcDDMFull=calcDDMFull;
+
+function calcCAPMFull(){
+  var rf=(+$('cpRf').value||0)/100,beta=+$('cpBeta').value||0,rm=(+$('cpRm').value||0)/100;
+  var mrp=rm-rf,ke=rf+beta*mrp;
+  $('cpResult').innerHTML='<div class="formula">MRP = Rm−Rf = '+fmt(rm*100,1)+'%−'+fmt(rf*100,1)+'% = '+fmt(mrp*100,2)+'%\nKe = '+fmt(rf*100,1)+'% + '+fmt(beta,2)+' × '+fmt(mrp*100,2)+'%\n   = '+fmt(rf*100,1)+'% + '+fmt(beta*mrp*100,2)+'%\n   = '+fmt(ke*100,2)+'%</div>'+
+    '<div class="metric" style="margin-top:10px"><small>Ke (CAPM)</small><strong class="good">'+fmt(ke*100,2)+'%</strong></div>';
+}
+window.calcCAPMFull=calcCAPMFull;
+
+function plotCAPMSens(){
+  var rf=(+$('cpRf').value||0)/100,rm=(+$('cpRm').value||0)/100;
+  var bmax=+$('cpBetaMax').value||2.5;
+  var betaCur=+$('cpBeta').value||0;
+  var betas=[];for(var b=0;b<=bmax;b+=bmax/40)betas.push(b);
+  var kes=betas.map(function(b){return(rf+b*(rm-rf))*100;});
+  var keCur=(rf+betaCur*(rm-rf))*100;
+  drawLineChart('capmSensChart',300,betas,[{data:kes,color:'#1a52a0',label:'Ke vs Beta'}],'Beta →',{x:betaCur,y:keCur,label:'β='+fmt(betaCur,2)+', Ke='+fmt(keCur,2)+'%'});
+  $('capmSensResult').innerHTML='At β='+fmt(betaCur,2)+': Ke = <b class="good">'+fmt(keCur,2)+'%</b>. SML: Ke = '+fmt(rf*100,1)+'% + β × '+fmt((rm-rf)*100,2)+'%.';
+}
+window.plotCAPMSens=plotCAPMSens;
+
+function drawSMLChart(){
+  var rf=(+$('smlRf').value||0)/100,rm=(+$('smlRm').value||0)/100;
+  var bmax=+$('smlBmax').value||2.5;
+  var bA=+$('smlA').value||0,bB=+$('smlB').value||0,bC=+$('smlC').value||0;
+  var betas=[];for(var b=0;b<=bmax;b+=bmax/50)betas.push(b);
+  var kes=betas.map(function(b){return(rf+b*(rm-rf))*100;});
+  var s=setupCanvas('smlInteractChart',320);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var pad={l:60,r:20,t:28,b:36};
+  var maxY=(rf+bmax*(rm-rf))*100+3,minY=rf*100-2;
+  function xp(b){return pad.l+(b/bmax)*(W-pad.l-pad.r);}
+  function yp(k){return pad.t+(maxY-k)/(maxY-minY)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';ctx.fillText('Beta →',W-pad.r-36,H-6);ctx.fillText('Ke%',2,pad.t+10);
+  ctx.strokeStyle='#1a52a0';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(xp(0),yp(rf*100));ctx.lineTo(xp(bmax),yp((rf+bmax*(rm-rf))*100));ctx.stroke();
+  [[bA,'#c0392b','A'],[bB,'#1a7a52','B'],[bC,'#b8860b','C']].forEach(function(pt){
+    var ke=(rf+pt[0]*(rm-rf))*100;
+    ctx.fillStyle=pt[1];ctx.beginPath();ctx.arc(xp(pt[0]),yp(ke),6,0,7);ctx.fill();
+    ctx.fillStyle=pt[1];ctx.font='bold 11px Inter,sans-serif';ctx.fillText(pt[2]+': β='+pt[0]+', Ke='+fmt(ke,1)+'%',xp(pt[0])+9,yp(ke)+4);
+  });
+  $('smlResult').innerHTML='<table><tr><th>Stock</th><th>Beta</th><th>Ke (CAPM)</th></tr>'+
+    [['A',bA,'#c0392b'],['B',bB,'#1a7a52'],['C',bC,'#b8860b']].map(function(r){return '<tr><td style="color:'+r[2]+'"><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td class="good">'+fmt((rf+r[1]*(rm-rf))*100,2)+'%</td></tr>';}).join('')+'</table>';
+}
+window.drawSMLChart=drawSMLChart;
+
+function toggleGMethod(){$('gROEInputs').style.display=$('gMethod').value==='roe'?'block':'none';$('gCAGRInputs').style.display=$('gMethod').value==='cagr'?'block':'none';}
+window.toggleGMethod=toggleGMethod;
+function calcGrowthRate(){
+  var m=$('gMethod').value,html='';
+  if(m==='roe'){var eps=+$('gEPS').value||0,dps=+$('gDPS').value||0,bv=+$('gBV').value||0;var b=(eps-dps)/eps,roe=bv>0?eps/bv:0,g=b*roe;html='<div class="formula">b (retention) = ('+fmt(eps,0)+'−'+fmt(dps,0)+')/'+fmt(eps,0)+' = '+fmt(b*100,1)+'%\nROE = EPS/BV = '+fmt(eps,0)+'/'+fmt(bv,0)+' = '+fmt(roe*100,1)+'%\ng = b × ROE = '+fmt(b*100,1)+'% × '+fmt(roe*100,1)+'% = '+fmt(g*100,2)+'%</div><div class="metric"><small>Growth Rate g</small><strong class="good">'+fmt(g*100,2)+'%</strong></div>';}
+  else{var d0=+$('gD0').value||0,dn=+$('gDn').value||0,n=+$('gN').value||1;var g=Math.pow(dn/d0,1/n)-1;html='<div class="formula">g = ('+fmt(dn,0)+'/'+fmt(d0,0)+')^(1/'+n+') − 1\n  = '+fmt(Math.pow(dn/d0,1/n),4)+' − 1\n  = '+fmt(g*100,2)+'%</div><div class="metric"><small>Growth Rate g</small><strong class="good">'+fmt(g*100,2)+'%</strong></div>';}
+  $('gResult').innerHTML=html;
+}
+window.calcGrowthRate=calcGrowthRate;
+
+function toggleGCMethod(){$('gcROE').style.display=$('gcMethod').value==='roe'?'block':'none';$('gcCAGR').style.display=$('gcMethod').value==='cagr'?'block':'none';}
+window.toggleGCMethod=toggleGCMethod;
+var lastG=null;
+function calcGC(){
+  var m=$('gcMethod').value;
+  if(m==='roe'){var eps=+$('gcEPS').value||0,dps=+$('gcDPS').value||0,bv=+$('gcBV').value||0;var b=(eps-dps)/eps,roe=bv>0?eps/bv:0;lastG=b*roe;}
+  else{var d0=+$('gcD0').value||0,dn=+$('gcDn').value||0,n=+$('gcN').value||1;lastG=Math.pow(dn/d0,1/n)-1;}
+  $('gcResult').innerHTML='<div class="metric"><small>Growth Rate g</small><strong class="good">'+fmt((lastG||0)*100,2)+'%</strong></div>';
+}
+window.calcGC=calcGC;
+function applyGtoKe(){
+  if(lastG===null){$('gcKeResult').innerHTML='<p class="note">Compute g first.</p>';return;}
+  var p0=+$('gcP0').value||0,d0=+$('gcDD0').value||0,flot=+$('gcFlot').value||0;
+  var d1=d0*(1+lastG),NP=p0-flot;
+  var kr=p0>0?d1/p0+lastG:null,ke=NP>0?d1/NP+lastG:null;
+  $('gcKeResult').innerHTML='<div class="formula">g = '+fmt(lastG*100,2)+'% | D₁ = '+fmtR(d1)+'\nKr = D₁/P₀ + g = '+fmtR(d1)+'/'+fmtR(p0)+' + '+fmt(lastG*100,2)+'% = '+fmt((kr||0)*100,2)+'%'+(flot>0?'\nKe = D₁/NP + g = '+fmtR(d1)+'/'+fmtR(NP)+' + '+fmt(lastG*100,2)+'% = '+fmt((ke||0)*100,2)+'%':'')+'</div>';
+}
+window.applyGtoKe=applyGtoKe;
+
+function calcTwoStage(){
+  var d0=+$('tsD0').value||0,g1=(+$('tsG1').value||0)/100;
+  var n=+$('tsN').value||1,g2=(+$('tsG2').value||0)/100,p0=+$('tsP0').value||0;
+  var divs=[];var d=d0;for(var t=1;t<=n;t++){d=d*(1+g1);divs.push(d);}
+  var lo=g2+0.001,hi=2;
+  function pvCFs(ke){var pv=0;divs.forEach(function(dv,i){pv+=dv/Math.pow(1+ke,i+1);});var dn1=divs[divs.length-1]*(1+g2),pn=dn1/(ke-g2);pv+=pn/Math.pow(1+ke,n);return pv;}
+  for(var i=0;i<300;i++){var mid=(lo+hi)/2,pvm=pvCFs(mid);if(Math.abs(pvm-p0)<0.01)break;if(pvm>p0)lo=mid;else hi=mid;}
+  var ke=(lo+hi)/2;
+  var rows=divs.map(function(dv,i){return '<tr><td>'+(i+1)+'</td><td>'+fmtR(dv)+'</td><td>'+fmt(dv/Math.pow(1+ke,i+1),2)+'</td></tr>';}).join('');
+  var dn1=divs[divs.length-1]*(1+g2),pn=dn1/(ke-g2);
+  $('tsResult').innerHTML='<div class="formula">Ke (Two-Stage) ≈ '+fmt(ke*100,2)+'%</div>'+
+    '<table style="font-size:.86rem"><tr><th>Year</th><th>Dividend (₹)</th><th>PV at '+fmt(ke*100,2)+'%</th></tr>'+rows+
+    '<tr><td>'+n+' (terminal)</td><td>P'+n+'='+fmtR(pn)+'</td><td>'+fmt(pn/Math.pow(1+ke,n),2)+'</td></tr></table>'+
+    '<div class="metric" style="margin-top:10px"><small>Ke (Two-Stage DDM)</small><strong class="good">'+fmt(ke*100,2)+'%</strong></div>';
+}
+window.calcTwoStage=calcTwoStage;
+
+function calcBeta(){
+  var si=(+$('betaSi').value||0)/100,sm=(+$('betaSm').value||0)/100,rho=+$('betaRho').value||0;
+  var beta=rho*si/sm;
+  $('betaResult').innerHTML='<div class="formula">β = ρ × σᵢ/σₘ = '+fmt(rho,2)+' × '+fmt(si*100,1)+'%/'+fmt(sm*100,1)+'% = '+fmt(beta,4)+'</div><div class="metric"><small>Beta</small><strong class="good">'+fmt(beta,3)+'</strong></div>';
+}
+window.calcBeta=calcBeta;
+
+function calcPortBeta(){
+  var bA=+$('pBetaA').value||0,wA=(+$('pWtA').value||0)/100;
+  var bB=+$('pBetaB').value||0,wB=(+$('pWtB').value||0)/100;
+  var bp=bA*wA+bB*wB;
+  $('pBetaResult').innerHTML='<div class="formula">β_portfolio = wA×βA + wB×βB\n = '+fmt(wA*100,0)+'%×'+fmt(bA,2)+' + '+fmt(wB*100,0)+'%×'+fmt(bB,2)+' = '+fmt(bp,3)+'</div><div class="metric"><small>Portfolio Beta</small><strong class="good">'+fmt(bp,3)+'</strong></div>';
+}
+window.calcPortBeta=calcPortBeta;
+
+var unleveredBeta=null;
+function calcHamada(){
+  var bl=+$('hamBL').value||0,de=+$('hamDE').value||0,tc=(+$('hamTc').value||0)/100;
+  var bu=bl/(1+(1-tc)*de);unleveredBeta=bu;
+  $('hamResult').innerHTML='<div class="formula">βᵤ = βₗ / [1+(1−Tc)×D/E]\n   = '+fmt(bl,2)+' / [1+'+fmt(1-tc,2)+'×'+fmt(de,2)+']\n   = '+fmt(bl,2)+' / '+fmt(1+(1-tc)*de,3)+'\n   = '+fmt(bu,3)+'</div><div class="metric"><small>Unlevered Beta (βᵤ)</small><strong class="good">'+fmt(bu,3)+'</strong></div>';
+}
+window.calcHamada=calcHamada;
+
+function releverBeta(){
+  if(!unleveredBeta){$('hamResult2').innerHTML='<p class="note">Unlever Beta first.</p>';return;}
+  var denew=+$('hamDEnew').value||0,tc=(+$('hamTc').value||0)/100;
+  var blnew=unleveredBeta*(1+(1-tc)*denew);
+  $('hamResult2').innerHTML='<div class="formula">βₗ_new = βᵤ × [1+(1−Tc)×D/E_new]\n       = '+fmt(unleveredBeta,3)+' × [1+'+fmt(1-tc,2)+'×'+fmt(denew,2)+']\n       = '+fmt(blnew,3)+'</div><div class="metric"><small>Re-levered Beta</small><strong class="good">'+fmt(blnew,3)+'</strong></div>';
+}
+window.releverBeta=releverBeta;
+
+function calcBondYield(){
+  var ytm=(+$('byYTM').value||0)/100,prem=(+$('byPrem').value||0)/100;
+  var ke=(ytm+prem)*100;
+  $('byResult').innerHTML='<div class="formula">Ke = YTM + Risk Premium\n   = '+fmt(ytm*100,1)+'% + '+fmt(prem*100,1)+'%\n   = '+fmt(ke,2)+'%</div><div class="metric"><small>Ke</small><strong class="good">'+fmt(ke,2)+'%</strong></div>';
+}
+window.calcBondYield=calcBondYield;
+
+function runDash(){
+  var d0=+$('dD0').value||0,g=(+$('dG').value||0)/100,p0=+$('dP0').value||0,flot=+$('dFlot').value||0;
+  var rf=(+$('cRf').value||0)/100,beta=+$('cBeta').value||0,rm=(+$('cRm').value||0)/100;
+  var d1=d0*(1+g),NP=p0-flot;
+  var keDDM=p0>0?d1/p0+g:null;var keDDMNew=NP>0?d1/NP+g:null;
+  var keCAPM=rf+beta*(rm-rf);var mrp=rm-rf;
+  $('dashMetrics').innerHTML='<div class="metric"><small>Ke — DDM (existing)</small><strong class="good">'+fmt((keDDM||0)*100,2)+'%</strong></div>'+
+    '<div class="metric"><small>Ke — DDM (new issue)</small><strong class="'+(flot>0?'bad':'muted')+'">'+fmt((keDDMNew||0)*100,2)+'%</strong></div>'+
+    '<div class="metric"><small>Ke — CAPM</small><strong class="good">'+fmt(keCAPM*100,2)+'%</strong></div>'+
+    '<div class="metric"><small>MRP = Rm−Rf</small><strong>'+fmt(mrp*100,2)+'%</strong></div>';
+  $('dashWorking').innerHTML='<div class="callout">DDM: D₁='+fmtR(d1)+'; Ke=D₁/P₀+g='+fmt((keDDM||0)*100,2)+'% | CAPM: Ke='+fmt(rf*100,1)+'%+'+fmt(beta,2)+'×'+fmt(mrp*100,1)+'%='+fmt(keCAPM*100,2)+'%</div>';
+  var betas=[];for(var b=0;b<=2.5;b+=0.05)betas.push(b);
+  var kes=betas.map(function(b){return(rf+b*(rm-rf))*100;});
+  drawLineChart('dashSMLChart',250,betas,[{data:kes,color:'#1a52a0',label:'SML: Ke = Rf + β×MRP'}],'Beta →',{x:beta,y:keCAPM*100,label:'β='+fmt(beta,2)+', CAPM Ke='+fmt(keCAPM*100,1)+'%'});
+}
+window.runDash=runDash;
+
+var MCQS=[
+ {q:"The cost of equity (Ke) is defined as:",opts:["The dividend yield on shares","The minimum rate of return equity shareholders require to compensate for their risk","The interest rate on long-term debt","The book value of equity divided by market capitalisation"],a:1,e:"Ke is the opportunity cost of equity capital — the minimum return shareholders require given the risk they bear. Unlike debt (contractual interest), Ke must be inferred from market data using models like DDM or CAPM."},
+ {q:"Under the Gordon Constant Growth Model, Ke for existing shares is:",opts:["D₀/P₀","D₁/P₀ − g","D₁/P₀ + g","D₁/NP + g"],a:2,e:"Ke = D₁/P₀ + g for existing shares (no flotation cost). D₁ = D₀(1+g). For new equity, use NP (net proceeds after flotation) instead of P₀, giving Ke = D₁/NP + g > Kr."},
+ {q:"A company's share price is ₹200. D₀ = ₹10. Growth rate 8%. Kr (retained earnings) is:",opts:["5.40%","13.40%","8.00%","10.00%"],a:1,e:"D₁ = 10×1.08=₹10.80. Kr = D₁/P₀+g = 10.80/200+0.08 = 5.40%+8% = 13.40%."},
+ {q:"Why is Ke (new equity issue) always greater than Kr (retained earnings)?",opts:["New equity shareholders demand higher dividends","Flotation costs reduce net proceeds below market price, raising the effective cost","New shares dilute earnings per share, reducing growth","New equity has higher Beta than retained earnings"],a:1,e:"New equity incurs flotation costs (underwriting, brokerage). These reduce NP below P₀, making D₁/NP > D₁/P₀. Since Ke=D₁/NP+g > D₁/P₀+g=Kr, flotation costs always make new equity costlier."},
+ {q:"Under CAPM, if Rf=8%, Rm=15%, β=1.3, Ke equals:",opts:["17.10%","15.00%","8.00%","23.00%"],a:0,e:"MRP = 15−8 = 7%. Ke = 8% + 1.3×7% = 8% + 9.1% = 17.10%."},
+ {q:"Beta (β) in CAPM measures:",opts:["Total risk of the stock (systematic + unsystematic)","Systematic (market) risk of the stock relative to the market portfolio","The correlation between two stocks","The volatility of the firm's cash flows"],a:1,e:"Beta measures systematic risk — the sensitivity of the stock's returns to market returns. Unsystematic risk can be diversified away, so CAPM only compensates investors for systematic risk (Beta)."},
+ {q:"On the Security Market Line (SML), the y-intercept and slope are respectively:",opts:["Rm and Beta","Rf and Market Risk Premium (Rm−Rf)","Beta and Rf","MRP and Rm"],a:1,e:"SML: Ke = Rf + β×(Rm−Rf). At β=0, Ke=Rf (y-intercept). Each unit increase in β increases Ke by (Rm−Rf) = MRP (slope)."},
+ {q:"The sustainable growth rate formula g = b × ROE uses:",opts:["b = dividend payout ratio; ROE = Return on Assets","b = retention ratio = 1−payout; ROE = Net Profit/Shareholders Equity","b = Beta; ROE = Return on Equity","b = book value ratio; ROE = ROCE"],a:1,e:"g = b×ROE where b = retention ratio = 1−DPS/EPS = (EPS−DPS)/EPS, and ROE = EPS/Book Value per share. The growth in earnings (and dividends, assuming constant payout) equals the rate of reinvestment times the return on that reinvestment."},
+ {q:"The Hamada equation is used to:",opts:["Compute the weighted average cost of capital","Adjust Beta for differences in capital structure — unlever a comparable firm's Beta and re-lever at the target D/E ratio","Estimate the market risk premium from historical data","Convert nominal returns to real returns"],a:1,e:"βₗ = βᵤ × [1+(1−Tc)×D/E]. Unlevering removes financial risk from a comparable firm's observed Beta. Re-levering applies the target D/E structure. Essential for the Pure Play method when evaluating a project in a new industry."},
+ {q:"Which cost of equity method cannot be used for a non-dividend-paying firm?",opts:["CAPM","Bond Yield + Risk Premium","DDM / Gordon Model","All three can be used"],a:2,e:"The DDM requires dividends (D₀ and g) to be observable or estimable. A firm that pays no dividends cannot be valued using the DDM — D₁=0 implies Ke=g which is meaningless. CAPM and Bond Yield+RP work without dividend data."},
+ {q:"If the Market Risk Premium (Rm−Rf) increases, the SML will:",opts:["Shift upward in parallel (all Ke values rise equally)","Rotate upward (become steeper) — high-Beta stocks are more affected","Shift downward","The SML is unaffected by changes in MRP"],a:1,e:"A higher MRP steepens the SML. At β=0, Ke=Rf (unchanged). At β=1, Ke=Rm (rises by the MRP change). At β>1, Ke rises by more than the MRP change. High-Beta stocks bear more of the impact."},
+ {q:"A firm's EPS = ₹25, DPS = ₹10, Book Value per share = ₹250. The sustainable growth rate g is:",opts:["4.00%","6.00%","10.00%","25.00%"],a:1,e:"b = (25−10)/25 = 15/25 = 0.60. ROE = 25/250 = 10%. g = 0.60×10% = 6.00%."},
+ {q:"The portfolio Beta of 60% in stock A (β=1.5) and 40% in stock B (β=0.7) is:",opts:["1.10","1.18","2.20","0.90"],a:1,e:"β_portfolio = 0.60×1.5 + 0.40×0.7 = 0.90 + 0.28 = 1.18."},
+ {q:"The Bond Yield Plus Risk Premium method estimates Ke as:",opts:["Kd after-tax + flotation cost","YTM on the firm's long-term bonds + an equity risk premium (judgement)","Rf + Beta × MRP","D₁/YTM + g"],a:1,e:"Ke = YTM on firm's bonds + Equity Risk Premium (typically 3–6%, judgmental). Simple and quick, but subjective. Useful when dividend history is erratic or Beta is unreliable."},
+ {q:"Which of the following is the correct cost hierarchy?",opts:["Ke > Kp > Kd (after-tax) > Kr","Kd (after-tax) < Kp < Kr < Ke (new issue)","Kp > Ke > Kr > Kd","Kd > Kr > Kp > Ke"],a:1,e:"Kd < Kp < Kr < Ke (new issue). Debt is cheapest (tax shield). Preference is next (no tax but priority). Retained earnings are next (no flotation). New equity is costliest (no tax + flotation costs reduce NP)."},
+ {q:"In the two-stage DDM, how is Ke determined?",opts:["Directly from the formula Ke = D₁/P₀ + g","As the IRR of the cash flow stream: P₀ at Year 0; Phase-1 dividends Years 1 to n; Terminal price Pₙ at Year n","By averaging g₁ and g₂","By the CAPM formula using the average Beta"],a:1,e:"In the two-stage DDM, Ke is found by trial-and-error (IRR method) — the rate that makes the present value of Phase-1 dividends plus the discounted terminal price equal the current market price P₀. There is no direct closed-form solution."},
+ {q:"A stock with β=0.6 is classified as:",opts:["Aggressive — more volatile than the market","Defensive — less volatile than the market; its Ke is between Rf and Rm","Inverse — moves opposite to the market","Risk-free — identical to T-bills"],a:1,e:"0 < β < 1 is 'defensive' — the stock is less volatile than the market. At β=0.6: Ke = Rf + 0.6×MRP, which lies between Rf (β=0) and Rm (β=1). Typical sectors: FMCG, utilities, pharma."},
+ {q:"If flotation costs are zero, the relationship between Kr (retained earnings) and Ke (new equity) is:",opts:["Kr > Ke","Kr < Ke","Kr = Ke","Cannot be determined without knowing g"],a:2,e:"With flotation=0, NP=P₀, so Ke=D₁/P₀+g = Kr. The entire difference between Kr and Ke arises from flotation costs reducing net proceeds below market price. No flotation → no difference."}
+];
+
+function shuffle(a){return a.map(function(v){return{v:v,s:Math.random()};}).sort(function(a,b){return a.s-b.s;}).map(function(o){return o.v;});}
+function pick(a,n){return shuffle(a).slice(0,n);}
+function renderMCQs(n){
+  var chosen=pick(MCQS,n);var html='';
+  chosen.forEach(function(m,qi){
+    html+='<div class="quiz-card"><b>Q'+(qi+1)+'.</b> '+m.q+'<div style="margin-top:8px">';
+    m.opts.forEach(function(opt,oi){html+='<button class="mcq-option" onclick="answerMCQ('+qi+','+oi+','+m.a+',this)">'+opt+'</button>';});
+    html+='</div><div class="answer" id="mcqExp'+qi+'" style="display:none">'+m.e+'</div></div>';
+  });
+  $('mcqContainer').innerHTML=html;
+}
+window.renderMCQs=renderMCQs;
+function answerMCQ(qi,chosen,correct,btn){
+  btn.closest('.quiz-card').querySelectorAll('.mcq-option').forEach(function(o,oi){o.disabled=true;if(oi===correct)o.classList.add('correct');else if(oi===chosen)o.classList.add('wrong');});
+  var e=$('mcqExp'+qi);if(e)e.style.display='block';
+}
+window.answerMCQ=answerMCQ;
+
+function generateExam(){
+  var nM=+$('egMCQ').value||0,nC=+$('egCalc').value||0,th=$('egTheory').value==='1';
+  var html='<h3>Exam Paper — Cost of Equity</h3><ol>';
+  pick(MCQS,nM).forEach(function(m){html+='<li>'+m.q+'<br><span class="note">('+m.opts.join(' | ')+')</span></li>';});
+  var calcQs=[
+    "Share price ₹200. D₀=₹10. Growth rate 7%. Flotation on new issue ₹16. Compute Kr (retained earnings) and Ke (new issue).",
+    "EPS=₹24, DPS=₹8, Book Value per share=₹200. Market price ₹280. Compute g (sustainable growth rate) and then Kr.",
+    "Rf=8%, Rm=15%, Beta=1.4. Compute Ke using CAPM. Also find Ke if Rm rises to 17% (all else constant).",
+    "Comparable firm: βₗ=1.8, D/E=1.0, Tax 30%. Target D/E=0.5. Rf=7.5%, Rm=14%. Compute target firm's Ke using the Hamada equation.",
+    "D₀=₹6, g₁=25% for 3 years, g₂=8% thereafter. P₀=₹160. Compute Ke using the two-stage DDM.",
+    "P₀=₹150, D₀=₹8, g=9%. Also: Rf=7%, Rm=13%, Beta=1.2. Flotation=₹12. Compute Ke by DDM (existing & new issue) and CAPM. Comment on the divergence."
+  ];
+  pick(calcQs,nC).forEach(function(q){html+='<li><b>Problem.</b> '+q+'</li>';});
+  if(th){pick(["Explain the Gordon Constant Growth Model for estimating cost of equity. What are its assumptions and limitations?","What is CAPM? Explain its formula, components, and the Security Market Line.","Distinguish between cost of retained earnings (Kr) and cost of new equity (Ke). Why is Kr < Ke?","Explain the Hamada equation. When and why is it used?","How is the dividend growth rate g estimated? Explain both the b×ROE and CAGR methods.","Compare the DDM, CAPM, and Bond Yield+Risk Premium methods for estimating Ke. When is each most appropriate?","Why is the cost of equity the highest component in a firm's cost of capital? Explain with reference to risk and tax treatment."],2).forEach(function(t){html+='<li><b>Theory.</b> '+t+'</li>';});}
+  html+='</ol>';$('egPaper').innerHTML=html;
+}
+window.generateExam=generateExam;
+
+var GLOSSARY=[
+  ["Beta (β)","Measure of systematic (market) risk. β>1: aggressive (more volatile than market); β=1: market; β<1: defensive; β=0: risk-free. Computed as Cov(Ri,Rm)/Var(Rm) = ρ×σi/σm."],
+  ["Bond Yield + Risk Premium","Ke = Bond YTM + Equity Risk Premium (3–6%, judgmental). Simple heuristic — less rigorous than CAPM or DDM."],
+  ["Capital Gain Yield","The rate at which the share price appreciates — equal to g in the Gordon Model (constant growth assumption)."],
+  ["CAPM","Capital Asset Pricing Model: Ke = Rf + β×(Rm−Rf). Derives Ke from systematic risk (Beta), risk-free rate, and market risk premium."],
+  ["Constant Growth DDM","Gordon Model: P₀ = D₁/(Ke−g). Rearranged: Kr = D₁/P₀ + g (existing); Ke = D₁/NP + g (new issue)."],
+  ["Cost of Equity (Ke)","Minimum required return on equity shares. Highest component of WACC — equity holders are residual claimants bearing the most risk."],
+  ["Cost of Retained Earnings (Kr)","Opportunity cost of retained profits: Kr = D₁/P₀ + g. Equal to Ke for existing shares with no flotation cost."],
+  ["D₁ (Next Dividend)","Expected dividend in the next period: D₁ = D₀×(1+g). The relevant dividend for Gordon Model computations."],
+  ["Defensive Stock","A stock with β<1 — less volatile than the market. Requires Ke between Rf and Rm. Typical sectors: FMCG, utilities."],
+  ["Dividend Yield","D₁/P₀ — the income component of Ke in the Gordon Model. The remaining component is the growth rate g."],
+  ["Flotation Costs","Issue costs on new shares (underwriting, brokerage, legal). Reduce NP below P₀, making Ke > Kr. Reason internal finance is preferred."],
+  ["Gordon Model","P₀ = D₁/(Ke−g); requires Ke > g. See Constant Growth DDM."],
+  ["Growth Rate (g)","Rate at which dividends (and share price) grow. Estimated as b×ROE or historical CAGR of dividends."],
+  ["Hamada Equation","βₗ = βᵤ × [1+(1−Tc)×D/E]. Used to unlever/re-lever Beta when comparing firms with different capital structures."],
+  ["Market Risk Premium (MRP)","MRP = Rm−Rf. The slope of the SML. Extra return required for bearing market (systematic) risk instead of holding the risk-free asset."],
+  ["Net Proceeds (NP)","NP = P₀ − Flotation Costs. The actual funds received per share from a new equity issue. Used in Ke = D₁/NP + g."],
+  ["Pecking Order Theory","Firms prefer internal finance (retained earnings) over new equity because retained earnings have no flotation cost — Kr < Ke."],
+  ["Residual Claimant","Equity holders receive whatever remains after all creditors and preference holders are paid — in both normal operations and liquidation. This residual position commands the highest required return."],
+  ["Retention Ratio (b)","b = 1 − DPS/EPS = fraction of earnings retained. Used in g = b×ROE."],
+  ["Risk-Free Rate (Rf)","Return on a default-free investment (government T-bills or G-Secs). The y-intercept of the SML in CAPM."],
+  ["ROE (Return on Equity)","Net Profit / Shareholders Equity = EPS / Book Value per share. Combined with b to estimate sustainable growth rate g."],
+  ["Security Market Line (SML)","Ke = Rf + β×MRP. Straight line plotting required return vs Beta for all correctly priced assets. y-intercept = Rf; slope = MRP."],
+  ["Sustainable Growth Rate","g = b×ROE: maximum growth rate using only internally generated funds (no new external equity or debt)."],
+  ["Two-Stage DDM","DDM with high growth phase (g₁, n years) followed by stable phase (g₂ forever). Ke is the IRR of the resulting cash flows."],
+  ["Unlevered Beta (βᵤ)","Asset Beta with financial risk removed. βᵤ = βₗ / [1+(1−Tc)×D/E]. Reflects pure business risk, independent of capital structure."],
+  ["Zero Growth DDM","Ke = D/P₀. Treats share as a perpetuity of constant dividends. Simple case of Gordon Model with g=0."]
+];
+
+function filterGlossary(){
+  var f=($('glSearch').value||'').toLowerCase();
+  $('glList').innerHTML=GLOSSARY.filter(function(p){return p[0].toLowerCase().indexOf(f)>=0||p[1].toLowerCase().indexOf(f)>=0;})
+    .map(function(p){return '<div class="quiz-card"><b>'+p[0]+'</b><div class="note" style="margin-top:3px">'+p[1]+'</div></div>';}).join('')||'<p class="note">No matches.</p>';
+}
+window.filterGlossary=filterGlossary;
+function toggleAns(id){var el=$(id);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+window.toggleAns=toggleAns;
+
+var SIDX=[];
+function buildSIDX(){document.querySelectorAll('.tab').forEach(function(t){var pg=$(t.dataset.page);SIDX.push({page:t.dataset.page,title:t.textContent.trim(),body:pg?pg.textContent.replace(/\s+/g,' ').slice(0,4000):''});});}
+function runSearch(){
+  var q=($('masterSearch').value||'').trim().toLowerCase(),out=$('masterResults');
+  if(!q){out.innerHTML='<p class="muted">Type a keyword.</p>';return;}
+  var hits=SIDX.map(function(s){var sc=0;if(s.title.toLowerCase().indexOf(q)>=0)sc+=100;var bi=s.body.toLowerCase().indexOf(q);if(bi>=0)sc+=40;return{s:s,score:sc,bi:bi};}).filter(function(h){return h.score>0;}).sort(function(a,b){return b.score-a.score;}).slice(0,16);
+  if(!hits.length){out.innerHTML='<p class="muted">No matches.</p>';return;}
+  out.innerHTML=hits.map(function(h){var snip='';if(h.bi>=0){var st=Math.max(0,h.bi-50);snip='…'+h.s.body.slice(st,h.bi+70)+'…';}return '<div class="quiz-card"><button class="small-btn" data-goto="'+h.s.page+'">→ '+h.s.title+'</button><div class="note" style="margin-top:4px">'+snip+'</div></div>';}).join('');
+  out.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){activatePage(b.dataset.goto);});});
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  runDash();
+  buildSIDX();
+  var ms=$('masterSearch');if(ms)ms.addEventListener('input',runSearch);
+  runSearch();
+  renderMCQs(8);
+  filterGlossary();
+});
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

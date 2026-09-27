@@ -1,0 +1,1614 @@
+{
+  "Accounting_Rate_of_Return_Lab.html": {
+    "title": "Accounting Rate of Return (ARR) — Interactive Deep-Dive Lab",
+    "tabCount": 12,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Meaning &amp; Need"
+      },
+      {
+        "id": "method",
+        "label": "The Method"
+      },
+      {
+        "id": "decision",
+        "label": "Decision Rule"
+      },
+      {
+        "id": "strengths",
+        "label": "Strengths &amp; Weaknesses"
+      },
+      {
+        "id": "vs_cf",
+        "label": "ARR vs Cash-Flow Methods"
+      },
+      {
+        "id": "calc_main",
+        "label": "ARR Calculator"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "Capital_Budgeting_Excel_Lab-3.html": {
+    "title": "Capital Budgeting with MS Excel — Complete Interactive Lab & Practitioner Suite",
+    "tabCount": 29,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Intro & Significance"
+      },
+      {
+        "id": "standards",
+        "label": "Modeling Standards"
+      },
+      {
+        "id": "npv_func",
+        "label": "=NPV() Deep Dive"
+      },
+      {
+        "id": "irr_func",
+        "label": "=IRR() Deep Dive"
+      },
+      {
+        "id": "mirr_func",
+        "label": "=MIRR() Mechanics"
+      },
+      {
+        "id": "xnpv_xirr",
+        "label": "=XNPV() & =XIRR()"
+      },
+      {
+        "id": "payback",
+        "label": "Payback Schedules"
+      },
+      {
+        "id": "pi_concept",
+        "label": "Profitability Index"
+      },
+      {
+        "id": "unequal_lives",
+        "label": "Unequal Lives & EAA"
+      },
+      {
+        "id": "replacement",
+        "label": "Replacement Decisions"
+      },
+      {
+        "id": "real_options",
+        "label": "Real Options"
+      },
+      {
+        "id": "lease_buy",
+        "label": "Lease vs. Buy"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation Dynamics"
+      },
+      {
+        "id": "project_finance",
+        "label": "Project Finance & DSCR"
+      },
+      {
+        "id": "data_tables",
+        "label": "Data Tables"
+      },
+      {
+        "id": "scenario_goal_seek",
+        "label": "Scenario & Goal Seek"
+      },
+      {
+        "id": "solver_rationing",
+        "label": "Solver (Capital Rationing)"
+      },
+      {
+        "id": "monte_carlo",
+        "label": "Monte Carlo Simulation"
+      },
+      {
+        "id": "vba_macros",
+        "label": "VBA Automation"
+      },
+      {
+        "id": "auditing_traps",
+        "label": "Auditing & 10 Traps"
+      },
+      {
+        "id": "calc_project",
+        "label": "Project Calculator"
+      },
+      {
+        "id": "calc_solver",
+        "label": "Capital Rationing Solver"
+      },
+      {
+        "id": "calc_data_table",
+        "label": "2-Way Sensitivity Matrix"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Cases"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Quiz Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "Capital_Budgeting_Final_Universal_Teacher_Student_Complete.html": {
+    "title": "Capital Budgeting Interactive Finance Laboratory — Final Universal Teacher Student Complete Edition",
+    "tabCount": 121,
+    "tabs": [
+      {
+        "id": "master_index",
+        "label": "Master Index &amp; Search"
+      },
+      {
+        "id": "project50",
+        "label": "500 Project Cases with Answers"
+      },
+      {
+        "id": "project_practice_planner",
+        "label": "Project Practice Planner"
+      },
+      {
+        "id": "report_generator",
+        "label": "Report Generator &amp; Print"
+      },
+      {
+        "id": "student_guide",
+        "label": "Student Guide"
+      },
+      {
+        "id": "teacher_student_checklist",
+        "label": "Teacher & Student Use Checklist"
+      },
+      {
+        "id": "learning_path",
+        "label": "Basic-to-Advanced Learning Path"
+      },
+      {
+        "id": "coverage",
+        "label": "Complete Coverage Map"
+      },
+      {
+        "id": "syllabus",
+        "label": "Full Basic-to-Advanced Syllabus"
+      },
+      {
+        "id": "completeness_audit",
+        "label": "Completeness Audit"
+      },
+      {
+        "id": "universal_course_mapper",
+        "label": "Universal Course &amp; Exam Mapper"
+      },
+      {
+        "id": "exam_paper_generator",
+        "label": "Exam Paper Generator"
+      },
+      {
+        "id": "marking_schemes",
+        "label": "Marking Schemes &amp; Answer Rubrics"
+      },
+      {
+        "id": "bloom_outcomes",
+        "label": "Learning Outcomes &amp; Bloom Taxonomy"
+      },
+      {
+        "id": "universal_terms",
+        "label": "Universal Terminology Converter"
+      },
+      {
+        "id": "final_working_check",
+        "label": "Final Working Check"
+      },
+      {
+        "id": "concept_mcq_mega",
+        "label": "Concept Lessons + 25 MCQs Each"
+      },
+      {
+        "id": "formula_derivation_mega",
+        "label": "Mega Formula Derivation Library"
+      },
+      {
+        "id": "examples_mega",
+        "label": "Mega Solved & Unsolved Examples"
+      },
+      {
+        "id": "theory_bank_mega",
+        "label": "Short & Long Question Bank"
+      },
+      {
+        "id": "visual_lab_pro",
+        "label": "Advanced Graphs & Visualisation Lab"
+      },
+      {
+        "id": "visual_heatmap",
+        "label": "Interactive NPV Heatmap"
+      },
+      {
+        "id": "frontier_lab",
+        "label": "Capital Rationing Frontier"
+      },
+      {
+        "id": "breakeven_lab",
+        "label": "Break-even Visual Lab"
+      },
+      {
+        "id": "tree_visual_lab",
+        "label": "Decision Tree Visual Builder"
+      },
+      {
+        "id": "final_visual_audit",
+        "label": "Final Visual &amp; Content Audit"
+      },
+      {
+        "id": "intro",
+        "label": "Introduction"
+      },
+      {
+        "id": "basicsaz",
+        "label": "Basics A–Z"
+      },
+      {
+        "id": "purpose",
+        "label": "Purpose"
+      },
+      {
+        "id": "process",
+        "label": "Process"
+      },
+      {
+        "id": "types",
+        "label": "Types of Decisions"
+      },
+      {
+        "id": "screening",
+        "label": "Project Identification & Screening"
+      },
+      {
+        "id": "concept_notes",
+        "label": "Complete Concept Notes"
+      },
+      {
+        "id": "timevalue",
+        "label": "Time Value & Discounting"
+      },
+      {
+        "id": "forecasting",
+        "label": "Forecasting Assumptions"
+      },
+      {
+        "id": "cashflow_masterclass",
+        "label": "Cash Flow Masterclass"
+      },
+      {
+        "id": "cashflow1",
+        "label": "Estimating Cash Flows"
+      },
+      {
+        "id": "cashflow2",
+        "label": "Cash Flow Categories"
+      },
+      {
+        "id": "incremental",
+        "label": "Relevant / Incremental Cash Flow Rules"
+      },
+      {
+        "id": "depmethods",
+        "label": "Depreciation Methods & Tax Shields"
+      },
+      {
+        "id": "block",
+        "label": "Block of Assets"
+      },
+      {
+        "id": "terminal",
+        "label": "Terminal Value & Disposal Tax"
+      },
+      {
+        "id": "financing",
+        "label": "Exclusion of Financing Costs"
+      },
+      {
+        "id": "posttax",
+        "label": "Post-Tax Principle"
+      },
+      {
+        "id": "techoverview",
+        "label": "Techniques Overview"
+      },
+      {
+        "id": "technique_deepdives",
+        "label": "Technique Deep Dives"
+      },
+      {
+        "id": "payback",
+        "label": "Payback Period"
+      },
+      {
+        "id": "arr",
+        "label": "ARR"
+      },
+      {
+        "id": "npv",
+        "label": "NPV"
+      },
+      {
+        "id": "pi",
+        "label": "Profitability Index"
+      },
+      {
+        "id": "irr",
+        "label": "IRR"
+      },
+      {
+        "id": "dpayback",
+        "label": "Discounted Payback"
+      },
+      {
+        "id": "mirr",
+        "label": "MIRR"
+      },
+      {
+        "id": "summarytable",
+        "label": "Decision Criteria Summary"
+      },
+      {
+        "id": "ranking",
+        "label": "Project Ranking & Crossover"
+      },
+      {
+        "id": "conflict",
+        "label": "NPV vs IRR Conflicts"
+      },
+      {
+        "id": "decision_playbook",
+        "label": "Decision Playbook"
+      },
+      {
+        "id": "wacc",
+        "label": "Cost of Capital & WACC"
+      },
+      {
+        "id": "capm",
+        "label": "Project Beta & CAPM Rate"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation-Adjusted Budgeting"
+      },
+      {
+        "id": "advancedrisk",
+        "label": "Advanced Risk Toolkit"
+      },
+      {
+        "id": "radr",
+        "label": "Risk-Adjusted Discount Rate"
+      },
+      {
+        "id": "certainty",
+        "label": "Certainty Equivalent Method"
+      },
+      {
+        "id": "probability",
+        "label": "Probability & Expected NPV"
+      },
+      {
+        "id": "stddev",
+        "label": "Standard Deviation & Coefficient of Variation"
+      },
+      {
+        "id": "dectree",
+        "label": "Decision Tree Analysis"
+      },
+      {
+        "id": "scenario",
+        "label": "Scenario Analysis"
+      },
+      {
+        "id": "simulation",
+        "label": "Simulation Approach"
+      },
+      {
+        "id": "sensitivity",
+        "label": "Sensitivity Lab"
+      },
+      {
+        "id": "replacement",
+        "label": "Replacement Analysis"
+      },
+      {
+        "id": "economiclife",
+        "label": "Economic Life & Replacement Timing"
+      },
+      {
+        "id": "leasebuy",
+        "label": "Lease vs Buy Decision"
+      },
+      {
+        "id": "rationing",
+        "label": "Capital Rationing"
+      },
+      {
+        "id": "unequal",
+        "label": "Unequal Lives"
+      },
+      {
+        "id": "apv",
+        "label": "Adjusted Present Value"
+      },
+      {
+        "id": "international",
+        "label": "International Capital Budgeting"
+      },
+      {
+        "id": "realoptions",
+        "label": "Real Options in Capital Budgeting"
+      },
+      {
+        "id": "socialcba",
+        "label": "Social Cost-Benefit Analysis"
+      },
+      {
+        "id": "esgstrategy",
+        "label": "ESG, Strategic & Qualitative Factors"
+      },
+      {
+        "id": "governancebias",
+        "label": "Governance & Behavioural Biases"
+      },
+      {
+        "id": "postaudit",
+        "label": "Implementation, Control & Post-Audit"
+      },
+      {
+        "id": "assumption_register",
+        "label": "Assumption Register"
+      },
+      {
+        "id": "ai_capital_budgeting",
+        "label": "AI Use in Decision Making"
+      },
+      {
+        "id": "india_cases",
+        "label": "Indian-Based Case Studies"
+      },
+      {
+        "id": "international_cases",
+        "label": "International Case Studies"
+      },
+      {
+        "id": "industry_cases",
+        "label": "Industry-Wise Case Library"
+      },
+      {
+        "id": "data_sources",
+        "label": "Data Sources & Assumption Research"
+      },
+      {
+        "id": "pv_tables",
+        "label": "PVIF &amp; PVAF Tables"
+      },
+      {
+        "id": "portfolio_dashboard",
+        "label": "Project Portfolio Dashboard"
+      },
+      {
+        "id": "india_tax_notes",
+        "label": "India Tax, GST &amp; Regulatory Notes"
+      },
+      {
+        "id": "printable_summary",
+        "label": "Printable One-Page Summary"
+      },
+      {
+        "id": "references",
+        "label": "References &amp; Further Reading"
+      },
+      {
+        "id": "derivations",
+        "label": "Formula Derivations"
+      },
+      {
+        "id": "formulas",
+        "label": "Formula & Glossary"
+      },
+      {
+        "id": "formulaplus",
+        "label": "Excel & Textbook Formula Bank"
+      },
+      {
+        "id": "excelr",
+        "label": "Excel & R Reference"
+      },
+      {
+        "id": "templates",
+        "label": "Solution Templates"
+      },
+      {
+        "id": "cheatsheets",
+        "label": "Quick Revision Cheat Sheets"
+      },
+      {
+        "id": "mistake_clinic",
+        "label": "Mistake Clinic"
+      },
+      {
+        "id": "examframework",
+        "label": "Exam Framework & Common Mistakes"
+      },
+      {
+        "id": "exam_prep",
+        "label": "Exam Preparation Planner"
+      },
+      {
+        "id": "flashcards",
+        "label": "Flashcards"
+      },
+      {
+        "id": "viva_answers",
+        "label": "Viva & Theory Answers"
+      },
+      {
+        "id": "practice",
+        "label": "Practice Lab"
+      },
+      {
+        "id": "morequestions",
+        "label": "More Solved & Unsolved"
+      },
+      {
+        "id": "mcq100",
+        "label": "100 MCQs"
+      },
+      {
+        "id": "questionbank",
+        "label": "Question Bank"
+      },
+      {
+        "id": "case_studies",
+        "label": "Case Studies"
+      },
+      {
+        "id": "mini_projects",
+        "label": "Mini Projects"
+      },
+      {
+        "id": "mastersolver",
+        "label": "Master Capital Budgeting Solver"
+      },
+      {
+        "id": "calc100",
+        "label": "100 Live Calculators"
+      },
+      {
+        "id": "searchhub",
+        "label": "Search Hub"
+      },
+      {
+        "id": "compare",
+        "label": "Which Tool? (Decision Guide)"
+      },
+      {
+        "id": "attached_calculators_csv",
+        "label": "Attached: 100 Calculators CSV"
+      },
+      {
+        "id": "attached_questions_csv",
+        "label": "Attached: Question Bank CSV"
+      },
+      {
+        "id": "attached_projects500_csv",
+        "label": "Attached: 500 Projects CSV"
+      },
+      {
+        "id": "attached_formulas_csv",
+        "label": "Attached: Formula Bank CSV"
+      },
+      {
+        "id": "attached_workbook_xlsx",
+        "label": "Attached: Excel Workbook Preview"
+      },
+      {
+        "id": "downloads",
+        "label": "CSV & Excel Files"
+      },
+      {
+        "id": "teacher",
+        "label": "Teacher Mode"
+      },
+      {
+        "id": "rubrics",
+        "label": "Grading Rubrics"
+      }
+    ]
+  },
+  "Cost_of_Capital_Lab-3.html": {
+    "title": "Cost of Capital — Complete Interactive Lab",
+    "tabCount": 23,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Introduction"
+      },
+      {
+        "id": "significance",
+        "label": "Significance"
+      },
+      {
+        "id": "kd",
+        "label": "Cost of Debt (Kd)"
+      },
+      {
+        "id": "kp",
+        "label": "Cost of Preference (Kp)"
+      },
+      {
+        "id": "ke_ddm",
+        "label": "Cost of Equity — DDM"
+      },
+      {
+        "id": "ke_capm",
+        "label": "Cost of Equity — CAPM"
+      },
+      {
+        "id": "kr",
+        "label": "Cost of Retained Earnings"
+      },
+      {
+        "id": "wacc_concept",
+        "label": "WACC Concept"
+      },
+      {
+        "id": "wacc_bv",
+        "label": "Book Value Weights"
+      },
+      {
+        "id": "wacc_mv",
+        "label": "Market Value Weights"
+      },
+      {
+        "id": "wacc_compare",
+        "label": "BV vs MV Comparison"
+      },
+      {
+        "id": "mcc",
+        "label": "Marginal Cost (MCC)"
+      },
+      {
+        "id": "ios",
+        "label": "Investment Opportunity Schedule"
+      },
+      {
+        "id": "flotation",
+        "label": "Flotation Costs"
+      },
+      {
+        "id": "calc_kd",
+        "label": "Kd Calculator"
+      },
+      {
+        "id": "calc_ke",
+        "label": "Ke Calculator"
+      },
+      {
+        "id": "calc_wacc",
+        "label": "WACC Calculator"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "Cost_of_Capital_Lab.html": {
+    "title": "Cost of Capital — Interactive Lab",
+    "tabCount": 28,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard &amp; Search"
+      },
+      {
+        "id": "intro",
+        "label": "Introduction"
+      },
+      {
+        "id": "concept",
+        "label": "Core Concept"
+      },
+      {
+        "id": "cost_debt",
+        "label": "Cost of Debt (Kd)"
+      },
+      {
+        "id": "cost_pref",
+        "label": "Cost of Preference (Kp)"
+      },
+      {
+        "id": "cost_equity",
+        "label": "Cost of Equity (Ke)"
+      },
+      {
+        "id": "cost_retained",
+        "label": "Cost of Retained Earnings (Kr)"
+      },
+      {
+        "id": "flotation",
+        "label": "Flotation Costs"
+      },
+      {
+        "id": "wacc",
+        "label": "WACC — Core"
+      },
+      {
+        "id": "weights",
+        "label": "Book vs Market Weights"
+      },
+      {
+        "id": "marginal",
+        "label": "Marginal Cost of Capital"
+      },
+      {
+        "id": "break_point",
+        "label": "Break Points &amp; MCC Schedule"
+      },
+      {
+        "id": "capm",
+        "label": "CAPM &amp; Beta"
+      },
+      {
+        "id": "dividend_growth",
+        "label": "Dividend Growth Model"
+      },
+      {
+        "id": "bond_yield_plus",
+        "label": "Bond-Yield-Plus"
+      },
+      {
+        "id": "capital_structure",
+        "label": "Capital Structure Link"
+      },
+      {
+        "id": "calc_kd",
+        "label": "Kd Calculator"
+      },
+      {
+        "id": "calc_ke",
+        "label": "Ke Calculator"
+      },
+      {
+        "id": "calc_wacc",
+        "label": "WACC Calculator"
+      },
+      {
+        "id": "calc_capm",
+        "label": "CAPM Calculator"
+      },
+      {
+        "id": "mcc_lab",
+        "label": "MCC Lab"
+      },
+      {
+        "id": "worked",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "unsolved",
+        "label": "Unsolved Problems"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "excel_guide",
+        "label": "Excel Guide"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "Cost_of_Debt_Lab.html": {
+    "title": "Cost of Debt (Kd) — Complete Interactive Lab",
+    "tabCount": 22,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Introduction"
+      },
+      {
+        "id": "tax_shield",
+        "label": "Tax Shield"
+      },
+      {
+        "id": "irred_concept",
+        "label": "Concept"
+      },
+      {
+        "id": "irred_cases",
+        "label": "All Cases (Par/Disc/Prem)"
+      },
+      {
+        "id": "redd_concept",
+        "label": "Concept"
+      },
+      {
+        "id": "redd_approx",
+        "label": "Approximate Method"
+      },
+      {
+        "id": "redd_ytm",
+        "label": "YTM / IRR Method"
+      },
+      {
+        "id": "redd_scenarios",
+        "label": "All Scenarios"
+      },
+      {
+        "id": "flotation",
+        "label": "Flotation Costs"
+      },
+      {
+        "id": "issue_effect",
+        "label": "Issue Price Effect"
+      },
+      {
+        "id": "bank_loan",
+        "label": "Bank Loans"
+      },
+      {
+        "id": "kd_wacc",
+        "label": "Kd in WACC"
+      },
+      {
+        "id": "calc_irred",
+        "label": "Irredeemable Kd"
+      },
+      {
+        "id": "calc_redd",
+        "label": "Redeemable Kd"
+      },
+      {
+        "id": "calc_ytm",
+        "label": "YTM Calculator"
+      },
+      {
+        "id": "calc_sens",
+        "label": "Sensitivity Chart"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "Cost_of_Equity_Lab.html": {
+    "title": "Cost of Equity (Ke) — Complete Interactive Lab",
+    "tabCount": 25,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Introduction"
+      },
+      {
+        "id": "why_highest",
+        "label": "Why Ke is Highest"
+      },
+      {
+        "id": "ddm_zero",
+        "label": "Zero Growth DDM"
+      },
+      {
+        "id": "ddm_gordon",
+        "label": "Gordon Model (Const. Growth)"
+      },
+      {
+        "id": "ddm_twostage",
+        "label": "Two-Stage Growth"
+      },
+      {
+        "id": "growth_rate",
+        "label": "Estimating g"
+      },
+      {
+        "id": "flotation",
+        "label": "Flotation Costs"
+      },
+      {
+        "id": "kr_vs_ke",
+        "label": "Kr vs Ke (New Issue)"
+      },
+      {
+        "id": "capm_concept",
+        "label": "CAPM Concept"
+      },
+      {
+        "id": "sml",
+        "label": "Security Market Line"
+      },
+      {
+        "id": "beta",
+        "label": "Beta (β) — Explained"
+      },
+      {
+        "id": "beta_leverage",
+        "label": "Levered vs Unlevered Beta"
+      },
+      {
+        "id": "capm_inputs",
+        "label": "CAPM Inputs"
+      },
+      {
+        "id": "bond_yield",
+        "label": "Bond Yield + Risk Premium"
+      },
+      {
+        "id": "method_compare",
+        "label": "Method Comparison"
+      },
+      {
+        "id": "calc_ddm",
+        "label": "DDM Calculator"
+      },
+      {
+        "id": "calc_capm",
+        "label": "CAPM Calculator"
+      },
+      {
+        "id": "calc_sml",
+        "label": "SML Chart"
+      },
+      {
+        "id": "calc_g",
+        "label": "Growth Rate (g) Calc"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "Cost_of_Preference_Share_Lab.html": {
+    "title": "Cost of Preference Share (Kp) — Complete Interactive Lab",
+    "tabCount": 24,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Introduction"
+      },
+      {
+        "id": "features",
+        "label": "Features of Pref. Shares"
+      },
+      {
+        "id": "cost_hierarchy",
+        "label": "Cost Hierarchy"
+      },
+      {
+        "id": "irr_concept",
+        "label": "Irredeemable — Concept"
+      },
+      {
+        "id": "irr_par",
+        "label": "Issued at Par"
+      },
+      {
+        "id": "irr_premium",
+        "label": "Issued at Premium"
+      },
+      {
+        "id": "irr_discount",
+        "label": "Issued at Discount"
+      },
+      {
+        "id": "irr_flotation",
+        "label": "Flotation Costs"
+      },
+      {
+        "id": "red_concept",
+        "label": "Redeemable — Concept"
+      },
+      {
+        "id": "red_approx",
+        "label": "Approximate Method"
+      },
+      {
+        "id": "red_irr",
+        "label": "YTM / IRR Method"
+      },
+      {
+        "id": "red_scenarios",
+        "label": "All Scenarios Table"
+      },
+      {
+        "id": "dividend_tax",
+        "label": "Dividend & Tax Treatment"
+      },
+      {
+        "id": "kp_in_wacc",
+        "label": "Kp in WACC"
+      },
+      {
+        "id": "kp_vs_kd",
+        "label": "Kp vs Kd Comparison"
+      },
+      {
+        "id": "calc_irr",
+        "label": "Irredeemable Kp Calc"
+      },
+      {
+        "id": "calc_red",
+        "label": "Redeemable Kp Calc"
+      },
+      {
+        "id": "calc_sens",
+        "label": "Sensitivity Chart"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "TVM_Interactive_Finance_Laboratory_COMPLETE_FIXED.html": {
+    "title": "TVM Interactive Finance Laboratory — Complete",
+    "tabCount": 31,
+    "tabs": [
+      {
+        "id": "learn",
+        "label": "Learn TVM"
+      },
+      {
+        "id": "singlesum",
+        "label": "Single Sum FV/PV"
+      },
+      {
+        "id": "compounding",
+        "label": "Compounding &amp; EAR"
+      },
+      {
+        "id": "realrate",
+        "label": "Real vs Nominal Rate"
+      },
+      {
+        "id": "annuity",
+        "label": "Annuity"
+      },
+      {
+        "id": "deferred",
+        "label": "Deferred Annuity"
+      },
+      {
+        "id": "perpetuity",
+        "label": "Perpetuity"
+      },
+      {
+        "id": "growing",
+        "label": "Growing Annuity"
+      },
+      {
+        "id": "sinkingfund",
+        "label": "Sinking Fund"
+      },
+      {
+        "id": "goalplanner",
+        "label": "Goal / SIP Planner"
+      },
+      {
+        "id": "bond",
+        "label": "Bond Valuation"
+      },
+      {
+        "id": "uneven",
+        "label": "Uneven Cash Flows"
+      },
+      {
+        "id": "loan",
+        "label": "Loan / EMI Amortization"
+      },
+      {
+        "id": "rule72",
+        "label": "Rule of 72"
+      },
+      {
+        "id": "mastersolver",
+        "label": "Master TVM Solver"
+      },
+      {
+        "id": "rateconverter",
+        "label": "Rate Converter"
+      },
+      {
+        "id": "factors",
+        "label": "TVM Factor Tables"
+      },
+      {
+        "id": "gradient",
+        "label": "Arithmetic Gradient"
+      },
+      {
+        "id": "stepupsip",
+        "label": "Step-Up SIP"
+      },
+      {
+        "id": "retirement",
+        "label": "Retirement Planner"
+      },
+      {
+        "id": "loanadvanced",
+        "label": "Loan Advanced"
+      },
+      {
+        "id": "bondanalytics",
+        "label": "Bond Analytics"
+      },
+      {
+        "id": "datedflows",
+        "label": "XNPV / XIRR"
+      },
+      {
+        "id": "leasebuy",
+        "label": "Lease vs Buy"
+      },
+      {
+        "id": "sensitivity",
+        "label": "Sensitivity Lab"
+      },
+      {
+        "id": "formulas",
+        "label": "Formula & Glossary"
+      },
+      {
+        "id": "excel",
+        "label": "Excel Master"
+      },
+      {
+        "id": "compare",
+        "label": "Which Tool? (Decision Guide)"
+      },
+      {
+        "id": "practice",
+        "label": "Practice"
+      },
+      {
+        "id": "teacher",
+        "label": "Teacher Mode"
+      },
+      {
+        "id": "questionbank",
+        "label": "Question Bank"
+      }
+    ]
+  },
+  "irr_lab.html": {
+    "title": "Internal Rate of Return — Interactive Deep-Dive Lab",
+    "tabCount": 21,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "concept",
+        "label": "Concept &amp; Meaning"
+      },
+      {
+        "id": "equation",
+        "label": "The IRR Equation"
+      },
+      {
+        "id": "methods",
+        "label": "Calculation Methods"
+      },
+      {
+        "id": "profile",
+        "label": "NPV Profile &amp; IRR"
+      },
+      {
+        "id": "multi_irr",
+        "label": "Multiple IRRs"
+      },
+      {
+        "id": "no_irr",
+        "label": "No IRR / Negative IRR"
+      },
+      {
+        "id": "reinvest",
+        "label": "Reinvestment Assumption"
+      },
+      {
+        "id": "mirr",
+        "label": "Modified IRR (MIRR)"
+      },
+      {
+        "id": "xirr",
+        "label": "XIRR (Dated CFs)"
+      },
+      {
+        "id": "vs_npv",
+        "label": "IRR vs NPV — Side by Side"
+      },
+      {
+        "id": "conflicts",
+        "label": "IRR vs NPV Conflicts"
+      },
+      {
+        "id": "calc_irr",
+        "label": "IRR Calculator"
+      },
+      {
+        "id": "calc_mirr",
+        "label": "MIRR Calculator"
+      },
+      {
+        "id": "calc_xirr",
+        "label": "XIRR Calculator"
+      },
+      {
+        "id": "calc_compare",
+        "label": "IRR vs NPV Compare"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "mirr_lab.html": {
+    "title": "Modified Internal Rate of Return — Interactive Deep-Dive Lab",
+    "tabCount": 18,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "concept",
+        "label": "Concept &amp; Meaning"
+      },
+      {
+        "id": "formula",
+        "label": "MIRR Formula &amp; Derivation"
+      },
+      {
+        "id": "calc",
+        "label": "Calculating MIRR"
+      },
+      {
+        "id": "vs_irr",
+        "label": "MIRR vs IRR"
+      },
+      {
+        "id": "reinvest",
+        "label": "The Reinvestment Critique"
+      },
+      {
+        "id": "rates",
+        "label": "Finance vs Reinvest Rate"
+      },
+      {
+        "id": "multi_irr",
+        "label": "MIRR &amp; Multiple IRRs"
+      },
+      {
+        "id": "vs_npv",
+        "label": "MIRR vs NPV"
+      },
+      {
+        "id": "capital_budgeting",
+        "label": "MIRR in Practice"
+      },
+      {
+        "id": "special",
+        "label": "Special Cases"
+      },
+      {
+        "id": "calc_mirr",
+        "label": "MIRR Calculator"
+      },
+      {
+        "id": "calc_compare",
+        "label": "MIRR vs IRR Compare"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  },
+  "npv_lab.html": {
+    "title": "Net Present Value — Interactive Deep-Dive Lab",
+    "tabCount": 31,
+    "tabs": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "id": "intro",
+        "label": "Concept &amp; Meaning"
+      },
+      {
+        "id": "tvm",
+        "label": "Time Value Foundation"
+      },
+      {
+        "id": "formula",
+        "label": "The NPV Formula"
+      },
+      {
+        "id": "discount_rate",
+        "label": "Discount Rate Selection"
+      },
+      {
+        "id": "lump_sum",
+        "label": "Single / Lump-Sum CFs"
+      },
+      {
+        "id": "annuity",
+        "label": "Annuity Cash Flows"
+      },
+      {
+        "id": "perpetuity",
+        "label": "Perpetuity"
+      },
+      {
+        "id": "growing",
+        "label": "Growing Perpetuity &amp; Annuity"
+      },
+      {
+        "id": "uneven",
+        "label": "Uneven Cash Flows"
+      },
+      {
+        "id": "npv_profile",
+        "label": "NPV Profile"
+      },
+      {
+        "id": "sensitivity",
+        "label": "Sensitivity Analysis"
+      },
+      {
+        "id": "scenario",
+        "label": "Scenario Analysis"
+      },
+      {
+        "id": "breakeven",
+        "label": "Break-Even NPV"
+      },
+      {
+        "id": "risk_adjusted",
+        "label": "Risk-Adjusted NPV"
+      },
+      {
+        "id": "terminal_value",
+        "label": "Terminal Value in NPV"
+      },
+      {
+        "id": "additivity",
+        "label": "NPV Additivity"
+      },
+      {
+        "id": "npv_vs_others",
+        "label": "NPV vs Other Metrics"
+      },
+      {
+        "id": "wacc_npv",
+        "label": "WACC &amp; NPV Link"
+      },
+      {
+        "id": "negative_npv",
+        "label": "Negative NPV Situations"
+      },
+      {
+        "id": "npv_india",
+        "label": "NPV in Indian Context"
+      },
+      {
+        "id": "calc_basic",
+        "label": "Basic NPV"
+      },
+      {
+        "id": "calc_annuity",
+        "label": "Annuity NPV"
+      },
+      {
+        "id": "calc_perpetuity",
+        "label": "Perpetuity &amp; Growing"
+      },
+      {
+        "id": "calc_sensitivity",
+        "label": "Sensitivity Tool"
+      },
+      {
+        "id": "calc_profile",
+        "label": "NPV Profile Chart"
+      },
+      {
+        "id": "examples",
+        "label": "Worked Examples"
+      },
+      {
+        "id": "mcq",
+        "label": "MCQ Bank"
+      },
+      {
+        "id": "exam_gen",
+        "label": "Exam Generator"
+      },
+      {
+        "id": "formula_bank",
+        "label": "Formula Bank"
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary"
+      }
+    ]
+  }
+}

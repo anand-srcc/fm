@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TVM Interactive Finance Laboratory — Complete</title>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#172033;--muted:#647089;--line:#dfe5ef;--blue:#2457d6;--green:#0b8a68;--red:#c53d52;--gold:#b86a08;--nav:#e8edf6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1400px;margin:auto;padding:18px}.hero{padding:28px;border-radius:24px;background:linear-gradient(135deg,#14284f,#2457d6);color:#fff;box-shadow:0 12px 30px #163b801f}.hero h1{font-size:clamp(30px,4vw,50px);margin:0 0 6px}.hero p{margin:0;max-width:1000px;opacity:.9}.nav{display:flex;gap:7px;overflow:auto;padding:7px;margin:14px 0;background:var(--nav);border:1px solid var(--line);border-radius:15px}.tab{border:1px solid #d4dce9;background:#fff;color:#34415a;padding:10px 14px;border-radius:10px;font-weight:750;white-space:nowrap;cursor:pointer;transition:.18s}.tab:hover{transform:translateY(-1px);border-color:#9eb1d5}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 5px 14px #2457d63d}.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:0 3px 12px #18345a0a}.s4{grid-column:span 4}.s6{grid-column:span 6}.s8{grid-column:span 8}.s12{grid-column:span 12}h2,h3{margin-top:0}.muted{color:var(--muted)}label{display:block;font-weight:700;margin:9px 0 4px}input,select,button,textarea{font:inherit}input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}button{border:0;border-radius:9px;padding:9px 13px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer}.secondary{background:#edf1f7;color:var(--ink)}.danger{background:#fbe9ed;color:var(--red)}.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.metric{padding:12px;border-radius:12px;background:#f1f5ff;border:1px solid #dfe7fb}.metric small{color:var(--muted)}.metric strong{display:block;font-size:21px;margin-top:2px}.formula{background:#101827;color:#eaf0ff;border-radius:12px;padding:14px;font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto;white-space:pre-wrap}.callout{padding:13px;border-left:4px solid var(--blue);background:#eef3ff;border-radius:9px}.good{color:var(--green);font-weight:800}.bad{color:var(--red);font-weight:800}.warn{color:var(--gold);font-weight:800}table{width:100%;border-collapse:collapse}th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{background:#f6f8fb}.scroll{overflow:auto}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf2ff;color:var(--blue);font-size:12px;font-weight:800}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}canvas{display:block;width:100%;height:290px;border:1px solid var(--line);border-radius:12px;background:#fff}.bar{height:9px;background:#e5eaf2;border-radius:9px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2457d6,#0b8a68);transition:.3s}.tip{position:relative;display:inline-block;border-bottom:1px dotted var(--muted);cursor:help}.tip:hover:after{content:attr(data-tip);position:absolute;z-index:10;left:0;top:25px;width:230px;padding:9px;border-radius:8px;background:#111827;color:#fff;font-size:12px}.pillrow{display:flex;gap:6px;flex-wrap:wrap}.sticky{position:sticky;top:8px}.center{text-align:center}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(3,1fr)}.s4,.s6,.s8{grid-column:span 6}}@media(max-width:700px){.s4,.s6,.s8,.s12{grid-column:span 12}.two,.three{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.wrap{padding:10px}}
+.formula-label{font-size:12px;font-weight:800;color:var(--muted);margin-bottom:5px}
+.note{font-size:13px;color:var(--muted)}
+.alert{padding:11px 13px;border-radius:10px;background:#fff7e8;border-left:4px solid #b86a08}
+.timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:start}
+.timeline .node{padding:12px;border:1px solid var(--line);border-radius:12px;text-align:center;background:#fafbfd}
+.timeline .node strong{display:block;font-size:16px}
+.small-btn{padding:7px 10px;font-size:13px}
+.quiz-card{padding:16px;border:1px solid var(--line);border-radius:13px;margin:10px 0}
+.answer{margin-top:8px;padding:10px;border-radius:9px;background:#f6f8fb}
+.row-flow{display:grid;grid-template-columns:70px 1fr 34px;gap:8px;align-items:center;margin-bottom:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:#eef3ff;color:var(--blue);font-weight:800;font-size:12px;margin:2px 4px 2px 0}
+@media(max-width:900px){.timeline{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.timeline{grid-template-columns:repeat(2,1fr)}}
+
+.matrix-table th,.matrix-table td{text-align:center}.matrix-table th:first-child,.matrix-table td:first-child{text-align:left}.mini{font-size:12px}.section-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:850;color:var(--blue);margin-bottom:5px}.formula-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.formula-grid .formula{height:100%}.compact-list{margin:6px 0 0 18px;padding:0}.wide-select{min-width:180px}@media(max-width:700px){.formula-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<h1>TVM Interactive Finance Laboratory — Complete</h1>
+<p>A complete, self-contained Time-Value-of-Money teaching and calculation laboratory — from single sums and rate conversion through annuities, perpetuities, gradients, SIPs, retirement planning, bonds, loans, date-based cash flows, lease decisions, sensitivity analysis, Excel functions, formula sheets, practice and teacher tools — all calculated live.</p>
+</header>
+
+<nav class="nav" id="nav">
+<button class="tab active" data-page="learn">Learn TVM</button>
+<button class="tab" data-page="singlesum">Single Sum FV/PV</button>
+<button class="tab" data-page="compounding">Compounding &amp; EAR</button>
+<button class="tab" data-page="realrate">Real vs Nominal Rate</button>
+<button class="tab" data-page="annuity">Annuity</button>
+<button class="tab" data-page="deferred">Deferred Annuity</button>
+<button class="tab" data-page="perpetuity">Perpetuity</button>
+<button class="tab" data-page="growing">Growing Annuity</button>
+<button class="tab" data-page="sinkingfund">Sinking Fund</button>
+<button class="tab" data-page="goalplanner">Goal / SIP Planner</button>
+<button class="tab" data-page="bond">Bond Valuation</button>
+<button class="tab" data-page="uneven">Uneven Cash Flows</button>
+<button class="tab" data-page="loan">Loan / EMI Amortization</button>
+<button class="tab" data-page="rule72">Rule of 72</button>
+<button class="tab" data-page="mastersolver">Master TVM Solver</button>
+<button class="tab" data-page="rateconverter">Rate Converter</button>
+<button class="tab" data-page="factors">TVM Factor Tables</button>
+<button class="tab" data-page="gradient">Arithmetic Gradient</button>
+<button class="tab" data-page="stepupsip">Step-Up SIP</button>
+<button class="tab" data-page="retirement">Retirement Planner</button>
+<button class="tab" data-page="loanadvanced">Loan Advanced</button>
+<button class="tab" data-page="bondanalytics">Bond Analytics</button>
+<button class="tab" data-page="datedflows">XNPV / XIRR</button>
+<button class="tab" data-page="leasebuy">Lease vs Buy</button>
+<button class="tab" data-page="sensitivity">Sensitivity Lab</button>
+<button class="tab" data-page="formulas">Formula & Glossary</button>
+<button class="tab" data-page="excel">Excel Master</button>
+<button class="tab" data-page="compare">Which Tool? (Decision Guide)</button>
+<button class="tab" data-page="practice">Practice</button>
+<button class="tab" data-page="teacher">Teacher Mode</button>
+<button class="tab" data-page="questionbank">Question Bank</button>
+</nav>
+
+<section id="learn" class="page active">
+<div class="grid">
+<div class="card s8"><h2>What is the Time Value of Money?</h2>
+<p><b>Time Value of Money (TVM)</b> is the principle that a rupee today is worth more than a rupee received in the future, because today's rupee can be invested to earn a return. TVM is the foundation of almost every valuation, budgeting and financing decision in corporate finance — including NPV, IRR, bond pricing, loan EMIs and retirement planning.</p>
+<div class="formula">FV = PV × (1 + i)ⁿ           PV = FV / (1 + i)ⁿ</div>
+<p>Every TVM problem is built from five core inputs. Set any four and you can solve the fifth.</p>
+</div>
+<div class="card s4"><h3>The Five TVM Variables</h3><ul><li><b>N</b> — number of periods</li><li><b>I/Y</b> — interest / discount rate per period</li><li><b>PV</b> — present value (value today)</li><li><b>PMT</b> — periodic payment (annuity)</li><li><b>FV</b> — future value</li></ul></div>
+<div class="card s4"><h3>Simple vs Compound Interest</h3><p><b>Simple interest</b> is earned only on the original principal. <b>Compound interest</b> is earned on principal <i>and</i> on previously earned interest — this is why compounding accelerates growth over time.</p><div class="formula">Simple FV = PV(1 + i·n)
+Compound FV = PV(1 + i)ⁿ</div></div>
+<div class="card s4"><h3>Cash-flow Timing</h3><p><b>Ordinary annuity</b> — payments at the end of each period (loan EMIs, bonds).</p><p><b>Annuity due</b> — payments at the start of each period (rent, insurance premiums, SIPs paid in advance).</p></div>
+<div class="card s4"><h3>Why it matters</h3><ul><li>Prices bonds, shares and projects.</li><li>Drives EMI and loan design.</li><li>Underpins retirement and goal planning.</li><li>Connects directly to NPV and IRR.</li></ul></div><div class="card s12"><h3>Complete Learning Path</h3><div class="pillrow"><span class="chip">1. Foundations</span><span class="chip">2. Rate Equivalence</span><span class="chip">3. Single Sums</span><span class="chip">4. Annuities & Perpetuities</span><span class="chip">5. Uneven & Gradient Flows</span><span class="chip">6. Savings & Retirement</span><span class="chip">7. Loans</span><span class="chip">8. Bonds</span><span class="chip">9. Dated Cash Flows</span><span class="chip">10. Decisions & Sensitivity</span></div><p class="note">Use the tabs from left to right for a full TVM course, or jump directly to the calculator that matches your problem.</p></div>
+<div class="card s12"><h2>Cash-flow Timeline</h2>
+<div class="timeline">
+<div class="node"><small class="muted">t = 0</small><strong>PV</strong></div>
+<div class="node"><small class="muted">t = 1</small><strong>CF₁</strong></div>
+<div class="node"><small class="muted">t = 2</small><strong>CF₂</strong></div>
+<div class="node"><small class="muted">t = 3</small><strong>CF₃</strong></div>
+<div class="node"><small class="muted">…</small><strong>…</strong></div>
+<div class="node"><small class="muted">t = n</small><strong>FV</strong></div>
+</div>
+<p class="note">Every TVM formula simply moves money along this timeline — forward by compounding, backward by discounting.</p>
+</div>
+<div class="card s12"><h2>Simple vs Compound Growth Demonstration</h2><div class="two">
+<div><label>Principal (₹)</label><input id="demoP" type="number" value="100000">
+<label>Annual rate (%)</label><input id="demoR" type="number" value="10" step=".1">
+<label>Years</label><input id="demoN" type="number" value="10" min="1" max="40">
+<button id="demoBtn">Compare Growth</button></div>
+<div class="callout" id="demoOut">Enter assumptions and compare.</div>
+</div>
+<canvas id="demoChart" style="margin-top:13px"></canvas>
+</div>
+</div>
+</section>
+
+<section id="singlesum" class="page">
+<div class="grid">
+<div class="card s4"><h2>Future Value of a Lump Sum</h2>
+<label>Present value (₹)</label><input id="fvPV" type="number" value="100000">
+<label>Annual rate (%)</label><input id="fvRate" type="number" value="10" step=".1">
+<label>Years</label><input id="fvN" type="number" value="8" min="1" max="50">
+<label>Compounding per year</label><select id="fvFreq"><option value="1">Annual</option><option value="2">Semi-annual</option><option value="4">Quarterly</option><option value="12">Monthly</option><option value="365">Daily</option></select>
+<div class="callout" id="fvOut" style="margin-top:10px"></div>
+</div>
+<div class="card s4"><h2>Present Value of a Lump Sum</h2>
+<label>Future value (₹)</label><input id="pvFV" type="number" value="215892">
+<label>Annual rate (%)</label><input id="pvRate" type="number" value="10" step=".1">
+<label>Years</label><input id="pvN" type="number" value="8" min="1" max="50">
+<label>Compounding per year</label><select id="pvFreq"><option value="1">Annual</option><option value="2">Semi-annual</option><option value="4">Quarterly</option><option value="12">Monthly</option><option value="365">Daily</option></select>
+<div class="callout" id="pvOut" style="margin-top:10px"></div>
+</div>
+<div class="card s4"><h2>Solve for N or Rate</h2>
+<label>Present value (₹)</label><input id="sPV" type="number" value="100000">
+<label>Future value (₹)</label><input id="sFV" type="number" value="200000">
+<div class="two"><div><label>If rate (%) known, find N</label><input id="sRate" type="number" value="12" step=".1"><div class="callout" id="sNOut" style="margin-top:8px">—</div></div>
+<div><label>If N (years) known, find rate</label><input id="sN" type="number" value="6"><div class="callout" id="sROut" style="margin-top:8px">—</div></div></div>
+</div>
+<div class="card s12"><h3>Growth Path (FV side)</h3><canvas id="fvChart"></canvas></div>
+</div>
+</section>
+
+<section id="compounding" class="page">
+<div class="grid">
+<div class="card s4"><h2>Nominal vs Effective Annual Rate</h2>
+<label>Nominal annual rate (%)</label><input id="eNom" type="number" value="12" step=".01">
+<label>Compounding periods per year</label><select id="eFreq"><option value="1">Annual (1)</option><option value="2">Semi-annual (2)</option><option value="4">Quarterly (4)</option><option value="12" selected>Monthly (12)</option><option value="365">Daily (365)</option></select>
+<div class="formula">EAR = (1 + i/m)ᵐ − 1</div>
+<div class="callout" id="eOut" style="margin-top:10px"></div>
+</div>
+<div class="card s8"><h2>Effect of Compounding Frequency</h2><p class="note">Same nominal rate, ₹1,00,000 principal, 1 year — more frequent compounding raises the effective rate and the year-end balance.</p><div class="scroll"><table id="eTable"></table></div></div>
+<div class="card s12"><h3>Continuous Compounding</h3><div class="two"><div class="formula">FV = PV × e^(r×n)</div><div class="callout" id="contOut">As compounding frequency → ∞, EAR approaches e^r − 1, the continuous-compounding limit.</div></div></div>
+</div>
+</section>
+
+<section id="realrate" class="page">
+<div class="grid">
+<div class="card s4"><h2>Fisher Equation Inputs</h2>
+<label>Nominal annual rate (%)</label><input id="frNom" type="number" value="10" step=".1">
+<label>Expected inflation rate (%)</label><input id="frInfl" type="number" value="6" step=".1">
+<label>Investment horizon (years)</label><input id="frN" type="number" value="10" min="1" max="40">
+<div class="formula">(1 + real) = (1 + nominal) / (1 + inflation)
+real ≈ nominal − inflation  (quick approximation)</div>
+</div>
+<div class="card s8"><h2>Nominal vs Real Growth</h2>
+<div class="metrics">
+<div class="metric"><small>Exact real rate</small><strong id="frRealExact">—</strong></div>
+<div class="metric"><small>Approx. real rate</small><strong id="frRealApprox">—</strong></div>
+<div class="metric"><small>Nominal FV of ₹1,00,000</small><strong id="frNomFV">—</strong></div>
+<div class="metric"><small>Real (purchasing-power) FV</small><strong id="frRealFV">—</strong></div>
+</div>
+<div class="callout" id="frStory" style="margin-top:12px"></div>
+<canvas id="frChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Why This Matters</h3><p class="note">Investors care about purchasing power, not just rupee count. A 10% nominal return during 6% inflation grows your money in rupee terms, but grows your real buying power at a much slower rate — the gap widens every year, which is why the chart above diverges.</p></div>
+</div>
+</section>
+
+<section id="annuity" class="page">
+<div class="grid">
+<div class="card s4"><h2>Annuity Inputs</h2>
+<label>Payment per period (₹)</label><input id="aPMT" type="number" value="10000">
+<label>Rate per period (%)</label><input id="aRate" type="number" value="10" step=".1">
+<label>Number of periods</label><input id="aN" type="number" value="10" min="1" max="60">
+<label>Timing</label><select id="aType"><option value="0">Ordinary annuity (end of period)</option><option value="1">Annuity due (start of period)</option></select>
+</div>
+<div class="card s8"><h2>Annuity Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>FV of annuity</small><strong id="aFV">—</strong></div>
+<div class="metric"><small>PV of annuity</small><strong id="aPV">—</strong></div>
+<div class="metric"><small>Total paid in</small><strong id="aTotalPaid">—</strong></div>
+<div class="metric"><small>Total interest (FV view)</small><strong id="aInt">—</strong></div>
+</div>
+<div class="callout" id="aStory" style="margin-top:12px"></div>
+<canvas id="aChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Period-by-Period Growth (FV view)</h3><div class="scroll"><table id="aTable"></table></div></div>
+</div>
+</section>
+
+<section id="deferred" class="page">
+<div class="grid">
+<div class="card s4"><h2>Deferred Annuity Inputs</h2>
+<label>Payment per period (₹)</label><input id="dfPMT" type="number" value="10000">
+<label>Rate per period (%)</label><input id="dfRate" type="number" value="10" step=".1">
+<label>Number of payments</label><input id="dfN" type="number" value="8" min="1" max="50">
+<label>Deferral period (periods with no payment before the first payment)</label><input id="dfD" type="number" value="3" min="0" max="30">
+<div class="formula">PV = [PMT × (1 − (1+i)⁻ⁿ)/i] / (1+i)^d</div>
+</div>
+<div class="card s8"><h2>Deferred Annuity Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>PV today (t=0)</small><strong id="dfPV0">—</strong></div>
+<div class="metric"><small>PV at start of annuity</small><strong id="dfPVstart">—</strong></div>
+<div class="metric"><small>FV at last payment</small><strong id="dfFV">—</strong></div>
+<div class="metric"><small>Total payments</small><strong id="dfTotal">—</strong></div>
+</div>
+<div class="callout" id="dfStory" style="margin-top:12px"></div>
+<canvas id="dfChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Timeline</h3><p class="note">A deferred annuity is an ordinary annuity that doesn't start immediately — common for scholarships that begin after graduation, or pensions that start at retirement. First value the annuity as of one period before its first payment, then discount that value back to today across the deferral period.</p></div>
+</div>
+</section>
+
+<section id="perpetuity" class="page">
+<div class="grid">
+<div class="card s6"><h2>Level Perpetuity</h2>
+<label>Payment per period (₹)</label><input id="pPMT" type="number" value="8000">
+<label>Discount rate per period (%)</label><input id="pRate" type="number" value="10" step=".1">
+<div class="formula">PV = PMT / i</div>
+<div class="callout" id="pOut" style="margin-top:10px"></div>
+</div>
+<div class="card s6"><h2>Growing Perpetuity</h2>
+<label>Next-period payment (₹)</label><input id="gpPMT" type="number" value="8000">
+<label>Discount rate per period (%)</label><input id="gpRate" type="number" value="10" step=".1">
+<label>Constant growth rate (%)</label><input id="gpG" type="number" value="4" step=".1">
+<div class="formula">PV = PMT₁ / (i − g),  requires i &gt; g</div>
+<div class="callout" id="gpOut" style="margin-top:10px"></div>
+</div>
+<div class="card s12"><h3>Convergence: Perpetuity as the Limit of a Long Annuity</h3><p class="note">As the number of periods in an ordinary annuity grows very large, its PV converges to the perpetuity value. The chart shows PV of an N-period annuity approaching PMT/i.</p><canvas id="pChart"></canvas></div>
+</div>
+</section>
+
+<section id="growing" class="page">
+<div class="grid">
+<div class="card s4"><h2>Growing Annuity Inputs</h2>
+<label>First payment, CF₁ (₹)</label><input id="gaPMT" type="number" value="10000">
+<label>Discount rate per period (%)</label><input id="gaRate" type="number" value="12" step=".1">
+<label>Growth rate per period (%)</label><input id="gaG" type="number" value="5" step=".1">
+<label>Number of periods</label><input id="gaN" type="number" value="10" min="1" max="50">
+<div class="formula">PV = CF₁ × [1 − ((1+g)/(1+i))ⁿ] / (i − g)</div>
+</div>
+<div class="card s8"><h2>Growing Annuity Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>PV</small><strong id="gaPV">—</strong></div>
+<div class="metric"><small>FV</small><strong id="gaFV">—</strong></div>
+<div class="metric"><small>Final payment CFₙ</small><strong id="gaLast">—</strong></div>
+<div class="metric"><small>Total nominal payments</small><strong id="gaTotal">—</strong></div>
+</div>
+<canvas id="gaChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Year-by-Year Cash Flows</h3><div class="scroll"><table id="gaTable"></table></div></div>
+</div>
+</section>
+
+<section id="sinkingfund" class="page">
+<div class="grid">
+<div class="card s4"><h2>Sinking Fund Inputs</h2>
+<label>Target future obligation (₹)</label><input id="sfFV" type="number" value="10000000">
+<label>Rate per period (%)</label><input id="sfRate" type="number" value="8" step=".1">
+<label>Number of periods</label><input id="sfN" type="number" value="10" min="1" max="50">
+<div class="formula">PMT = FV × i / [(1+i)ⁿ − 1]</div>
+</div>
+<div class="card s8"><h2>Sinking Fund Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>Required periodic deposit</small><strong id="sfPMT">—</strong></div>
+<div class="metric"><small>Total deposited</small><strong id="sfTotalDep">—</strong></div>
+<div class="metric"><small>Total interest earned</small><strong id="sfInt">—</strong></div>
+</div>
+<div class="callout" id="sfStory" style="margin-top:12px"></div>
+<canvas id="sfChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Fund Balance by Period</h3><div class="scroll"><table id="sfTable"></table></div><p class="note">A sinking fund is the mirror image of a loan amortization schedule: instead of paying down a debt, you build up a fund toward a known future obligation — e.g. bond redemption, equipment replacement, or a balloon payment.</p></div>
+</div>
+</section>
+
+<section id="goalplanner" class="page">
+<div class="grid">
+<div class="card s4"><h2>Goal Inputs</h2>
+<label>Target corpus (₹)</label><input id="gpTarget" type="number" value="5000000">
+<label>Years to goal</label><input id="gpYears" type="number" value="15" min="1" max="45">
+<label>Expected annual return (%)</label><input id="gpRate2" type="number" value="12" step=".1">
+<label>Existing lump-sum already invested (₹)</label><input id="gpLump" type="number" value="200000">
+<label>SIP timing</label><select id="gpType"><option value="1">Start of month (typical SIP)</option><option value="0">End of month</option></select>
+</div>
+<div class="card s8"><h2>Goal / SIP Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>FV of existing lump sum</small><strong id="gpLumpFV">—</strong></div>
+<div class="metric"><small>Remaining gap to fund</small><strong id="gpGap">—</strong></div>
+<div class="metric"><small>Required monthly SIP</small><strong id="gpSIP">—</strong></div>
+<div class="metric"><small>Total SIP contributions</small><strong id="gpTotalSIP">—</strong></div>
+</div>
+<div class="callout" id="gpStory" style="margin-top:12px"></div>
+<canvas id="gpChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>How It's Solved</h3><div class="formula">FV of lump sum = Lump × (1+i)ⁿ
+Gap = Target − FV of lump sum
+Required SIP = Gap × i / [((1+i)ⁿ − 1) × (1+i)^type]</div><p class="note">This is a retirement/goal-planning application of the annuity formula: solve PMT given a target FV, an existing head start, a rate and a horizon.</p></div>
+</div>
+</section>
+
+<section id="bond" class="page">
+<div class="grid">
+<div class="card s4"><h2>Bond Inputs</h2>
+<label>Face value (₹)</label><input id="bdFace" type="number" value="1000">
+<label>Coupon rate, annual (%)</label><input id="bdCoupon" type="number" value="8" step=".01">
+<label>Required yield to maturity, YTM (%)</label><input id="bdYTM" type="number" value="10" step=".01">
+<label>Years to maturity</label><input id="bdYears" type="number" value="10" min="1" max="40">
+<label>Coupon frequency</label><select id="bdFreq"><option value="1">Annual</option><option value="2" selected>Semi-annual</option><option value="4">Quarterly</option></select>
+</div>
+<div class="card s8"><h2>Bond Pricing Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>PV of coupons</small><strong id="bdPVcoup">—</strong></div>
+<div class="metric"><small>PV of face value</small><strong id="bdPVface">—</strong></div>
+<div class="metric"><small>Bond price</small><strong id="bdPrice">—</strong></div>
+<div class="metric"><small>Premium / Discount</small><strong id="bdPD">—</strong></div>
+</div>
+<div class="callout" id="bdStory" style="margin-top:12px"></div>
+<canvas id="bdChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Why a Bond is Two TVM Building Blocks</h3><div class="formula">Bond Price = PV(coupon annuity) + PV(face value as a single sum)</div><p class="note">When coupon rate = YTM, the bond prices at par. When YTM &gt; coupon rate, the bond trades at a discount; when YTM &lt; coupon rate, it trades at a premium — exactly what the dashboard shows as you change the YTM.</p></div>
+</div>
+</section>
+
+<section id="uneven" class="page">
+<div class="grid">
+<div class="card s4"><h2>Cash-Flow Builder</h2>
+<label>Discount rate (%)</label><input id="uRate" type="number" value="10" step=".1">
+<div id="uFlows"></div>
+<div class="pillrow" style="margin-top:8px"><button class="secondary small-btn" id="uAdd">+ Add Period</button><button class="secondary small-btn" id="uRemove">− Remove Period</button><button class="secondary small-btn" id="uReset">Reset Example</button></div>
+</div>
+<div class="card s8"><h2>PV / FV Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>PV of stream</small><strong id="uPV">—</strong></div>
+<div class="metric"><small>FV of stream (at last period)</small><strong id="uFV">—</strong></div>
+<div class="metric"><small>Sum of raw cash flows</small><strong id="uSum">—</strong></div>
+<div class="metric"><small>Weighted-average timing</small><strong id="uWavg">—</strong></div>
+</div>
+<canvas id="uChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Discounting Detail</h3><div class="scroll"><table id="uTable"></table></div></div>
+</div>
+</section>
+
+<section id="loan" class="page">
+<div class="grid">
+<div class="card s4"><h2>Loan Inputs</h2>
+<label>Loan amount / principal (₹)</label><input id="lP" type="number" value="2500000">
+<label>Annual interest rate (%)</label><input id="lRate" type="number" value="9" step=".01">
+<label>Tenure (years)</label><input id="lYears" type="number" value="20" min="1" max="40">
+<label>Payments per year</label><select id="lFreq"><option value="12">Monthly (EMI)</option><option value="4">Quarterly</option><option value="1">Annual</option></select>
+</div>
+<div class="card s8"><h2>EMI Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>Installment (EMI)</small><strong id="lPMT">—</strong></div>
+<div class="metric"><small>Total payments</small><strong id="lTotal">—</strong></div>
+<div class="metric"><small>Total interest</small><strong id="lIntTotal">—</strong></div>
+<div class="metric"><small>Interest as % of loan</small><strong id="lIntPct">—</strong></div>
+</div>
+<canvas id="lChart" style="margin-top:12px"></canvas>
+</div>
+<div class="card s12"><h3>Amortization Schedule (yearly summary)</h3><div class="scroll"><table id="lTable"></table></div><p class="note" id="lNote"></p></div>
+</div>
+</section>
+
+<section id="rule72" class="page">
+<div class="grid">
+<div class="card s4"><h2>Doubling Time</h2>
+<label>Annual rate (%)</label><input id="r72Rate" type="number" value="8" step=".1">
+<div class="formula">Years to double ≈ 72 / rate</div>
+<div class="callout" id="r72Out" style="margin-top:10px"></div>
+</div>
+<div class="card s4"><h2>Tripling Time (Rule of 114)</h2>
+<label>Annual rate (%)</label><input id="r114Rate" type="number" value="8" step=".1">
+<div class="formula">Years to triple ≈ 114 / rate</div>
+<div class="callout" id="r114Out" style="margin-top:10px"></div>
+</div>
+<div class="card s4"><h2>Reverse: Rate Needed</h2>
+<label>Years available to double</label><input id="r72N" type="number" value="9">
+<div class="formula">Required rate ≈ 72 / years</div>
+<div class="callout" id="r72ROut" style="margin-top:10px"></div>
+</div>
+<div class="card s12"><h3>Rule of 72 vs Exact Doubling Time</h3><p class="note">The Rule of 72 (and its more precise cousins, 69.3 for continuous compounding and 70 for low rates) is a mental-math shortcut. The table compares its estimate against the exact compound-interest answer across rates.</p><div class="scroll"><table id="r72Table"></table></div></div>
+</div>
+</section>
+
+
+<section id="mastersolver" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">General Solver</div><h2>Master TVM Solver</h2>
+<p class="note">A savings-style TVM equation. Enter four variables and choose the fifth to solve. PV and PMT are treated as positive contributions toward FV.</p>
+<label>Solve for</label><select id="msSolve"><option value="FV">Future Value (FV)</option><option value="PV">Present Value (PV)</option><option value="PMT">Periodic Payment (PMT)</option><option value="N">Number of Periods (N)</option><option value="RATE">Rate per Period</option></select>
+<label>Present Value (₹)</label><input id="msPV" type="number" value="100000">
+<label>Periodic Payment (₹)</label><input id="msPMT" type="number" value="10000">
+<label>Future Value (₹)</label><input id="msFV" type="number" value="350000">
+<label>Number of Periods</label><input id="msN" type="number" value="10" step=".1">
+<label>Rate per Period (%)</label><input id="msRate" type="number" value="8" step=".01">
+<label>Payment Timing</label><select id="msType"><option value="0">End of period</option><option value="1">Beginning of period</option></select>
+</div>
+<div class="card s8"><h2>Solver Result</h2><div class="callout" id="msOut">—</div>
+<div class="formula" style="margin-top:12px">FV = PV(1+i)ⁿ + PMT × [((1+i)ⁿ − 1)/i] × (1+i)^type</div>
+<h3 style="margin-top:16px">Accumulation Path</h3><canvas id="msChart"></canvas></div>
+<div class="card s12"><h3>How to Read the Solver</h3><div class="three"><div><b>PV</b><p class="note">Money already available at time 0.</p></div><div><b>PMT</b><p class="note">Equal contribution each period.</p></div><div><b>FV</b><p class="note">Target or accumulated value at the final period.</p></div></div></div>
+</div></section>
+
+<section id="rateconverter" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Equivalent Rates</div><h2>Rate Converter</h2>
+<label>Quoted nominal annual rate (%)</label><input id="rcNom" type="number" value="12" step=".01">
+<label>Compounding frequency</label><select id="rcM"><option value="1">Annual</option><option value="2">Semi-annual</option><option value="4">Quarterly</option><option value="12" selected>Monthly</option><option value="52">Weekly</option><option value="365">Daily</option></select>
+<label>Effective annual rate to reverse-convert (%)</label><input id="rcEARInput" type="number" value="12.6825" step=".0001">
+<div class="formula">EAR=(1+j/m)^m−1
+Nominal = m[(1+EAR)^(1/m)−1]
+Continuous rate = ln(1+EAR)</div></div>
+<div class="card s8"><h2>Equivalent-Rate Dashboard</h2><div class="metrics">
+<div class="metric"><small>Periodic rate</small><strong id="rcPeriodic">—</strong></div>
+<div class="metric"><small>EAR from nominal</small><strong id="rcEAR">—</strong></div>
+<div class="metric"><small>Continuous equivalent</small><strong id="rcCont">—</strong></div>
+<div class="metric"><small>Nominal from entered EAR</small><strong id="rcBackNom">—</strong></div>
+</div><div class="callout" id="rcStory" style="margin-top:12px"></div><div class="scroll" style="margin-top:12px"><table id="rcTable"></table></div></div>
+</div></section>
+
+<section id="factors" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Reference Factors</div><h2>TVM Factor Tables</h2>
+<label>Rate per period (%)</label><input id="tfRate" type="number" value="10" step=".1">
+<label>Maximum periods</label><input id="tfN" type="number" value="20" min="1" max="100">
+<div class="callout" id="tfOut" style="margin-top:10px"></div></div>
+<div class="card s8"><h2>Core Factors</h2><div class="scroll"><table id="tfTable"></table></div></div>
+<div class="card s12"><div class="formula-grid">
+<div class="formula">FVIF = (1+i)ⁿ
+PVIF = 1/(1+i)ⁿ</div>
+<div class="formula">FVIFA = [(1+i)ⁿ−1]/i
+PVIFA = [1−(1+i)⁻ⁿ]/i</div>
+<div class="formula">Capital Recovery Factor = i/[1−(1+i)⁻ⁿ]</div>
+<div class="formula">Sinking Fund Factor = i/[(1+i)ⁿ−1]</div>
+</div></div>
+</div></section>
+
+<section id="gradient" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Non-Level Series</div><h2>Arithmetic Gradient Cash Flow</h2>
+<label>Cash flow in period 1 (₹)</label><input id="grBase" type="number" value="10000">
+<label>Fixed increase each period, G (₹)</label><input id="grStep" type="number" value="2000">
+<label>Discount rate per period (%)</label><input id="grRate" type="number" value="10" step=".1">
+<label>Number of periods</label><input id="grN" type="number" value="10" min="1" max="60">
+<p class="note">Unlike a growing annuity, the increase is a fixed rupee amount, not a percentage.</p></div>
+<div class="card s8"><h2>Gradient Dashboard</h2><div class="metrics"><div class="metric"><small>PV</small><strong id="grPV">—</strong></div><div class="metric"><small>FV at period N</small><strong id="grFV">—</strong></div><div class="metric"><small>Final cash flow</small><strong id="grLast">—</strong></div><div class="metric"><small>Total nominal cash flow</small><strong id="grTotal">—</strong></div></div><canvas id="grChart" style="margin-top:12px"></canvas></div>
+<div class="card s12"><h3>Period Detail</h3><div class="scroll"><table id="grTable"></table></div></div>
+</div></section>
+
+<section id="stepupsip" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Savings Application</div><h2>Step-Up SIP Planner</h2>
+<label>Starting monthly SIP (₹)</label><input id="suPMT" type="number" value="10000">
+<label>Annual SIP increase (%)</label><input id="suStep" type="number" value="10" step=".1">
+<label>Expected annual return (%)</label><input id="suRate" type="number" value="12" step=".1">
+<label>Investment horizon (years)</label><input id="suYears" type="number" value="15" min="1" max="50">
+<label>Existing lump sum (₹)</label><input id="suLump" type="number" value="0"></div>
+<div class="card s8"><h2>Step-Up SIP Dashboard</h2><div class="metrics"><div class="metric"><small>Projected corpus</small><strong id="suFV">—</strong></div><div class="metric"><small>Total contributions</small><strong id="suContrib">—</strong></div><div class="metric"><small>Investment growth</small><strong id="suGrowth">—</strong></div><div class="metric"><small>Final monthly SIP</small><strong id="suFinalPMT">—</strong></div></div><div class="callout" id="suStory" style="margin-top:12px"></div><canvas id="suChart" style="margin-top:12px"></canvas></div>
+<div class="card s12"><p class="note">The calculator increases the monthly contribution once each year and compounds the portfolio monthly. It is useful when salary-linked savings rise over time.</p></div>
+</div></section>
+
+<section id="retirement" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Two-Stage TVM</div><h2>Retirement Planner</h2>
+<label>Current retirement savings (₹)</label><input id="rtCurrent" type="number" value="500000">
+<label>Monthly contribution (₹)</label><input id="rtPMT" type="number" value="25000">
+<label>Years until retirement</label><input id="rtYears" type="number" value="25" min="1" max="50">
+<label>Pre-retirement return (%)</label><input id="rtPreRate" type="number" value="11" step=".1">
+<label>Desired monthly spending in today's ₹</label><input id="rtSpend" type="number" value="75000">
+<label>Inflation (%)</label><input id="rtInfl" type="number" value="5" step=".1">
+<label>Years in retirement</label><input id="rtRetYears" type="number" value="25" min="1" max="50">
+<label>Post-retirement return (%)</label><input id="rtPostRate" type="number" value="7" step=".1"></div>
+<div class="card s8"><h2>Retirement Readiness</h2><div class="metrics"><div class="metric"><small>Projected corpus</small><strong id="rtCorpus">—</strong></div><div class="metric"><small>First retirement-month need</small><strong id="rtFutureSpend">—</strong></div><div class="metric"><small>Required corpus</small><strong id="rtRequired">—</strong></div><div class="metric"><small>Surplus / Gap</small><strong id="rtGap">—</strong></div></div><div class="callout" id="rtStory" style="margin-top:12px"></div><canvas id="rtChart" style="margin-top:12px"></canvas></div>
+<div class="card s12"><h3>Method</h3><p class="note">Stage 1 grows current savings plus monthly contributions to retirement. Stage 2 values an inflation-growing monthly withdrawal stream over the retirement years using the post-retirement return. This is a planning estimate, not investment advice.</p></div>
+</div></section>
+
+<section id="loanadvanced" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Debt Strategy</div><h2>Loan Prepayment & Balloon Lab</h2>
+<label>Loan principal (₹)</label><input id="laP" type="number" value="3000000">
+<label>Annual rate (%)</label><input id="laRate" type="number" value="9" step=".01">
+<label>Original tenure (years)</label><input id="laYears" type="number" value="20" min="1" max="40">
+<label>Extra monthly payment (₹)</label><input id="laExtra" type="number" value="5000">
+<label>Balloon amount due at original maturity (₹)</label><input id="laBalloon" type="number" value="0">
+</div>
+<div class="card s8"><h2>Prepayment Dashboard</h2><div class="metrics"><div class="metric"><small>Scheduled EMI</small><strong id="laEMI">—</strong></div><div class="metric"><small>New payoff time</small><strong id="laNewTerm">—</strong></div><div class="metric"><small>Interest without extra</small><strong id="laBaseInt">—</strong></div><div class="metric"><small>Interest with extra</small><strong id="laNewInt">—</strong></div><div class="metric"><small>Interest saved</small><strong id="laSaved">—</strong></div><div class="metric"><small>Months saved</small><strong id="laMonthsSaved">—</strong></div></div><div class="callout" id="laStory" style="margin-top:12px"></div><canvas id="laChart" style="margin-top:12px"></canvas></div>
+<div class="card s12"><h3>Interpretation</h3><p class="note">Extra payments reduce principal earlier, which lowers future interest. A balloon structure lowers periodic payments only if the EMI is explicitly designed around a residual balance; here the balloon input is used to calculate the scheduled payment required to leave that balance at original maturity.</p></div>
+</div></section>
+
+<section id="bondanalytics" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Fixed Income</div><h2>Bond Analytics</h2>
+<label>Face value (₹)</label><input id="baFace" type="number" value="1000">
+<label>Annual coupon rate (%)</label><input id="baCoupon" type="number" value="8" step=".01">
+<label>Market price (₹)</label><input id="baPrice" type="number" value="920">
+<label>Years to maturity</label><input id="baYears" type="number" value="7" min=".25" max="50" step=".25">
+<label>Coupon frequency</label><select id="baFreq"><option value="1">Annual</option><option value="2" selected>Semi-annual</option><option value="4">Quarterly</option></select></div>
+<div class="card s8"><h2>Yield & Interest-Rate Risk</h2><div class="metrics"><div class="metric"><small>Yield to maturity</small><strong id="baYTM">—</strong></div><div class="metric"><small>Current yield</small><strong id="baCurrentYield">—</strong></div><div class="metric"><small>Macaulay duration</small><strong id="baMacDur">—</strong></div><div class="metric"><small>Modified duration</small><strong id="baModDur">—</strong></div><div class="metric"><small>Convexity</small><strong id="baConvexity">—</strong></div><div class="metric"><small>Approx. price move for +1%</small><strong id="baPriceMove">—</strong></div></div><div class="callout" id="baStory" style="margin-top:12px"></div><canvas id="baChart" style="margin-top:12px"></canvas></div>
+<div class="card s12"><h3>Zero-Coupon Bond</h3><div class="two"><div><label>Zero-coupon market price (₹)</label><input id="baZeroPrice" type="number" value="600"></div><div><div class="callout" id="baZeroOut">—</div></div></div></div>
+</div></section>
+
+<section id="datedflows" class="page">
+<div class="grid">
+<div class="card s5 card s4"><div class="section-kicker">Irregular Dates</div><h2>Date-Based Cash Flows</h2>
+<label>Discount rate for XNPV (%)</label><input id="xdRate" type="number" value="10" step=".1">
+<div id="xdRows"></div><div class="pillrow" style="margin-top:8px"><button class="secondary small-btn" id="xdAdd">+ Add Cash Flow</button><button class="secondary small-btn" id="xdRemove">− Remove</button><button class="secondary small-btn" id="xdReset">Reset</button></div>
+</div>
+<div class="card s8"><h2>XNPV / XIRR Dashboard</h2><div class="metrics"><div class="metric"><small>XNPV</small><strong id="xdNPV">—</strong></div><div class="metric"><small>XIRR</small><strong id="xdIRR">—</strong></div><div class="metric"><small>Span</small><strong id="xdSpan">—</strong></div><div class="metric"><small>Cash-flow count</small><strong id="xdCount">—</strong></div></div><div class="callout" id="xdStory" style="margin-top:12px"></div><div class="scroll" style="margin-top:12px"><table id="xdTable"></table></div></div>
+<div class="card s12"><div class="formula">XNPV = Σ CFₜ / (1+r)^((dateₜ−date₀)/365)
+XIRR = rate that makes XNPV = 0</div><p class="note">XIRR can have multiple or no economically meaningful solutions when cash-flow signs change more than once. This lab reports a numerical root when one is found in its search range.</p></div>
+</div></section>
+
+<section id="leasebuy" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Decision Application</div><h2>Lease vs Buy</h2>
+<label>Asset cash price (₹)</label><input id="lbPrice" type="number" value="1200000">
+<label>Down payment if buying (₹)</label><input id="lbDown" type="number" value="200000">
+<label>Loan annual rate (%)</label><input id="lbLoanRate" type="number" value="9" step=".01">
+<label>Loan / lease term (years)</label><input id="lbYears" type="number" value="5" min="1" max="15">
+<label>Monthly lease payment (₹)</label><input id="lbLease" type="number" value="22000">
+<label>Lease upfront fee (₹)</label><input id="lbLeaseFee" type="number" value="50000">
+<label>Expected resale value after term (₹)</label><input id="lbResale" type="number" value="500000">
+<label>Discount rate (%)</label><input id="lbDisc" type="number" value="8" step=".1"></div>
+<div class="card s8"><h2>Present-Value Comparison</h2><div class="metrics"><div class="metric"><small>Buy loan EMI</small><strong id="lbEMI">—</strong></div><div class="metric"><small>PV cost of buying</small><strong id="lbBuyPV">—</strong></div><div class="metric"><small>PV cost of leasing</small><strong id="lbLeasePV">—</strong></div><div class="metric"><small>Lower-PV option</small><strong id="lbChoice">—</strong></div></div><div class="callout" id="lbStory" style="margin-top:12px"></div></div>
+<div class="card s12"><p class="note">This is a pure TVM comparison of contractual cash flows. Taxes, maintenance, insurance, transaction costs and flexibility can materially change a real-world lease-versus-buy decision.</p></div>
+</div></section>
+
+<section id="sensitivity" class="page">
+<div class="grid">
+<div class="card s4"><div class="section-kicker">Scenario Analysis</div><h2>FV Sensitivity Lab</h2>
+<label>Starting amount (₹)</label><input id="snPV" type="number" value="100000">
+<label>Base annual rate (%)</label><input id="snRate" type="number" value="10" step=".1">
+<label>Base horizon (years)</label><input id="snYears" type="number" value="10" min="1" max="40">
+<label>Rate step (%)</label><input id="snRateStep" type="number" value="2" step=".1">
+<label>Year step</label><input id="snYearStep" type="number" value="2" min="1" max="10"></div>
+<div class="card s8"><h2>Rate × Time Matrix</h2><div class="callout" id="snStory"></div><div class="scroll" style="margin-top:12px"><table class="matrix-table" id="snTable"></table></div></div>
+<div class="card s12"><h3>Why Sensitivity Matters</h3><p class="note">Compounding creates non-linear outcomes. Small changes in rate or time can cause large changes in terminal value, especially over long horizons.</p></div>
+</div></section>
+
+<section id="formulas" class="page">
+<div class="grid">
+<div class="card s12"><div class="section-kicker">Reference</div><h2>Complete TVM Formula Sheet</h2><div class="formula-grid">
+<div class="formula"><b>Single Sum</b>
+FV = PV(1+i)ⁿ
+PV = FV/(1+i)ⁿ
+n = ln(FV/PV)/ln(1+i)
+i = (FV/PV)^(1/n)−1</div>
+<div class="formula"><b>Simple Interest</b>
+FV = PV(1+in)
+Interest = PV×i×n</div>
+<div class="formula"><b>EAR / Nominal</b>
+EAR=(1+j/m)^m−1
+j=m[(1+EAR)^(1/m)−1]
+Continuous EAR=e^r−1</div>
+<div class="formula"><b>Ordinary Annuity</b>
+FV=PMT[(1+i)ⁿ−1]/i
+PV=PMT[1−(1+i)⁻ⁿ]/i</div>
+<div class="formula"><b>Annuity Due</b>
+FV_due = FV_ordinary(1+i)
+PV_due = PV_ordinary(1+i)</div>
+<div class="formula"><b>Perpetuities</b>
+Level: PV=CF₁/i
+Growing: PV=CF₁/(i−g), i&gt;g</div>
+<div class="formula"><b>Growing Annuity</b>
+PV=CF₁[1−((1+g)/(1+i))ⁿ]/(i−g)</div>
+<div class="formula"><b>Deferred Annuity</b>
+PV₀ = PV_annuity at deferral point /(1+i)^d</div>
+<div class="formula"><b>Sinking Fund</b>
+PMT=FV×i/[(1+i)ⁿ−1]</div>
+<div class="formula"><b>Loan / EMI</b>
+PMT=PV×i/[1−(1+i)⁻ⁿ]</div>
+<div class="formula"><b>Fisher Equation</b>
+1+real=(1+nominal)/(1+inflation)</div>
+<div class="formula"><b>Bond Price</b>
+Price=PV(coupons)+PV(face value)</div>
+<div class="formula"><b>XNPV</b>
+Σ CFₜ/(1+r)^((dateₜ−date₀)/365)</div>
+<div class="formula"><b>Rule of 72</b>
+Doubling years ≈ 72/rate%</div>
+</div></div>
+<div class="card s12"><h2>Glossary</h2><div class="three">
+<div><b>Discount rate</b><p class="note">Required return used to translate future money into present value.</p><b>Compounding</b><p class="note">Earning returns on principal plus previously earned returns.</p><b>Discount factor</b><p class="note">1/(1+i)ⁿ, the multiplier that converts a future amount to PV.</p></div>
+<div><b>Ordinary annuity</b><p class="note">Equal payments at period-end.</p><b>Annuity due</b><p class="note">Equal payments at period-start.</p><b>Perpetuity</b><p class="note">A stream expected to continue indefinitely.</p></div>
+<div><b>Nominal rate</b><p class="note">Quoted annual rate before intra-year compounding.</p><b>EAR</b><p class="note">True one-year compound rate.</p><b>YTM</b><p class="note">Discount rate that equates a bond's promised cash flows to its market price.</p></div>
+</div></div>
+<div class="card s12"><h3>Core Decision Rule</h3><div class="callout">Always match the <b>rate period</b> to the <b>cash-flow period</b>. If payments are monthly, use a monthly rate and a monthly period count. Most TVM errors come from violating this rule.</div></div>
+</div></section>
+
+<section id="excel" class="page">
+<div class="grid">
+<div class="card s6"><h2>Single Sum</h2><div class="formula">=FV(rate,nper,0,-pv)
+=PV(rate,nper,0,-fv)</div><p class="note">rate is the periodic rate; nper is the number of periods.</p></div>
+<div class="card s6"><h2>Annuity</h2><div class="formula">=FV(rate,nper,-pmt,,type)
+=PV(rate,nper,-pmt,,type)
+=PMT(rate,nper,-pv,fv,type)</div><p class="note">type = 0 for ordinary annuity, 1 for annuity due.</p></div>
+<div class="card s6"><h2>Effective Annual Rate</h2><div class="formula">=EFFECT(nominal_rate,npery)
+=NOMINAL(effective_rate,npery)</div></div>
+<div class="card s6"><h2>Loan / EMI</h2><div class="formula">=PMT(rate,nper,-loan_amount)
+=IPMT(rate,per,nper,-loan_amount)
+=PPMT(rate,per,nper,-loan_amount)
+=CUMIPMT(rate,nper,pv,start,end,type)</div></div>
+<div class="card s6"><h2>Solve for N or Rate</h2><div class="formula">=NPER(rate,pmt,-pv,fv)
+=RATE(nper,pmt,-pv,fv)</div><p class="note">Or use Goal Seek to back-solve any single unknown.</p></div>
+<div class="card s6"><h2>Perpetuity &amp; Growing Streams</h2><div class="formula">PV = PMT/rate                  ' level perpetuity
+PV = PMT/(rate-g)              ' growing perpetuity
+' Growing annuity has no built-in Excel function —
+' build it from the closed-form formula directly.</div></div>
+<div class="card s6"><h2>Real vs Nominal Rate</h2><div class="formula">Real rate = (1+nominal)/(1+inflation) − 1</div><p class="note">No dedicated Excel function — compute directly from the Fisher equation.</p></div>
+<div class="card s6"><h2>Deferred Annuity</h2><div class="formula">=PV(rate,nper,-pmt) / (1+rate)^deferral_periods</div></div>
+<div class="card s6"><h2>Sinking Fund</h2><div class="formula">=PMT(rate,nper,0,-target_fv)</div></div>
+<div class="card s6"><h2>Bond Pricing</h2><div class="formula">=PV(ytm/freq,years*freq,-face*coupon/freq,-face)
+=PRICE(settlement,maturity,rate,yld,redemption,frequency)</div></div>
+<div class="card s6"><h2>Date-Based Cash Flows</h2><div class="formula">=XNPV(rate,values,dates)
+=XIRR(values,dates,[guess])</div><p class="note">Use actual dates rather than assuming equally spaced periods.</p></div>
+<div class="card s6"><h2>Bond Analytics</h2><div class="formula">=YIELD(settlement,maturity,rate,pr,redemption,frequency)
+=DURATION(settlement,maturity,coupon,yld,frequency)
+=MDURATION(settlement,maturity,coupon,yld,frequency)</div></div>
+<div class="card s6"><h2>Lease / Buy PV</h2><div class="formula">PV lease = upfront fee + PV(monthly lease payments)
+PV buy = down payment + PV(loan payments) − PV(resale value)</div></div>
+<div class="card s6"><h2>Step-Up / Gradient Streams</h2><div class="formula">No single built-in function is required. Build the cash-flow row explicitly, then use PV/FV or SUMPRODUCT with discount factors.</div></div>
+<div class="card s12"><h3>Recommended Spreadsheet Layout</h3><table><tr><th>Row</th><th>Content</th></tr><tr><td>1</td><td>Period 0,1,2,…n across columns</td></tr><tr><td>2</td><td>Cash flow in each period</td></tr><tr><td>3</td><td>Discount factor = 1/(1+rate)^period</td></tr><tr><td>4</td><td>Present value = cash flow × discount factor</td></tr><tr><td>5</td><td>Running total (cumulative PV)</td></tr></table></div>
+</div>
+</section>
+
+<section id="compare" class="page">
+<div class="grid">
+<div class="card s12"><h2>Which TVM Tool Fits Which Real-World Question?</h2><div class="scroll"><table>
+<tr><th>Real-world question</th><th>TVM concept</th><th>Use this tab</th></tr>
+<tr><td>"What will my ₹1 lakh be worth in 10 years?"</td><td>Single sum, future value</td><td>Single Sum FV/PV</td></tr>
+<tr><td>"What lump sum do I need today to have ₹20 lakh in 5 years?"</td><td>Single sum, present value</td><td>Single Sum FV/PV</td></tr>
+<tr><td>"My card quotes 24% p.a. compounded monthly — what's my real rate?"</td><td>Nominal vs effective rate</td><td>Compounding &amp; EAR</td></tr>
+<tr><td>"If I invest ₹10,000 every year for 10 years, what do I have?"</td><td>Ordinary annuity / annuity due</td><td>Annuity</td></tr>
+<tr><td>"What's a share worth if it pays a fixed dividend forever?"</td><td>Level perpetuity</td><td>Perpetuity</td></tr>
+<tr><td>"What's a stock worth if dividends grow at a constant rate forever?"</td><td>Growing (Gordon) perpetuity</td><td>Perpetuity</td></tr>
+<tr><td>"My SIP payment rises 5% every year — what's it worth?"</td><td>Growing annuity</td><td>Growing Annuity</td></tr>
+<tr><td>"I have irregular cash flows across years — what are they worth today?"</td><td>Uneven / mixed cash-flow stream</td><td>Uneven Cash Flows</td></tr>
+<tr><td>"What is my home-loan EMI, and how much is interest vs principal?"</td><td>Loan amortization</td><td>Loan / EMI Amortization</td></tr>
+<tr><td>"Roughly how many years until my money doubles?"</td><td>Rule of 72</td><td>Rule of 72</td></tr>
+<tr><td>"My return looks good but inflation is high — what's my real gain?"</td><td>Real vs nominal rate (Fisher equation)</td><td>Real vs Nominal Rate</td></tr>
+<tr><td>"My scholarship/pension starts only after N years — what's it worth now?"</td><td>Deferred annuity</td><td>Deferred Annuity</td></tr>
+<tr><td>"I must accumulate a fixed amount by a future date — how much to save each period?"</td><td>Sinking fund</td><td>Sinking Fund</td></tr>
+<tr><td>"How much should I SIP monthly to hit a retirement or goal corpus?"</td><td>Goal-based annuity (PMT solve)</td><td>Goal / SIP Planner</td></tr>
+<tr><td>"What should I pay for a bond given its coupon and the market yield?"</td><td>Bond = annuity (coupons) + single sum (face value)</td><td>Bond Valuation</td></tr>
+<tr><td>"I know PV, PMT, FV and N — what rate makes them consistent?"</td><td>General TVM equation / numerical solving</td><td>Master TVM Solver</td></tr>
+<tr><td>"How do I compare a monthly-compounded quote with an effective annual rate?"</td><td>Equivalent interest rates</td><td>Rate Converter</td></tr>
+<tr><td>"I need PVIF, FVIF, PVIFA or FVIFA for an exam/table method."</td><td>TVM factor tables</td><td>TVM Factor Tables</td></tr>
+<tr><td>"My cash flow rises by a fixed ₹ amount each year, not a percentage."</td><td>Arithmetic gradient</td><td>Arithmetic Gradient</td></tr>
+<tr><td>"My SIP increases every year as my income rises."</td><td>Step-up contribution accumulation</td><td>Step-Up SIP</td></tr>
+<tr><td>"Will my savings fund an inflation-adjusted retirement income?"</td><td>Two-stage accumulation and withdrawal TVM</td><td>Retirement Planner</td></tr>
+<tr><td>"How much interest and time can extra loan payments save?"</td><td>Accelerated amortization / balloon debt</td><td>Loan Advanced</td></tr>
+<tr><td>"I know a bond's market price — what are its YTM and duration?"</td><td>Yield solving and interest-rate risk</td><td>Bond Analytics</td></tr>
+<tr><td>"My cash flows occur on irregular calendar dates."</td><td>XNPV / XIRR</td><td>XNPV / XIRR</td></tr>
+<tr><td>"Should I lease an asset or buy it with financing?"</td><td>Present-value cost comparison</td><td>Lease vs Buy</td></tr>
+<tr><td>"How sensitive is future wealth to rate and time assumptions?"</td><td>Scenario / sensitivity analysis</td><td>Sensitivity Lab</td></tr>
+
+</table></div></div>
+<div class="card s12"><h3>How TVM Connects to NPV</h3><p>NPV is simply the <b>PV of an uneven cash-flow stream</b> minus the initial investment. Every technique on this page — discounting a single sum, an annuity, a growing stream — is a building block used inside the NPV Lab's cash-flow discounting engine.</p></div>
+</div>
+</section>
+
+<section id="practice" class="page">
+<div class="grid">
+<div class="card s12"><h2>Practice Lab</h2><p class="note">Work each problem, then reveal the solution to check your method.</p><div id="practiceList"></div></div>
+</div>
+</section>
+
+<section id="teacher" class="page">
+<div class="grid">
+<div class="card s6"><h2>Teacher Mode</h2><h3>Learning Objectives</h3><ul><li>Explain the time value of money and why it underlies finance.</li><li>Distinguish simple from compound interest.</li><li>Compute FV/PV of a single sum, annuity and perpetuity.</li><li>Convert nominal rates to effective annual rates.</li><li>Build and interpret a loan amortization schedule.</li></ul></div>
+<div class="card s6"><h2>Classroom Activities</h2><ol><li>Have students predict FV before calculating it, then compare.</li><li>Change compounding frequency and discuss why EAR rises.</li><li>Compare an ordinary annuity and annuity due with identical inputs.</li><li>Build a real EMI schedule for a students' hypothetical home loan.</li><li>Ask why NPV is "TVM applied to a project."</li></ol></div>
+<div class="card s12"><h2>Exam Question Bank</h2><div class="three"><div><b>Short answer</b><p>Define the time value of money and list its five core variables.</p><p>Distinguish an ordinary annuity from an annuity due.</p></div><div><b>Numerical</b><p>Calculate the FV of a 12-year annuity and compare it to an annuity due.</p><p>Build an EMI schedule for a 5-year, ₹5,00,000 loan at 10% p.a.</p></div><div><b>Long answer</b><p>Explain how nominal and effective rates diverge as compounding frequency rises.</p><p>Derive the link between TVM, annuities, perpetuities and NPV.</p></div></div></div>
+<div class="card s12"><h2>Extended Learning Objectives</h2><div class="three"><div><b>Rates & Factors</b><p>Convert nominal, effective, periodic and continuous rates; interpret TVM factor tables.</p></div><div><b>Planning & Debt</b><p>Model step-up savings, retirement withdrawals, prepayments and balloon balances.</p></div><div><b>Advanced Valuation</b><p>Estimate YTM, duration, convexity, XNPV/XIRR and lease-vs-buy present-value differences.</p></div></div></div>
+</div>
+</section>
+
+<section id="questionbank" class="page">
+<div class="grid">
+<div class="card s12"><h2>TVM Question Bank</h2>
+<div class="three">
+<div><b>Short Questions</b><ol>
+<li>Why is a rupee today worth more than a rupee tomorrow?</li>
+<li>Define present value and future value.</li>
+<li>What is the difference between nominal and effective annual rate?</li>
+<li>What is a perpetuity? Give a real-world example.</li>
+<li>State the Rule of 72 and its main use.</li>
+</ol></div>
+<div><b>Numerical Questions</b><ol>
+<li>Find the FV of ₹50,000 invested for 6 years at 9% compounded annually.</li>
+<li>Find the PV of ₹3,00,000 receivable in 7 years at a 12% discount rate.</li>
+<li>An investor deposits ₹8,000 at the end of each year for 15 years at 8%. Find the FV.</li>
+<li>A perpetuity pays ₹6,000 a year. At an 11% discount rate, find its PV.</li>
+<li>Compute the EMI on a ₹10,00,000 loan at 8.5% p.a. for 15 years, monthly payments.</li>
+<li>Price a ₹1,000 face-value, 9% semi-annual coupon bond maturing in 8 years at a 10% YTM.</li>
+<li>Find the periodic sinking-fund deposit needed to accumulate ₹25,00,000 in 8 years at 7.5%.</li>
+</ol></div>
+<div><b>Advanced / Case Questions</b><ol>
+<li>A pension pays ₹1,00,000 next year, growing 6% annually for 25 years. Find its PV at a 10% discount rate.</li>
+<li>Compare the total interest paid on a 15-year vs a 20-year loan of the same principal and rate.</li>
+<li>An investment offers ₹40,000 in year 2, ₹60,000 in year 4 and ₹1,00,000 in year 7. Find its PV at 10%.</li>
+<li>Show algebraically why a growing perpetuity requires the discount rate to exceed the growth rate.</li>
+<li>A pension of ₹8,000 per month begins only after a 5-year deferral. At 9% p.a., find its present value today.</li>
+<li>An investor wants a ₹1 crore retirement corpus in 20 years with a ₹3,00,000 head start invested today. Find the required monthly SIP at 12% p.a.</li>
+</ol></div>
+</div>
+</div>
+<div class="card s12"><h3>Extended Question Bank</h3><div class="three"><div><b>Conceptual</b><ol><li>Why can two loans with the same nominal annual rate have different effective costs?</li><li>Explain the difference between a percentage-growing annuity and an arithmetic-gradient series.</li><li>Why does modified duration approximate bond-price sensitivity?</li><li>Why may XIRR be non-unique?</li></ol></div><div><b>Applied Numerical</b><ol><li>Convert a 15% nominal rate compounded monthly into EAR.</li><li>Construct PVIF and PVIFA for 12% and 8 periods.</li><li>Find the corpus from a ₹15,000 monthly SIP that rises 8% each year for 20 years at 11%.</li><li>Measure the effect of a ₹3,000 monthly prepayment on a 15-year loan.</li></ol></div><div><b>Advanced Cases</b><ol><li>Given a bond's market price, estimate YTM, duration and the price impact of a 100-basis-point yield rise.</li><li>Compare the PV of leasing an asset against buying it with debt and selling it after five years.</li><li>Evaluate dated cash flows with XNPV and explain when XIRR may mislead.</li><li>Build a two-stage retirement accumulation-and-withdrawal model.</li></ol></div></div></div>
+<div class="card s12"><h3>Common Exam Mistakes</h3><ul><li>Mixing an annual rate with a monthly period count without converting either.</li><li>Forgetting to shift an annuity-due answer by one extra period of compounding.</li><li>Using a growing perpetuity formula when growth rate ≥ discount rate (formula breaks down).</li><li>Confusing total interest paid with the loan installment amount.</li><li>Rounding the periodic rate too early in a long amortization schedule.</li></ul></div>
+</div>
+</section>
+
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const money=x=>"₹"+Math.round(x).toLocaleString("en-IN");
+const num=x=>Number.isFinite(x)?x.toLocaleString("en-IN",{maximumFractionDigits:2}):"—";
+
+function chart(id,x,y1,y2=null){
+  const c=$(id);if(!c)return;const ctx=c.getContext("2d"),d=window.devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);
+  const ys=y2?[...y1,...y2]:y1.slice(),min=Math.min(...ys,0),max=Math.max(...ys,1),pad=46,sx=i=>pad+i*(w-pad-20)/Math.max(x.length-1,1),sy=v=>h-35-(v-min)/(max-min||1)*(h-70);
+  ctx.strokeStyle="#ccd5e3";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,sy(0));ctx.lineTo(w-15,sy(0));ctx.stroke();
+  const line=(a,stroke)=>{ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.beginPath();a.forEach((v,i)=>i?ctx.lineTo(sx(i),sy(v)):ctx.moveTo(sx(i),sy(v)));ctx.stroke()};
+  line(y1,"#2457d6");if(y2)line(y2,"#0b8a68");
+  ctx.fillStyle="#4d5b73";ctx.font="11px system-ui";x.forEach((v,i)=>{if(i===0||i===x.length-1||i===Math.floor(x.length/2))ctx.fillText(v,sx(i)-8,h-12)});
+}
+function bars(id,x,y){
+  const c=$(id);if(!c)return;const ctx=c.getContext("2d"),d=window.devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);
+  const max=Math.max(...y,1),pad=46,bw=(w-pad-20)/y.length;
+  ctx.fillStyle="#2457d6";y.forEach((v,i)=>{const bh=(v/max)*(h-60);ctx.fillRect(pad+i*bw+3,h-35-bh,bw-6,bh)});
+  ctx.fillStyle="#4d5b73";ctx.font="11px system-ui";x.forEach((v,i)=>{if(i===0||i===x.length-1||i===Math.floor(x.length/2))ctx.fillText(v,pad+i*bw,h-12)});
+}
+function stackedBars(id,x,y1,y2){
+  const c=$(id);if(!c)return;const ctx=c.getContext("2d"),d=window.devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);
+  const tot=y1.map((v,i)=>v+y2[i]),max=Math.max(...tot,1),pad=46,bw=(w-pad-20)/y1.length;
+  y1.forEach((v,i)=>{const bh1=(v/max)*(h-60),bh2=(y2[i]/max)*(h-60);
+    ctx.fillStyle="#0b8a68";ctx.fillRect(pad+i*bw+2,h-35-bh1,bw-4,bh1);
+    ctx.fillStyle="#c53d52";ctx.fillRect(pad+i*bw+2,h-35-bh1-bh2,bw-4,bh2);
+  });
+  ctx.fillStyle="#4d5b73";ctx.font="11px system-ui";x.forEach((v,i)=>{if(i===0||i===x.length-1||i%Math.ceil(x.length/8)===0)ctx.fillText(v,pad+i*bw,h-12)});
+}
+
+/* ---------- LEARN: simple vs compound demo ---------- */
+function demoRun(){
+  const p=+$("demoP").value||0,r=(+$("demoR").value||0)/100,n=+$("demoN").value||1;
+  const simple=[],comp=[],labels=[];
+  for(let t=0;t<=n;t++){labels.push("Y"+t);simple.push(p*(1+r*t));comp.push(p*Math.pow(1+r,t));}
+  const fvS=simple[n],fvC=comp[n];
+  $("demoOut").innerHTML=`Simple interest gives <b>${money(fvS)}</b> after ${n} years. Compound interest gives <b>${money(fvC)}</b> — a difference of <b class="good">${money(fvC-fvS)}</b> purely from earning interest-on-interest.`;
+  chart("demoChart",labels,simple,comp);
+}
+$("demoBtn").onclick=demoRun;
+
+/* ---------- SINGLE SUM ---------- */
+function singleSumRun(){
+  const pv=+$("fvPV").value||0,rf=+$("fvRate").value||0,nf=+$("fvN").value||0,mf=+$("fvFreq").value||1;
+  const i=(rf/100)/mf,per=nf*mf,fv=pv*Math.pow(1+i,per);
+  $("fvOut").innerHTML=`FV = ${money(pv)} × (1+${(i*100).toFixed(4)}%)<sup>${per}</sup> = <b>${money(fv)}</b>`;
+  const pf=+$("pvFV").value||0,rp=+$("pvRate").value||0,np=+$("pvN").value||0,mp=+$("pvFreq").value||1;
+  const ip=(rp/100)/mp,perp=np*mp,pvv=pf/Math.pow(1+ip,perp);
+  $("pvOut").innerHTML=`PV = ${money(pf)} / (1+${(ip*100).toFixed(4)}%)<sup>${perp}</sup> = <b>${money(pvv)}</b>`;
+  const labels=[],vals=[];for(let t=0;t<=per;t++){labels.push("P"+t);vals.push(pv*Math.pow(1+i,t));}
+  chart("fvChart",labels,vals);
+}
+["fvPV","fvRate","fvN","fvFreq","pvFV","pvRate","pvN","pvFreq"].forEach(id=>$(id).addEventListener("input",singleSumRun));
+
+function solveRun(){
+  const pv=+$("sPV").value||0,fv=+$("sFV").value||0,rate=+$("sRate").value||0,n=+$("sN").value||0;
+  if(pv>0&&fv>0&&rate>0){const i=rate/100,years=Math.log(fv/pv)/Math.log(1+i);$("sNOut").innerHTML=`At <b>${rate}%</b>, it takes <b>${years.toFixed(2)} years</b> to grow ${money(pv)} to ${money(fv)}.`;}
+  if(pv>0&&fv>0&&n>0){const req=(Math.pow(fv/pv,1/n)-1)*100;$("sROut").innerHTML=`Over <b>${n} years</b>, the required rate is <b>${req.toFixed(3)}%</b> per year.`;}
+}
+["sPV","sFV","sRate","sN"].forEach(id=>$(id).addEventListener("input",solveRun));
+
+/* ---------- COMPOUNDING & EAR ---------- */
+function earRun(){
+  const nom=+$("eNom").value||0,m=+$("eFreq").value||1,r=nom/100;
+  const ear=(Math.pow(1+r/m,m)-1)*100;
+  $("eOut").innerHTML=`A nominal rate of <b>${nom}%</b> compounded ${m===1?"annually":m+" times a year"} equals an <b>Effective Annual Rate of ${ear.toFixed(4)}%</b>.`;
+  const freqs=[1,2,4,12,365],names=["Annual","Semi-annual","Quarterly","Monthly","Daily"];
+  $("eTable").innerHTML="<tr><th>Frequency</th><th>Periods/yr</th><th>Periodic rate</th><th>EAR</th><th>Year-end value of ₹1,00,000</th></tr>"+
+    freqs.map((f,i)=>{const e=(Math.pow(1+r/f,f)-1)*100;const val=100000*Math.pow(1+r/f,f);return `<tr><td>${names[i]}</td><td>${f}</td><td>${(r/f*100).toFixed(4)}%</td><td>${e.toFixed(4)}%</td><td>${money(val)}</td></tr>`}).join("")+
+    `<tr><td>Continuous</td><td>∞</td><td>—</td><td>${((Math.exp(r)-1)*100).toFixed(4)}%</td><td>${money(100000*Math.exp(r))}</td></tr>`;
+}
+["eNom","eFreq"].forEach(id=>$(id).addEventListener("input",earRun));
+
+/* ---------- ANNUITY ---------- */
+function annuityRun(){
+  const pmt=+$("aPMT").value||0,rate=+$("aRate").value||0,n=+$("aN").value||0,type=+$("aType").value;
+  const i=rate/100;
+  const fvOrd=i===0?pmt*n:pmt*((Math.pow(1+i,n)-1)/i);
+  const fv=type===1?fvOrd*(1+i):fvOrd;
+  const pvOrd=i===0?pmt*n:pmt*((1-Math.pow(1+i,-n))/i);
+  const pv=type===1?pvOrd*(1+i):pvOrd;
+  const totalPaid=pmt*n,interest=fv-totalPaid;
+  $("aFV").textContent=money(fv);$("aPV").textContent=money(pv);$("aTotalPaid").textContent=money(totalPaid);$("aInt").textContent=money(interest);
+  $("aStory").innerHTML=`A ${type===1?"annuity due":"ordinary annuity"} of <b>${money(pmt)}</b> per period for <b>${n}</b> periods at <b>${rate}%</b> grows to <b>${money(fv)}</b>, or is worth <b>${money(pv)}</b> today.`;
+  let bal=0;const rows=[],labels=[],series=[];
+  for(let t=1;t<=n;t++){
+    if(type===1){bal=(bal+pmt)*(1+i);}else{bal=bal*(1+i)+pmt;}
+    rows.push({t,bal});labels.push("P"+t);series.push(bal);
+  }
+  $("aTable").innerHTML="<tr><th>Period</th><th>Payment</th><th>Balance (FV so far)</th></tr>"+rows.map(r=>`<tr><td>${r.t}</td><td>${money(pmt)}</td><td>${money(r.bal)}</td></tr>`).join("");
+  chart("aChart",labels,series);
+}
+["aPMT","aRate","aN","aType"].forEach(id=>$(id).addEventListener("input",annuityRun));
+
+/* ---------- PERPETUITY ---------- */
+function perpetuityRun(){
+  const pmt=+$("pPMT").value||0,rate=+$("pRate").value||0,i=rate/100;
+  const pv=i>0?pmt/i:NaN;
+  $("pOut").innerHTML=Number.isFinite(pv)?`PV = ${money(pmt)} / ${rate}% = <b>${money(pv)}</b>`:"Enter a positive discount rate.";
+  const gpmt=+$("gpPMT").value||0,grate=+$("gpRate").value||0,gg=+$("gpG").value||0,gi=grate/100,gG=gg/100;
+  if(gi>gG){const gpv=gpmt/(gi-gG);$("gpOut").innerHTML=`PV = ${money(gpmt)} / (${grate}% − ${gg}%) = <b>${money(gpv)}</b>`;}
+  else{$("gpOut").innerHTML=`<span class="bad">Discount rate must exceed growth rate</span> — the formula is undefined when i ≤ g.`;}
+  const labels=[],vals=[];const nMax=100;
+  for(let n=5;n<=nMax;n+=5){const pvN=i>0?pmt*((1-Math.pow(1+i,-n))/i):0;labels.push(n+"p");vals.push(pvN);}
+  const perp=i>0?pmt/i:0;const flat=labels.map(()=>perp);
+  chart("pChart",labels,vals,flat);
+}
+["pPMT","pRate","gpPMT","gpRate","gpG"].forEach(id=>$(id).addEventListener("input",perpetuityRun));
+
+/* ---------- GROWING ANNUITY ---------- */
+function growingRun(){
+  const cf1=+$("gaPMT").value||0,rate=+$("gaRate").value||0,g=+$("gaG").value||0,n=+$("gaN").value||0;
+  const i=rate/100,gg=g/100;
+  let pv;
+  if(Math.abs(i-gg)<1e-9){pv=(cf1*n)/(1+i);}else{pv=cf1*((1-Math.pow((1+gg)/(1+i),n))/(i-gg));}
+  const fv=pv*Math.pow(1+i,n);
+  const rows=[],labels=[],series=[];let totalNominal=0,last=0;
+  for(let t=1;t<=n;t++){const cf=cf1*Math.pow(1+gg,t-1);const df=1/Math.pow(1+i,t);const p=cf*df;totalNominal+=cf;last=cf;rows.push({t,cf,p});labels.push("Y"+t);series.push(cf);}
+  $("gaPV").textContent=money(pv);$("gaFV").textContent=money(fv);$("gaLast").textContent=money(last);$("gaTotal").textContent=money(totalNominal);
+  $("gaTable").innerHTML="<tr><th>Year</th><th>Cash Flow</th><th>PV of Cash Flow</th></tr>"+rows.map(r=>`<tr><td>${r.t}</td><td>${money(r.cf)}</td><td>${money(r.p)}</td></tr>`).join("");
+  bars("gaChart",labels,series);
+}
+["gaPMT","gaRate","gaG","gaN"].forEach(id=>$(id).addEventListener("input",growingRun));
+
+/* ---------- UNEVEN CASH FLOWS ---------- */
+function setUFlows(vals=[-100000,20000,25000,30000,35000,60000]){
+  $("uFlows").innerHTML=vals.map((v,i)=>`<div class="row-flow"><span class="muted">t=${i}</span><input class="ufInput" type="number" value="${v}"><span class="muted">₹</span></div>`).join("");
+  document.querySelectorAll(".ufInput").forEach(x=>x.addEventListener("input",unevenRun));
+}
+function unevenRun(){
+  const rate=+$("uRate").value||0,i=rate/100,flows=[...document.querySelectorAll(".ufInput")].map(x=>+x.value||0);
+  let pv=0,sum=0;const rows=[],labels=[],series=[];
+  flows.forEach((cf,t)=>{const df=1/Math.pow(1+i,t);const p=cf*df;pv+=p;sum+=cf;rows.push({t,cf,df,p});labels.push("t"+t);series.push(cf);});
+  const n=flows.length-1;const fv=pv*Math.pow(1+i,n);
+  const wavgNum=flows.reduce((a,cf,t)=>a+(cf>0?cf*t:0),0),wavgDen=flows.reduce((a,cf)=>a+(cf>0?cf:0),0);
+  $("uPV").textContent=money(pv);$("uFV").textContent=money(fv);$("uSum").textContent=money(sum);$("uWavg").textContent=(wavgDen?(wavgNum/wavgDen).toFixed(2):"—")+" periods";
+  $("uTable").innerHTML="<tr><th>Period</th><th>Cash Flow</th><th>Discount Factor</th><th>Present Value</th></tr>"+rows.map(r=>`<tr><td>${r.t}</td><td>${money(r.cf)}</td><td>${r.df.toFixed(4)}</td><td>${money(r.p)}</td></tr>`).join("");
+  bars("uChart",labels,series.map(v=>Math.abs(v)));
+}
+$("uAdd").onclick=()=>{const cur=[...document.querySelectorAll(".ufInput")].map(x=>+x.value||0);cur.push(20000);setUFlows(cur);unevenRun();};
+$("uRemove").onclick=()=>{const cur=[...document.querySelectorAll(".ufInput")].map(x=>+x.value||0);if(cur.length>2)cur.pop();setUFlows(cur);unevenRun();};
+$("uReset").onclick=()=>{setUFlows();unevenRun();};
+$("uRate").addEventListener("input",unevenRun);
+
+/* ---------- LOAN / EMI ---------- */
+function loanRun(){
+  const P=+$("lP").value||0,rate=+$("lRate").value||0,years=+$("lYears").value||0,freq=+$("lFreq").value||12;
+  const i=(rate/100)/freq,n=years*freq;
+  const pmt=i===0?P/n:P*i/(1-Math.pow(1+i,-n));
+  const total=pmt*n,totalInt=total-P;
+  $("lPMT").textContent=money(pmt);$("lTotal").textContent=money(total);$("lIntTotal").textContent=money(totalInt);$("lIntPct").textContent=(totalInt/P*100).toFixed(1)+"%";
+  let bal=P;const yearRows=[];const labels=[],prin=[],intr=[];
+  for(let y=1;y<=years;y++){
+    let yPrin=0,yInt=0;
+    for(let k=0;k<freq;k++){const intPay=bal*i;const prinPay=pmt-intPay;bal-=prinPay;yInt+=intPay;yPrin+=prinPay;}
+    yearRows.push({y,yPrin,yInt,bal:Math.max(bal,0)});labels.push("Y"+y);prin.push(yPrin);intr.push(yInt);
+  }
+  $("lTable").innerHTML="<tr><th>Year</th><th>Principal Paid</th><th>Interest Paid</th><th>Closing Balance</th></tr>"+yearRows.map(r=>`<tr><td>${r.y}</td><td>${money(r.yPrin)}</td><td>${money(r.yInt)}</td><td>${money(r.bal)}</td></tr>`).join("");
+  $("lNote").textContent="Early years are interest-heavy; principal repayment accelerates in later years as the outstanding balance shrinks.";
+  stackedBars("lChart",labels,prin,intr);
+}
+["lP","lRate","lYears","lFreq"].forEach(id=>$(id).addEventListener("input",loanRun));
+
+/* ---------- RULE OF 72 ---------- */
+function rule72Run(){
+  const r=+$("r72Rate").value||0;
+  const est=72/r,exact=r>0?Math.log(2)/Math.log(1+r/100):NaN;
+  $("r72Out").innerHTML=`Rule-of-72 estimate: <b>${est.toFixed(2)} years</b> to double. Exact compound-interest answer: <b>${exact.toFixed(2)} years</b>.`;
+  const r114=+$("r114Rate").value||0;
+  const est3=114/r114,exact3=r114>0?Math.log(3)/Math.log(1+r114/100):NaN;
+  $("r114Out").innerHTML=`Rule-of-114 estimate: <b>${est3.toFixed(2)} years</b> to triple. Exact answer: <b>${exact3.toFixed(2)} years</b>.`;
+  const nYears=+$("r72N").value||1;
+  const reqRate=72/nYears;
+  $("r72ROut").innerHTML=`To double money in <b>${nYears} years</b>, you need roughly <b>${reqRate.toFixed(2)}%</b> per year (Rule of 72).`;
+  const rates=[2,4,6,8,10,12,15,20,25];
+  $("r72Table").innerHTML="<tr><th>Rate</th><th>Rule of 72</th><th>Exact years</th><th>Difference</th></tr>"+
+    rates.map(rt=>{const e=72/rt,ex=Math.log(2)/Math.log(1+rt/100);return `<tr><td>${rt}%</td><td>${e.toFixed(2)}</td><td>${ex.toFixed(2)}</td><td>${(e-ex).toFixed(2)}</td></tr>`}).join("");
+}
+["r72Rate","r114Rate","r72N"].forEach(id=>$(id).addEventListener("input",rule72Run));
+
+/* ---------- PRACTICE LAB ---------- */
+const PRACTICE=[
+ {q:"Find the FV of ₹75,000 invested for 5 years at 9% p.a. compounded annually.",a:"FV = 75,000 × (1.09)^5 = ₹1,15,433 (approx)."},
+ {q:"Find the PV of ₹2,00,000 receivable after 6 years at a 11% discount rate.",a:"PV = 2,00,000 / (1.11)^6 = ₹1,06,974 (approx)."},
+ {q:"₹5,000 is deposited at the end of every year for 12 years at 8%. Find the FV.",a:"FV = 5,000 × [(1.08^12 − 1)/0.08] = ₹95,127 (approx)."},
+ {q:"A preference share pays a fixed dividend of ₹7 forever. At a 9% required return, find its price.",a:"PV = 7 / 0.09 = ₹77.78 (approx)."},
+ {q:"A cash flow of ₹50,000 grows 5% a year for 8 years, discounted at 12%. Find its PV.",a:"Use PV = CF1 × [1 − ((1+g)/(1+i))^n] / (i − g) with CF1 = 50,000 × 1.05 for year-1 flow, or CF1=50,000 if that IS year 1 — apply the Growing Annuity tab to verify numerically."},
+ {q:"Compute the monthly EMI on a ₹15,00,000 loan at 8.75% p.a. for 20 years.",a:"Use the Loan tab: i = 0.0875/12, n = 240; EMI ≈ ₹13,180 (approx) — verify on the Loan / EMI tab."},
+ {q:"Approximately how many years does it take money to triple at 9% p.a.?",a:"Rule of 114: 114/9 ≈ 12.7 years. Verify against the exact answer on the Rule of 72 tab."},
+ {q:"If the nominal return is 11% and inflation is 7%, find the exact real rate of return.",a:"Real = (1.11/1.07) − 1 ≈ 3.74%. Verify on the Real vs Nominal Rate tab."},
+ {q:"A ₹12,000 annuity for 6 years is deferred by 4 years at 9%. Find its present value today.",a:"First find PV of the ordinary annuity as of one period before the first payment, then discount that value back 4 more periods. Verify on the Deferred Annuity tab."},
+ {q:"How much must be deposited annually for 12 years at 7% to accumulate ₹50,00,000?",a:"PMT = FV × i / [(1+i)^n − 1]. Verify on the Sinking Fund tab."},
+ {q:"Price an 8% annual-coupon, 10-year, ₹1,000 face-value bond at a 9% YTM.",a:"Price = PV(coupon annuity) + PV(face value). At 9% YTM against an 8% coupon, expect a small discount to par. Verify on the Bond Valuation tab."},
+ {q:"Convert a 12% nominal annual rate compounded monthly into an effective annual rate.",a:"EAR = (1+0.12/12)^12−1 ≈ 12.6825%. Verify on the Rate Converter tab."},
+ {q:"At 10% for 8 periods, what are PVIF and FVIF?",a:"FVIF=(1.10)^8; PVIF=1/FVIF. Verify on the TVM Factor Tables tab."},
+ {q:"Cash flow starts at ₹20,000 in year 1 and increases by ₹3,000 each year for 7 years. Find PV at 9%.",a:"This is an arithmetic gradient, not a percentage-growing annuity. Discount each year-specific cash flow or use the Arithmetic Gradient tab."},
+ {q:"A ₹10,000 monthly SIP rises by 10% every year for 15 years at 12% expected return. Estimate the corpus.",a:"Use monthly compounding and step the SIP up once each year. Verify on the Step-Up SIP tab."},
+ {q:"A borrower has a 20-year ₹30 lakh loan at 9% and pays ₹5,000 extra every month. Estimate months and interest saved.",a:"Use the Loan Advanced tab to compare scheduled versus accelerated amortization."},
+ {q:"A ₹1,000 face bond with an 8% coupon, 7 years remaining and market price ₹920: estimate YTM and duration.",a:"YTM is solved numerically from price; duration is the PV-weighted timing of cash flows. Verify on Bond Analytics."},
+ {q:"Evaluate irregular dated cash flows using XNPV at 10% and find XIRR.",a:"Discount each cash flow by its actual day fraction from the first date. Use the XNPV / XIRR tab."},
+ {q:"Compare leasing and buying an asset using present value.",a:"Discount all lease payments and all buy-side cash flows, including resale value. The lower PV cost is financially cheaper under the stated assumptions."},
+ {q:"Why does the FV sensitivity table spread out dramatically at long horizons?",a:"Because compounding is exponential: rate differences are repeatedly applied to an ever-growing balance."},
+];
+function renderPractice(){
+  $("practiceList").innerHTML=PRACTICE.map((p,i)=>`<div class="quiz-card"><b>Q${i+1}.</b> ${p.q}
+  <div><button class="secondary small-btn" style="margin-top:8px;width:auto" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal solution</button>
+  <div class="answer" style="display:none">${p.a}</div></div></div>`).join("");
+}
+
+/* ---------- REAL VS NOMINAL RATE (Fisher) ---------- */
+function realRateRun(){
+  const nom=+$("frNom").value||0,infl=+$("frInfl").value||0,n=+$("frN").value||0;
+  const rNom=nom/100,rInfl=infl/100;
+  const realExact=((1+rNom)/(1+rInfl))-1;
+  const realApprox=rNom-rInfl;
+  $("frRealExact").textContent=(realExact*100).toFixed(3)+"%";
+  $("frRealApprox").textContent=(realApprox*100).toFixed(3)+"%";
+  const nomFV=100000*Math.pow(1+rNom,n);
+  const realFV=nomFV/Math.pow(1+rInfl,n);
+  $("frNomFV").textContent=money(nomFV);$("frRealFV").textContent=money(realFV);
+  $("frStory").innerHTML=`At <b>${nom}%</b> nominal and <b>${infl}%</b> inflation, your exact real return is <b>${(realExact*100).toFixed(3)}%</b>. Over ${n} years, ₹1,00,000 grows to <b>${money(nomFV)}</b> in rupee terms but only <b>${money(realFV)}</b> in today's purchasing power.`;
+  const labels=[],nomSeries=[],realSeries=[];
+  for(let t=0;t<=n;t++){labels.push("Y"+t);nomSeries.push(100000*Math.pow(1+rNom,t));realSeries.push(100000*Math.pow(1+rNom,t)/Math.pow(1+rInfl,t));}
+  chart("frChart",labels,nomSeries,realSeries);
+}
+
+/* ---------- DEFERRED ANNUITY ---------- */
+function deferredRun(){
+  const pmt=+$("dfPMT").value||0,rate=+$("dfRate").value||0,n=+$("dfN").value||0,d=+$("dfD").value||0;
+  const i=rate/100;
+  const pvStart=i===0?pmt*n:pmt*((1-Math.pow(1+i,-n))/i);
+  const pv0=pvStart/Math.pow(1+i,d);
+  const fv=pvStart*Math.pow(1+i,n);
+  const total=pmt*n;
+  $("dfPV0").textContent=money(pv0);$("dfPVstart").textContent=money(pvStart);$("dfFV").textContent=money(fv);$("dfTotal").textContent=money(total);
+  $("dfStory").innerHTML=`With <b>${d}</b> deferral periods, an annuity of <b>${money(pmt)}</b> for <b>${n}</b> payments is worth <b>${money(pvStart)}</b> just before the first payment, and <b>${money(pv0)}</b> today.`;
+  const labels=[],series=[];
+  for(let t=0;t<=d+n;t++){
+    labels.push("t"+t);
+    if(t<d){series.push(0);}else{
+      const k=t-d;const pvAtK=i===0?pmt*k:pmt*((1-Math.pow(1+i,-k))/i);
+      series.push(k===0?0:pvAtK*Math.pow(1+i,k));
+    }
+  }
+  chart("dfChart",labels,series);
+}
+
+/* ---------- SINKING FUND ---------- */
+function sinkingFundRun(){
+  const fv=+$("sfFV").value||0,rate=+$("sfRate").value||0,n=+$("sfN").value||0;
+  const i=rate/100;
+  const pmt=i===0?fv/n:fv*i/(Math.pow(1+i,n)-1);
+  const totalDep=pmt*n,interest=fv-totalDep;
+  $("sfPMT").textContent=money(pmt);$("sfTotalDep").textContent=money(totalDep);$("sfInt").textContent=money(interest);
+  $("sfStory").innerHTML=`Depositing <b>${money(pmt)}</b> at the end of each of <b>${n}</b> periods, at <b>${rate}%</b>, accumulates to the target <b>${money(fv)}</b>.`;
+  let bal=0;const rows=[],labels=[],series=[];
+  for(let t=1;t<=n;t++){bal=bal*(1+i)+pmt;rows.push({t,bal});labels.push("P"+t);series.push(bal);}
+  $("sfTable").innerHTML="<tr><th>Period</th><th>Deposit</th><th>Fund Balance</th></tr>"+rows.map(r=>`<tr><td>${r.t}</td><td>${money(pmt)}</td><td>${money(r.bal)}</td></tr>`).join("");
+  chart("sfChart",labels,series);
+}
+
+/* ---------- GOAL / SIP PLANNER ---------- */
+function goalPlannerRun(){
+  const target=+$("gpTarget").value||0,years=+$("gpYears").value||0,rate=+$("gpRate2").value||0,lump=+$("gpLump").value||0,type=+$("gpType").value;
+  const i=(rate/100)/12,n=years*12;
+  const lumpFV=lump*Math.pow(1+i,n);
+  const gap=Math.max(target-lumpFV,0);
+  const sip=i===0?gap/n:gap*i/((Math.pow(1+i,n)-1)*Math.pow(1+i,type));
+  const totalSIP=sip*n;
+  $("gpLumpFV").textContent=money(lumpFV);$("gpGap").textContent=money(gap);$("gpSIP").textContent=money(sip);$("gpTotalSIP").textContent=money(totalSIP);
+  $("gpStory").innerHTML=target<=lumpFV?`Your existing lump sum alone is projected to reach <b>${money(lumpFV)}</b>, already meeting the <b>${money(target)}</b> goal — no SIP required.`:`To close a gap of <b>${money(gap)}</b> over <b>${years} years</b> at <b>${rate}%</b>, you need a monthly SIP of about <b>${money(sip)}</b>.`;
+  const labels=[],series=[];let bal=lump;
+  for(let y=0;y<=years;y++){
+    labels.push("Y"+y);
+    series.push(bal);
+    for(let m=0;m<12&&y<years;m++){ if(type===1){bal=(bal+sip)*(1+i);} else {bal=bal*(1+i)+sip;} }
+  }
+  chart("gpChart",labels,series);
+}
+
+/* ---------- BOND VALUATION ---------- */
+function bondRun(){
+  const face=+$("bdFace").value||0,couponRate=+$("bdCoupon").value||0,ytm=+$("bdYTM").value||0,years=+$("bdYears").value||0,freq=+$("bdFreq").value||2;
+  const per=years*freq,cpn=face*(couponRate/100)/freq,i=(ytm/100)/freq;
+  const pvCoupons=i===0?cpn*per:cpn*((1-Math.pow(1+i,-per))/i);
+  const pvFace=face/Math.pow(1+i,per);
+  const price=pvCoupons+pvFace;
+  $("bdPVcoup").textContent=money(pvCoupons);$("bdPVface").textContent=money(pvFace);$("bdPrice").textContent=money(price);
+  const pd=price-face;
+  $("bdPD").textContent=(pd>=0?"+":"")+money(pd);$("bdPD").className=pd>=0?"good":"bad";
+  $("bdStory").innerHTML=`At a YTM of <b>${ytm}%</b> against an <b>${couponRate}%</b> coupon, the bond prices at <b>${money(price)}</b> — trading at a <b>${price>face?"premium":price<face?"discount":"par value"}</b> to its ${money(face)} face value.`;
+  const rates=[];for(let r=Math.max(1,ytm-6);r<=ytm+6;r+=1)rates.push(r);
+  const labels=rates.map(r=>r.toFixed(0)+"%"),series=rates.map(r=>{const ii=(r/100)/freq;const pvc=ii===0?cpn*per:cpn*((1-Math.pow(1+ii,-per))/ii);const pvf=face/Math.pow(1+ii,per);return pvc+pvf;});
+  chart("bdChart",labels,series);
+}
+
+["frNom","frInfl","frN"].forEach(id=>$(id).addEventListener("input",realRateRun));
+["dfPMT","dfRate","dfN","dfD"].forEach(id=>$(id).addEventListener("input",deferredRun));
+["sfFV","sfRate","sfN"].forEach(id=>$(id).addEventListener("input",sinkingFundRun));
+["gpTarget","gpYears","gpRate2","gpLump","gpType"].forEach(id=>$(id).addEventListener("input",goalPlannerRun));
+["bdFace","bdCoupon","bdYTM","bdYears","bdFreq"].forEach(id=>$(id).addEventListener("input",bondRun));
+
+
+/* ---------- COMPLETE-LAB ADDITIONS ---------- */
+function annuityFactorFV(i,n){return i===0?n:(Math.pow(1+i,n)-1)/i;}
+function annuityFactorPV(i,n){return i===0?n:(1-Math.pow(1+i,-n))/i;}
+function bisectRoot(fn,lo,hi,iterations=120){
+  let flo=fn(lo),fhi=fn(hi);if(!Number.isFinite(flo)||!Number.isFinite(fhi)||flo*fhi>0)return NaN;
+  for(let k=0;k<iterations;k++){const mid=(lo+hi)/2,fm=fn(mid);if(!Number.isFinite(fm))return NaN;if(Math.abs(fm)<1e-10)return mid;if(flo*fm<=0){hi=mid;fhi=fm}else{lo=mid;flo=fm}}
+  return (lo+hi)/2;
+}
+function findRootScan(fn,lo=-.999,hi=10,steps=3000){
+  let a=lo,fa=fn(a);for(let s=1;s<=steps;s++){const b=lo+(hi-lo)*s/steps,fb=fn(b);if(Number.isFinite(fa)&&Number.isFinite(fb)&&fa===0)return a;if(Number.isFinite(fa)&&Number.isFinite(fb)&&fa*fb<0)return bisectRoot(fn,a,b);a=b;fa=fb;}return NaN;
+}
+
+/* MASTER TVM SOLVER */
+function msFVcalc(pv,pmt,i,n,type){const ann=annuityFactorFV(i,n)*Math.pow(1+i,type);return pv*Math.pow(1+i,n)+pmt*ann;}
+function masterSolverRun(){
+  const solve=$('msSolve').value,type=+$('msType').value;let pv=+$('msPV').value||0,pmt=+$('msPMT').value||0,fv=+$('msFV').value||0,n=+$('msN').value||0,i=(+$('msRate').value||0)/100;
+  let result=NaN,label='';
+  if(solve==='FV'){result=msFVcalc(pv,pmt,i,n,type);fv=result;label=`Future value = <b>${money(result)}</b>`;}
+  if(solve==='PV'){const ann=annuityFactorFV(i,n)*Math.pow(1+i,type);result=(fv-pmt*ann)/Math.pow(1+i,n);pv=result;label=`Present value = <b>${money(result)}</b>`;}
+  if(solve==='PMT'){const ann=annuityFactorFV(i,n)*Math.pow(1+i,type);result=ann!==0?(fv-pv*Math.pow(1+i,n))/ann:NaN;pmt=result;label=`Periodic payment = <b>${money(result)}</b>`;}
+  if(solve==='RATE'){
+    const fn=r=>msFVcalc(pv,pmt,r,n,type)-fv;result=findRootScan(fn,-.95,5,3500);i=result;label=Number.isFinite(result)?`Rate per period = <b>${(result*100).toFixed(5)}%</b>`:'No rate root found for these inputs.';
+  }
+  if(solve==='N'){
+    const fn=x=>msFVcalc(pv,pmt,i,x,type)-fv;let lo=0,hi=1;while(hi<1000&&fn(hi)<0)hi*=2;result=(fn(lo)*fn(hi)<=0)?bisectRoot(fn,lo,hi):NaN;n=result;label=Number.isFinite(result)?`Number of periods = <b>${result.toFixed(4)}</b>`:'No positive period solution found.';
+  }
+  $('msOut').innerHTML=Number.isFinite(result)?`${label}. Assumptions: ${type?'beginning':'end'}-of-period payments.`:`<span class="bad">${label||'The selected combination has no valid solution.'}</span>`;
+  if(Number.isFinite(n)&&n>=0&&Number.isFinite(i)&&i>-1){const N=Math.max(1,Math.ceil(n)),labels=[],vals=[];let bal=pv;for(let t=0;t<=N;t++){if(t===0){labels.push('P0');vals.push(bal);continue;}if(type)bal=(bal+pmt)*(1+i);else bal=bal*(1+i)+pmt;labels.push('P'+t);vals.push(bal);}chart('msChart',labels,vals);}
+}
+['msSolve','msPV','msPMT','msFV','msN','msRate','msType'].forEach(id=>$(id).addEventListener('input',masterSolverRun));
+
+/* RATE CONVERTER */
+function rateConverterRun(){
+  const nom=(+$('rcNom').value||0)/100,m=+$('rcM').value||1,earIn=(+$('rcEARInput').value||0)/100;
+  const periodic=nom/m,ear=Math.pow(1+periodic,m)-1,cont=Math.log(1+ear),backNom=m*(Math.pow(1+earIn,1/m)-1);
+  $('rcPeriodic').textContent=(periodic*100).toFixed(5)+'%';$('rcEAR').textContent=(ear*100).toFixed(5)+'%';$('rcCont').textContent=(cont*100).toFixed(5)+'%';$('rcBackNom').textContent=(backNom*100).toFixed(5)+'%';
+  $('rcStory').innerHTML=`A quoted nominal rate of <b>${(nom*100).toFixed(3)}%</b> with ${m} compounding period${m===1?'':'s'} has an effective annual cost/return of <b>${(ear*100).toFixed(4)}%</b>.`;
+  const freqs=[1,2,4,12,52,365],names=['Annual','Semi-annual','Quarterly','Monthly','Weekly','Daily'];
+  $('rcTable').innerHTML='<tr><th>Equivalent frequency</th><th>Periodic rate</th><th>Nominal quote</th></tr>'+freqs.map((f,k)=>{const pr=Math.pow(1+ear,1/f)-1;return `<tr><td>${names[k]}</td><td>${(pr*100).toFixed(5)}%</td><td>${(pr*f*100).toFixed(5)}%</td></tr>`}).join('');
+}
+['rcNom','rcM','rcEARInput'].forEach(id=>$(id).addEventListener('input',rateConverterRun));
+
+/* FACTOR TABLES */
+function factorRun(){const rate=+$('tfRate').value||0,i=rate/100,n=+$('tfN').value||1;let rows='';for(let t=1;t<=n;t++){const fvif=Math.pow(1+i,t),pvif=1/fvif,fvifa=annuityFactorFV(i,t),pvifa=annuityFactorPV(i,t),crf=pvifa?1/pvifa:NaN,sff=fvifa?1/fvifa:NaN;rows+=`<tr><td>${t}</td><td>${fvif.toFixed(5)}</td><td>${pvif.toFixed(5)}</td><td>${fvifa.toFixed(5)}</td><td>${pvifa.toFixed(5)}</td><td>${crf.toFixed(5)}</td><td>${sff.toFixed(5)}</td></tr>`}$('tfTable').innerHTML='<tr><th>N</th><th>FVIF</th><th>PVIF</th><th>FVIFA</th><th>PVIFA</th><th>CRF</th><th>SFF</th></tr>'+rows;$('tfOut').innerHTML=`Factors shown for <b>${rate}%</b> per period through <b>${n}</b> periods.`;}
+['tfRate','tfN'].forEach(id=>$(id).addEventListener('input',factorRun));
+
+/* ARITHMETIC GRADIENT */
+function gradientRun(){const base=+$('grBase').value||0,step=+$('grStep').value||0,i=(+$('grRate').value||0)/100,n=+$('grN').value||0;let pv=0,total=0,last=0;const rows=[],labels=[],series=[];for(let t=1;t<=n;t++){const cf=base+(t-1)*step,p=cf/Math.pow(1+i,t);pv+=p;total+=cf;last=cf;rows.push({t,cf,p});labels.push('P'+t);series.push(cf);}const fv=pv*Math.pow(1+i,n);$('grPV').textContent=money(pv);$('grFV').textContent=money(fv);$('grLast').textContent=money(last);$('grTotal').textContent=money(total);$('grTable').innerHTML='<tr><th>Period</th><th>Cash Flow</th><th>Present Value</th></tr>'+rows.map(r=>`<tr><td>${r.t}</td><td>${money(r.cf)}</td><td>${money(r.p)}</td></tr>`).join('');bars('grChart',labels,series.map(Math.abs));}
+['grBase','grStep','grRate','grN'].forEach(id=>$(id).addEventListener('input',gradientRun));
+
+/* STEP-UP SIP */
+function stepUpRun(){const start=+$('suPMT').value||0,step=(+$('suStep').value||0)/100,i=(+$('suRate').value||0)/1200,years=+$('suYears').value||0,lump=+$('suLump').value||0;let bal=lump,contrib=lump,pmt=start;const labels=['Y0'],series=[bal];for(let y=1;y<=years;y++){for(let m=0;m<12;m++){bal=(bal+pmt)*(1+i);contrib+=pmt;}labels.push('Y'+y);series.push(bal);if(y<years)pmt*=1+step;}const growth=bal-contrib;$('suFV').textContent=money(bal);$('suContrib').textContent=money(contrib);$('suGrowth').textContent=money(growth);$('suFinalPMT').textContent=money(pmt);$('suStory').innerHTML=`Starting at <b>${money(start)}</b> per month and increasing it by <b>${(step*100).toFixed(1)}%</b> each year produces a projected corpus of <b>${money(bal)}</b> after ${years} years at the assumed return.`;chart('suChart',labels,series);}
+['suPMT','suStep','suRate','suYears','suLump'].forEach(id=>$(id).addEventListener('input',stepUpRun));
+
+/* RETIREMENT */
+function retirementRun(){
+  const current=+$('rtCurrent').value||0,pmt=+$('rtPMT').value||0,years=+$('rtYears').value||0,pre=(+$('rtPreRate').value||0)/1200,spend=+$('rtSpend').value||0,infl=(+$('rtInfl').value||0)/100,retYears=+$('rtRetYears').value||0,post=(+$('rtPostRate').value||0)/1200;
+  const months=years*12;let corpus=current;const labels=['Y0'],series=[corpus];for(let m=1;m<=months;m++){corpus=(corpus+pmt)*(1+pre);if(m%12===0){labels.push('Y'+(m/12));series.push(corpus);}}
+  const firstMonth=spend*Math.pow(1+infl,years),gm=Math.pow(1+infl,1/12)-1,nRet=retYears*12;let required=0;for(let m=0;m<nRet;m++){const wd=firstMonth*Math.pow(1+gm,m);required+=wd/Math.pow(1+post,m);}const gap=corpus-required;
+  $('rtCorpus').textContent=money(corpus);$('rtFutureSpend').textContent=money(firstMonth);$('rtRequired').textContent=money(required);$('rtGap').textContent=(gap>=0?'+':'')+money(gap);$('rtGap').className=gap>=0?'good':'bad';$('rtStory').innerHTML=gap>=0?`Projected savings exceed the estimated retirement-corpus requirement by <b class="good">${money(gap)}</b>.`:`The model shows an estimated retirement funding gap of <b class="bad">${money(-gap)}</b>. Increase contributions, extend the horizon, reduce planned spending, or revise assumptions.`;chart('rtChart',labels,series);
+}
+['rtCurrent','rtPMT','rtYears','rtPreRate','rtSpend','rtInfl','rtRetYears','rtPostRate'].forEach(id=>$(id).addEventListener('input',retirementRun));
+
+/* ADVANCED LOAN */
+function loanAdvancedRun(){
+  const P=+$('laP').value||0,annual=+$('laRate').value||0,years=+$('laYears').value||0,extra=Math.max(0,+$('laExtra').value||0),balloon=Math.max(0,+$('laBalloon').value||0),i=annual/1200,n=years*12;
+  const emi=i===0?(P-balloon)/n:(P-balloon/Math.pow(1+i,n))*i/(1-Math.pow(1+i,-n));
+  const baseInt=emi*n+balloon-P;
+  let bal=P,totalInt=0,months=0;const labels=[],monthNums=[],extraSeries=[];
+  while(bal>0.005&&months<1200){months++;const intPay=bal*i;let pay=emi+extra;if(months===n&&balloon>0)pay+=balloon;pay=Math.min(pay,bal+intPay);bal=bal+intPay-pay;totalInt+=intPay;if(months%12===0||bal<=0.005){labels.push('M'+months);monthNums.push(months);extraSeries.push(Math.max(0,bal));}}
+  function laBaseBalanceAt(m){if(i===0)return Math.max(0,P-emi*m-(m>=n?balloon:0));let b=P*Math.pow(1+i,m)-emi*((Math.pow(1+i,m)-1)/i);if(m>=n)b-=balloon;return Math.max(0,b);}
+  const baseSeries=monthNums.map(m=>laBaseBalanceAt(Math.min(m,n)));
+  const saved=baseInt-totalInt,monthsSaved=Math.max(0,n-months);
+  $('laEMI').textContent=money(emi);$('laNewTerm').textContent=`${Math.floor(months/12)}y ${months%12}m`;$('laBaseInt').textContent=money(baseInt);$('laNewInt').textContent=money(totalInt);$('laSaved').textContent=money(saved);$('laMonthsSaved').textContent=monthsSaved.toString();$('laStory').innerHTML=extra>0?`Adding <b>${money(extra)}</b> per month pays the balance off about <b>${monthsSaved} months earlier</b> and saves approximately <b>${money(saved)}</b> in interest under these assumptions.`:`With no extra payment, the loan follows its scheduled term.`;chart('laChart',labels,baseSeries,extraSeries);
+}
+['laP','laRate','laYears','laExtra','laBalloon'].forEach(id=>$(id).addEventListener('input',loanAdvancedRun));
+
+/* BOND ANALYTICS */
+function bondPriceAtYield(face,couponRate,years,freq,y){const n=Math.round(years*freq),c=face*(couponRate/100)/freq,i=y/freq;let p=0;for(let t=1;t<=n;t++)p+=c/Math.pow(1+i,t);p+=face/Math.pow(1+i,n);return p;}
+function bondAnalyticsRun(){
+  const face=+$('baFace').value||0,couponRate=+$('baCoupon').value||0,price=+$('baPrice').value||0,years=+$('baYears').value||0,freq=+$('baFreq').value||2,n=Math.max(1,Math.round(years*freq)),c=face*(couponRate/100)/freq;
+  const fn=y=>bondPriceAtYield(face,couponRate,years,freq,y)-price;const ytm=findRootScan(fn,-.95,5,4000);const per=ytm/freq;let wT=0,pvSum=0,conv=0;for(let t=1;t<=n;t++){const cf=t===n?c+face:c,pv=cf/Math.pow(1+per,t);pvSum+=pv;wT+=(t/freq)*pv;conv+=(t*(t+1))*pv/Math.pow(1+per,2);}const mac=wT/price,mod=mac/(1+per),convAnnual=conv/(price*freq*freq),currentYield=price?face*(couponRate/100)/price:NaN;const move=(-mod*.01+.5*convAnnual*.01*.01)*100;
+  $('baYTM').textContent=Number.isFinite(ytm)?(ytm*100).toFixed(4)+'%':'—';$('baCurrentYield').textContent=Number.isFinite(currentYield)?(currentYield*100).toFixed(3)+'%':'—';$('baMacDur').textContent=Number.isFinite(mac)?mac.toFixed(3)+' yrs':'—';$('baModDur').textContent=Number.isFinite(mod)?mod.toFixed(3):'—';$('baConvexity').textContent=Number.isFinite(convAnnual)?convAnnual.toFixed(3):'—';$('baPriceMove').textContent=Number.isFinite(move)?move.toFixed(2)+'%':'—';
+  $('baStory').innerHTML=Number.isFinite(ytm)?`At a market price of <b>${money(price)}</b>, the bond's estimated YTM is <b>${(ytm*100).toFixed(4)}%</b>. Modified duration suggests roughly a ${mod.toFixed(2)}% price move in the opposite direction for a 1 percentage-point yield change before convexity adjustment.`:'A YTM root could not be found for the entered bond terms.';
+  if(Number.isFinite(ytm)){const labels=[],series=[];for(let dy=-.03;dy<=.0301;dy+=.005){const yy=Math.max(-.95,ytm+dy);labels.push(((yy)*100).toFixed(1)+'%');series.push(bondPriceAtYield(face,couponRate,years,freq,yy));}chart('baChart',labels,series);}
+  const zp=+$('baZeroPrice').value||0;if(face>0&&zp>0&&years>0){const zy=Math.pow(face/zp,1/years)-1;$('baZeroOut').innerHTML=`A zero-coupon bond priced at <b>${money(zp)}</b> and redeeming at <b>${money(face)}</b> in <b>${years}</b> years has an annual compound yield of <b>${(zy*100).toFixed(4)}%</b>.`;}
+}
+['baFace','baCoupon','baPrice','baYears','baFreq','baZeroPrice'].forEach(id=>$(id).addEventListener('input',bondAnalyticsRun));
+
+/* DATE-BASED XNPV / XIRR */
+function setXDRows(vals=[['2026-01-01',-100000],['2026-06-30',25000],['2027-02-15',35000],['2028-01-20',65000]]){$('xdRows').innerHTML=vals.map(v=>`<div class="two" style="margin-bottom:6px"><input class="xdDate" type="date" value="${v[0]}"><input class="xdCF" type="number" value="${v[1]}"></div>`).join('');document.querySelectorAll('.xdDate,.xdCF').forEach(x=>x.addEventListener('input',datedFlowsRun));}
+function getXD(){return [...document.querySelectorAll('.xdDate')].map((d,i)=>({date:new Date(d.value+'T00:00:00'),dateText:d.value,cf:+document.querySelectorAll('.xdCF')[i].value||0})).filter(x=>!isNaN(x.date));}
+function xnpv(rate,flows){if(!flows.length||rate<=-1)return NaN;const d0=flows[0].date;return flows.reduce((s,x)=>s+x.cf/Math.pow(1+rate,(x.date-d0)/86400000/365),0);}
+function datedFlowsRun(){const rate=(+$('xdRate').value||0)/100,flows=getXD().sort((a,b)=>a.date-b.date);if(!flows.length)return;const npv=xnpv(rate,flows),irr=findRootScan(r=>xnpv(r,flows),-.95,10,6000),d0=flows[0].date,dn=flows[flows.length-1].date,span=(dn-d0)/86400000/365;$('xdNPV').textContent=money(npv);$('xdIRR').textContent=Number.isFinite(irr)?(irr*100).toFixed(4)+'%':'No unique root';$('xdSpan').textContent=span.toFixed(2)+' yrs';$('xdCount').textContent=flows.length.toString();$('xdStory').innerHTML=Number.isFinite(irr)?`At a <b>${(rate*100).toFixed(2)}%</b> discount rate, XNPV is <b>${money(npv)}</b>. A numerical XIRR root is <b>${(irr*100).toFixed(4)}%</b>.`:`XNPV is <b>${money(npv)}</b>. No XIRR root was found in the search range; check the sign pattern and dates.`;$('xdTable').innerHTML='<tr><th>Date</th><th>Cash Flow</th><th>Years from first date</th><th>PV</th></tr>'+flows.map(x=>{const y=(x.date-d0)/86400000/365,pv=x.cf/Math.pow(1+rate,y);return `<tr><td>${x.dateText}</td><td>${money(x.cf)}</td><td>${y.toFixed(4)}</td><td>${money(pv)}</td></tr>`}).join('');}
+$('xdAdd').onclick=()=>{const vals=getXD().map(x=>[x.dateText,x.cf]);const last=vals.length?new Date(vals[vals.length-1][0]+'T00:00:00'):new Date();last.setMonth(last.getMonth()+6);vals.push([last.toISOString().slice(0,10),20000]);setXDRows(vals);datedFlowsRun();};$('xdRemove').onclick=()=>{const vals=getXD().map(x=>[x.dateText,x.cf]);if(vals.length>2)vals.pop();setXDRows(vals);datedFlowsRun();};$('xdReset').onclick=()=>{setXDRows();datedFlowsRun();};$('xdRate').addEventListener('input',datedFlowsRun);
+
+/* LEASE VS BUY */
+function leaseBuyRun(){const price=+$('lbPrice').value||0,down=+$('lbDown').value||0,loanRate=(+$('lbLoanRate').value||0)/1200,years=+$('lbYears').value||0,lease=+$('lbLease').value||0,fee=+$('lbLeaseFee').value||0,resale=+$('lbResale').value||0,disc=(+$('lbDisc').value||0)/1200,n=years*12,loan=Math.max(0,price-down),emi=loanRate===0?loan/n:loan*loanRate/(1-Math.pow(1+loanRate,-n)),pvBuy=down+emi*annuityFactorPV(disc,n)-resale/Math.pow(1+disc,n),pvLease=fee+lease*annuityFactorPV(disc,n),choice=pvBuy<pvLease?'Buy':'Lease',diff=Math.abs(pvBuy-pvLease);$('lbEMI').textContent=money(emi);$('lbBuyPV').textContent=money(pvBuy);$('lbLeasePV').textContent=money(pvLease);$('lbChoice').textContent=choice;$('lbStory').innerHTML=`On the entered cash flows and a <b>${(disc*1200).toFixed(2)}%</b> annual discount rate, <b>${choice}</b> has the lower present-value cost by about <b>${money(diff)}</b>.`;}
+['lbPrice','lbDown','lbLoanRate','lbYears','lbLease','lbLeaseFee','lbResale','lbDisc'].forEach(id=>$(id).addEventListener('input',leaseBuyRun));
+
+/* SENSITIVITY */
+function sensitivityRun(){const pv=+$('snPV').value||0,base=+$('snRate').value||0,years=+$('snYears').value||0,rs=+$('snRateStep').value||1,ys=+$('snYearStep').value||1,rates=[base-2*rs,base-rs,base,base+rs,base+2*rs],horiz=[Math.max(1,years-2*ys),Math.max(1,years-ys),years,years+ys,years+2*ys];let html='<tr><th>Rate ↓ / Years →</th>'+horiz.map(y=>`<th>${y}y</th>`).join('')+'</tr>';rates.forEach(r=>{html+=`<tr><td>${r.toFixed(1)}%</td>`+horiz.map(y=>`<td>${money(pv*Math.pow(1+r/100,y))}</td>`).join('')+'</tr>'});$('snTable').innerHTML=html;$('snStory').innerHTML=`Base case: <b>${money(pv)}</b> at <b>${base}%</b> for <b>${years} years</b> grows to <b>${money(pv*Math.pow(1+base/100,years))}</b>. The matrix shows how rate and time interact.`;}
+['snPV','snRate','snYears','snRateStep','snYearStep'].forEach(id=>$(id).addEventListener('input',sensitivityRun));
+
+/* ---------- ROUTING ---------- */
+function activatePage(name){
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===name));
+  document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===name));
+  if(name==="learn")demoRun();
+  if(name==="singlesum"){singleSumRun();solveRun();}
+  if(name==="compounding")earRun();
+  if(name==="realrate")realRateRun();
+  if(name==="annuity")annuityRun();
+  if(name==="deferred")deferredRun();
+  if(name==="perpetuity")perpetuityRun();
+  if(name==="growing")growingRun();
+  if(name==="sinkingfund")sinkingFundRun();
+  if(name==="goalplanner")goalPlannerRun();
+  if(name==="bond")bondRun();
+  if(name==="uneven")unevenRun();
+  if(name==="loan")loanRun();
+  if(name==="rule72")rule72Run();
+  if(name==="mastersolver")masterSolverRun();
+  if(name==="rateconverter")rateConverterRun();
+  if(name==="factors")factorRun();
+  if(name==="gradient")gradientRun();
+  if(name==="stepupsip")stepUpRun();
+  if(name==="retirement")retirementRun();
+  if(name==="loanadvanced")loanAdvancedRun();
+  if(name==="bondanalytics")bondAnalyticsRun();
+  if(name==="datedflows")datedFlowsRun();
+  if(name==="leasebuy")leaseBuyRun();
+  if(name==="sensitivity")sensitivityRun();
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>activatePage(b.dataset.page)));
+window.addEventListener("resize",()=>activatePage(document.querySelector(".tab.active").dataset.page));
+
+setUFlows();
+setXDRows();
+renderPractice();
+demoRun();singleSumRun();solveRun();earRun();realRateRun();annuityRun();deferredRun();perpetuityRun();growingRun();sinkingFundRun();goalPlannerRun();bondRun();unevenRun();loanRun();rule72Run();masterSolverRun();rateConverterRun();factorRun();gradientRun();stepUpRun();retirementRun();loanAdvancedRun();bondAnalyticsRun();datedFlowsRun();leaseBuyRun();sensitivityRun();
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

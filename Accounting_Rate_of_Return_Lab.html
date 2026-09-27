@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accounting Rate of Return (ARR) — Interactive Deep-Dive Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf5ec;--card:#fff;--ink:#2b1c06;--muted:#6d5c44;--line:#e6d6bd;
+  --amber:#b06a00;--amber-d:#7a4800;--amber-l:#fdf3e3;
+  --forest:#1d5c2e;--forest-d:#0f3319;--forest-l:#e6f2e9;
+  --slate:#2d4a6e;--slate-l:#e8eef7;
+  --red:#9e2a2a;--red-l:#fceaea;
+  --teal:#1a6b5e;--teal-l:#e4f4f0;
+  --nav-bg:#f3e8d6;color-scheme:light
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.65 'Inter',system-ui,sans-serif}
+.wrap{max-width:1460px;margin:auto;padding:18px}
+.hero{padding:38px 40px 34px;border-radius:22px;background:linear-gradient(140deg,#4a3205 0%,#b06a00 50%,#d98f1f 100%);color:#fff;position:relative;overflow:hidden;box-shadow:0 20px 56px #7a480040}
+.hero::before{content:"";position:absolute;right:-80px;top:-80px;width:380px;height:380px;border-radius:50%;background:rgba(255,230,180,.08);pointer-events:none}
+.hero::after{content:"";position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#1d5c2e,#3a8f54,#1d5c2e)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:#ffffff15;border:1px solid #ffffff25;padding:5px 15px;border-radius:999px;font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;color:#ffe6b0}
+.hero h1{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(26px,4vw,52px);margin:0 0 12px;line-height:1.06;letter-spacing:-.01em;max-width:1100px}
+.hero h1 em{color:#ffe0a0;font-style:italic}
+.hero p{margin:0;max-width:1120px;opacity:.94;font-size:1.01rem;line-height:1.65}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.hero-actions button{border:1px solid #ffffff30;background:#ffffff15;color:#fff;border-radius:10px;padding:9px 18px;font-weight:700;cursor:pointer;font-size:.88rem;font-family:inherit;transition:.15s}
+.hero-actions button.on{background:#fff;color:var(--amber-d)}
+.hero-actions button:hover{background:#ffffff28}
+.nav{display:flex;flex-wrap:nowrap;gap:6px;padding:10px 12px;margin:14px 0 0;background:var(--nav-bg);border:1px solid var(--line);border-radius:16px;overflow-x:auto;scrollbar-width:thin;position:sticky;top:0;z-index:10}
+.tab{border:1px solid #d6bd95;background:#fff;color:#6e4a10;padding:8px 12px;border-radius:9px;font-weight:700;font-size:.82rem;white-space:nowrap;cursor:pointer;transition:.13s;font-family:inherit}
+.tab:hover{border-color:var(--amber);transform:translateY(-1px)}
+.tab.active{background:var(--amber);color:#fff;border-color:var(--amber);box-shadow:0 5px 16px #b06a0038}
+.navsep{align-self:center;padding:0 4px;font-size:.62rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#a98a5c;white-space:nowrap;user-select:none}
+.page{display:none}.page.active{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:.25}to{opacity:1}}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s9{grid-column:span 9}.s10{grid-column:span 10}.s12{grid-column:span 12}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 2px 12px #2b1c0608}
+.card-amber{border-top:4px solid var(--amber)}.card-teal{border-top:4px solid var(--teal)}.card-slate{border-top:4px solid var(--slate)}.card-forest{border-top:4px solid var(--forest)}.card-red{border-top:4px solid var(--red)}
+h2{font-family:'DM Serif Display',Georgia,serif;margin:0 0 14px;font-size:1.6rem;line-height:1.18;letter-spacing:-.01em}
+h3{margin:18px 0 8px;font-size:1.05rem;font-weight:700}h3:first-child{margin-top:0}
+.muted{color:var(--muted)}.kicker{font-size:.77rem;text-transform:uppercase;letter-spacing:.11em;font-weight:800;color:var(--teal);margin-bottom:7px}
+label{display:block;font-weight:600;margin:12px 0 5px;font-size:.93rem}
+input,select,textarea{width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:.97rem}
+input:focus,select:focus{outline:2px solid var(--amber);outline-offset:1px;border-color:var(--amber)}
+button{border:0;border-radius:10px;padding:11px 16px;background:var(--amber);color:#fff;font-weight:700;cursor:pointer;font-size:.97rem;font-family:inherit;transition:.13s}
+button:hover{filter:brightness(1.08)}
+.btn-sm{padding:8px 12px;font-size:.85rem}.btn-secondary{background:var(--amber-l);color:var(--amber-d)}.btn-ghost{background:#f0e8dc;color:var(--ink)}
+.formula{background:#3a2a08;color:#f2d9a8;border-radius:13px;padding:18px 22px;font:1rem/1.75 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;margin:10px 0}
+.formula b{color:#ffd98a}
+.callout{padding:14px 16px;border-left:4px solid var(--amber);background:var(--amber-l);border-radius:10px;font-size:.97rem;margin:10px 0}
+.callout-teal{border-color:var(--teal);background:var(--teal-l)}.callout-slate{border-color:var(--slate);background:var(--slate-l)}.callout-red{border-color:var(--red);background:var(--red-l)}.callout-forest{border-color:var(--forest);background:var(--forest-l)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:.93rem}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{background:#f6ecdc;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+tr:last-child td{border-bottom:none}.scroll{overflow-x:auto;max-height:440px}
+.metrics{display:grid;gap:10px}
+.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:repeat(3,1fr)}.cols-4{grid-template-columns:repeat(4,1fr)}.cols-5{grid-template-columns:repeat(5,1fr)}
+.metric{padding:14px 16px;border-radius:13px;background:#fbf3e2;border:1px solid #e2cca2}
+.metric small{color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;display:block}
+.metric strong{display:block;font-size:1.3rem;font-weight:800;margin-top:4px}
+.stepflow{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:12px 0}
+.step{background:var(--amber-l);border:1px solid #e0c284;color:#5c3a04;padding:9px 15px;border-radius:10px;font-weight:700;font-size:.88rem}
+.arrow{color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.adv{border-left:4px solid var(--teal);background:var(--teal-l);padding:12px 15px;border-radius:10px;margin:6px 0}
+.lim{border-left:4px solid var(--red);background:var(--red-l);padding:12px 15px;border-radius:10px;margin:6px 0}
+.note-amber{border-left:4px solid var(--amber);background:var(--amber-l);padding:12px 15px;border-radius:10px;margin:6px 0}
+.note-forest{border-left:4px solid var(--forest);background:var(--forest-l);padding:12px 15px;border-radius:10px;margin:6px 0}
+.quiz-card{padding:16px 18px;border:1px solid var(--line);border-radius:14px;margin:10px 0}
+.answer{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--amber-l);font-size:.96rem}
+.mcq-option{display:block;width:100%;text-align:left;padding:14px 14px;margin:5px 0;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:.95rem;font-weight:500;font-family:inherit;transition:.12s}
+.mcq-option:hover{background:var(--amber-l);border-color:#d9b26a}.mcq-option.correct{background:#dff0e3;border-color:var(--forest);color:var(--forest)}.mcq-option.wrong{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.chip{display:inline-flex;align-items:center;padding:4px 11px;border-radius:999px;background:var(--amber-l);color:var(--amber-d);font-weight:700;font-size:.82rem;margin:2px 3px 2px 0}
+.chip-teal{background:var(--teal-l);color:#07382f}.chip-red{background:var(--red-l);color:var(--red)}.chip-forest{background:var(--forest-l);color:var(--forest-d)}
+.pillrow{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.dash-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.dash-cell{padding:14px;border-radius:13px;background:#fff;border:1px solid var(--line);text-align:center}
+.dash-cell small{display:block;color:var(--muted);font-size:.73rem;text-transform:uppercase;letter-spacing:.05em}
+.dash-cell .val{font-size:1.25rem;font-weight:800;margin:5px 0;color:var(--amber)}
+.good{color:var(--forest);font-weight:700}.bad{color:var(--red);font-weight:700}.warn{color:var(--amber);font-weight:700}
+.teacher-note{display:none;border-left:4px solid var(--teal);background:var(--teal-l);padding:12px 15px;border-radius:10px;margin-top:10px;font-size:.93rem}
+body.teacher .teacher-note{display:block}
+@media(max-width:1060px){.s3,.s4,.s5,.s6,.s7,.s8,.s9{grid-column:span 6}.dash-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.s3,.s4,.s5,.s6,.s7,.s8,.s9,.s10,.s12{grid-column:span 12}.two,.three{grid-template-columns:1fr}.metrics.cols-3,.metrics.cols-4,.metrics.cols-5{grid-template-columns:1fr 1fr}.dash-grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:10px}}
+@media print{.nav,.hero-actions,button,input,textarea,select{display:none!important}.page{display:block!important}.card{box-shadow:none;border:1px solid #bbb;break-inside:avoid}body{background:#fff}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="hero-eyebrow">Corporate Finance · Investment Decisions · Capital Budgeting Techniques</div>
+  <h1>The <em>Accounting Rate of Return</em> (ARR) — Interactive Deep-Dive Lab</h1>
+  <p>A fully offline lab on the only popular appraisal method expressed as a <b>percentage accounting return</b>: average expected profit after tax divided by the investment in the project. Covering straight-line depreciation, the average-investment basis, the hurdle comparison, why ARR uses book profits rather than cash flows, its practical appeal for financial managers, and its serious theoretical flaws. All calculations live in your browser, in Indian ₹.</p>
+  <div class="hero-actions">
+    <button id="modeStudent" class="on" onclick="setMode('student')">Student Mode</button>
+    <button id="modeTeacher" onclick="setMode('teacher')">Teacher Mode</button>
+    <button onclick="window.print()">Print / Save PDF</button>
+  </div>
+</header>
+<nav class="nav">
+  <span class="navsep">Start</span>
+  <button class="tab active" data-page="dashboard">Dashboard</button>
+  <span class="navsep">Fundamentals</span>
+  <button class="tab" data-page="intro">Meaning &amp; Need</button>
+  <button class="tab" data-page="method">The Method</button>
+  <button class="tab" data-page="decision">Decision Rule</button>
+  <span class="navsep">Analysis</span>
+  <button class="tab" data-page="strengths">Strengths &amp; Weaknesses</button>
+  <button class="tab" data-page="vs_cf">ARR vs Cash-Flow Methods</button>
+  <span class="navsep">Calculators</span>
+  <button class="tab" data-page="calc_main">ARR Calculator</button>
+  <span class="navsep">Practice</span>
+  <button class="tab" data-page="examples">Worked Examples</button>
+  <button class="tab" data-page="mcq">MCQ Bank</button>
+  <button class="tab" data-page="exam_gen">Exam Generator</button>
+  <span class="navsep">Reference</span>
+  <button class="tab" data-page="formula_bank">Formula Bank</button>
+  <button class="tab" data-page="glossary">Glossary</button>
+</nav>
+
+<!-- ===== DASHBOARD ===== -->
+<section id="dashboard" class="page active">
+<div class="grid" style="margin-top:14px">
+<div class="card s12 card-amber" style="background:linear-gradient(135deg,#fdf6ea,var(--amber-l))">
+  <div class="kicker">Signature Tool — Live ARR Estimator</div>
+  <h2>Accounting Rate of Return Dashboard</h2>
+  <p class="muted" style="margin-top:-6px;margin-bottom:16px">Enter the project's cost, expected salvage value and forecast profits after tax (PAT is already after depreciation). The dashboard derives straight-line depreciation, average profit, average book investment, and the ARR, then compares it with your target return.</p>
+  <div class="grid">
+    <div class="s4">
+      <label>Initial Cost of Asset (₹)</label><input id="dCost" type="number" value="500000" step="10000">
+      <label>Salvage Value at End (₹)</label><input id="dSalv" type="number" value="50000" step="10000">
+      <label>Number of years</label>
+      <select id="dN" onchange="renderDashInputs()">
+        <option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+      </select>
+      <div id="dInputs" style="margin-top:6px"></div>
+      <label style="margin-top:12px">Target ARR / Required Return (%)</label><input id="dTarget" type="number" value="15" step="0.5">
+      <button onclick="runDash()" style="margin-top:16px;width:100%">Compute ARR</button>
+    </div>
+    <div class="s8">
+      <div class="dash-grid">
+        <div class="dash-cell"><small>Depreciation / yr</small><div class="val" id="dDep" style="color:var(--slate)">—</div></div>
+        <div class="dash-cell"><small>Average PAT</small><div class="val" id="dAvgP">—</div></div>
+        <div class="dash-cell"><small>Average Investment</small><div class="val" id="dAvgI" style="color:var(--teal)">—</div></div>
+        <div class="dash-cell"><small>ARR</small><div class="val" id="dArr" style="color:var(--forest)">—</div></div>
+        <div class="dash-cell"><small>Verdict</small><div class="val" id="dVerdict" style="font-size:1rem">—</div></div>
+      </div>
+      <h3>Profit &amp; Book-Value Schedule</h3>
+      <div class="scroll"><table id="dashTable">
+        <tr><th>Yr</th><th>PAT (₹)</th><th>Depreciation (₹)</th><th>Book Value Start (₹)</th><th>Book Value End (₹)</th></tr>
+      </table></div>
+      <div class="callout" id="dashCallout" style="margin-top:12px">Enter values and click Compute.</div>
+    </div>
+  </div>
+</div>
+<div class="card s5">
+  <div class="kicker">Find Anything</div>
+  <h3>Master Search</h3>
+  <input id="masterSearch" type="text" placeholder="Search: depreciation, average investment, PAT, hurdle, book value…">
+  <div id="masterSearchResults" style="margin-top:12px"></div>
+</div>
+<div class="card s7">
+  <div class="kicker">Learning Path</div>
+  <h3>Suggested sequence</h3>
+  <div class="stepflow">
+    <span class="step">1 · Meaning</span><span class="arrow">→</span>
+    <span class="step">2 · The Method</span><span class="arrow">→</span>
+    <span class="step">3 · Decision Rule</span><span class="arrow">→</span>
+    <span class="step">4 · Strengths/Weaknesses</span><span class="arrow">→</span>
+    <span class="step">5 · Vs Cash-Flow Methods</span><span class="arrow">→</span>
+    <span class="step">6 · Calculator</span>
+  </div>
+  <h3>Jump to</h3>
+  <div class="pillrow">
+    <button class="btn-sm btn-secondary" onclick="activatePage('calc_main')">ARR Calculator</button>
+    <button class="btn-sm btn-secondary" onclick="activatePage('examples')">Worked Examples</button>
+    <button class="btn-sm btn-secondary" onclick="activatePage('mcq')">MCQ Bank</button>
+    <button class="btn-sm btn-secondary" onclick="activatePage('formula_bank')">Formula Bank</button>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ===== INTRO ===== -->
+<section id="intro" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 card-amber">
+  <div class="kicker">Fundamentals</div>
+  <h2>Meaning and Need for ARR</h2>
+  <p>The <b>Accounting Rate of Return</b> (ARR, also called the Average Rate of Return or Return on Investment) measures the expected <b>accounting profitability</b> of a project as a percentage: the average annual profit after tax, over the project's life, divided by the average investment locked in the asset.</p>
+  <div class="callout"><b>Definition:</b> ARR is the ratio of the average expected profit after tax (PAT) to the average investment in the project, expressed as a percentage. Unlike payback, NPV or IRR, it is built from <b>accounting profits</b> — the same figures managers already report — rather than from cash flows.</div>
+  <p>Its appeal is direct: management thinks in terms of return-on-investment percentages ("this machine should earn 20% a year on its book value"), and ARR produces exactly that number from readily available projected income statements.</p>
+  <div class="stepflow">
+    <span class="step">Forecast PAT each year</span><span class="arrow">→</span>
+    <span class="step">Compute average PAT</span><span class="arrow">→</span>
+    <span class="step">Compute average investment</span><span class="arrow">→</span>
+    <span class="step">ARR = avg PAT ÷ avg investment</span><span class="arrow">→</span>
+    <span class="step">Compare with target</span>
+  </div>
+  <div class="teacher-note"><b>Teaching note:</b> Anchor with a familiar ratio: ARR is essentially a projected ROCE/ROI for the asset. Students then see both its appeal (consistent with how performance is measured post-investment) and its flaw (book profits and book values are accounting conventions, not cash).</div>
+</div>
+<div class="card s4">
+  <h3>The reference machine</h3>
+  <table>
+    <tr><th>Item</th><th>Value</th></tr>
+    <tr><td>Cost</td><td>₹5,00,000</td></tr>
+    <tr><td>Salvage (5 yr)</td><td>₹50,000</td></tr>
+    <tr><td>Depreciation / yr</td><td>₹90,000</td></tr>
+    <tr><td>Average PAT</td><td>₹52,000</td></tr>
+    <tr><td>Average investment</td><td>₹2,75,000</td></tr>
+    <tr><td><b>ARR</b></td><td class="good"><b>18.91%</b></td></tr>
+    <tr><td>Target</td><td>15%</td></tr>
+  </table>
+  <div class="callout-forest callout" style="margin-top:12px">ARR 18.91% &gt; 15% target → <span class="good">accept</span>.</div>
+</div>
+</div></section>
+
+<!-- ===== METHOD ===== -->
+<section id="method" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s7 card-teal">
+  <div class="kicker">Fundamentals</div>
+  <h2>The Method — Step by Step</h2>
+  <div class="formula">Annual depreciation (straight line) =
+   (Cost − Salvage value) ÷ Life (years)
+
+Average annual profit (PAT) =
+   Σ PAT over life ÷ Number of years
+
+Average investment = (Cost + Salvage value) ÷ 2
+  (= average book value over the life)
+
+<b>ARR = (Average annual profit ÷ Average investment) × 100</b></div>
+  <h3>Worked schedule — machine ₹5,00,000, salvage ₹50,000, 5 years</h3>
+  <div class="scroll"><table>
+    <tr><th>Yr</th><th>PAT (₹)</th><th>Depreciation (₹)</th><th>Book value start (₹)</th><th>Book value end (₹)</th></tr>
+    <tr><td>1</td><td>40,000</td><td>90,000</td><td>5,00,000</td><td>4,10,000</td></tr>
+    <tr><td>2</td><td>60,000</td><td>90,000</td><td>4,10,000</td><td>3,20,000</td></tr>
+    <tr><td>3</td><td>80,000</td><td>90,000</td><td>3,20,000</td><td>2,30,000</td></tr>
+    <tr><td>4</td><td>50,000</td><td>90,000</td><td>2,30,000</td><td>1,40,000</td></tr>
+    <tr><td>5</td><td>30,000</td><td>90,000</td><td>1,40,000</td><td>50,000</td></tr>
+  </table></div>
+  <p style="margin-top:10px">Average PAT = (40+60+80+50+30)k ÷ 5 = ₹52,000. Average investment = (5,00,000 + 50,000)/2 = ₹2,75,000.</p>
+  <div class="callout-teal callout"><b>ARR = 52,000 / 2,75,000 = 18.91%</b> &gt; 15% target → accept.</div>
+</div>
+<div class="card s5">
+  <h3>The two denominator conventions</h3>
+  <table>
+    <tr><th>Basis</th><th>Denominator</th><th>Reference ARR</th></tr>
+    <tr><td>Average investment (standard)</td><td>(Cost+Salvage)/2 = ₹2.75L</td><td class="good">18.91%</td></tr>
+    <tr><td>Initial cost (variant)</td><td>Cost = ₹5L</td><td class="warn">10.40%</td></tr>
+  </table>
+  <div class="callout-amber callout" style="margin-top:12px">Indian/textbook convention uses <b>average investment</b> = (initial cost + salvage)/2 — the average book value over the asset's life. Always state which basis a percentage uses; the accept/reject signal can differ.</div>
+  <div class="callout-slate callout">PAT figures are already <b>after</b> depreciation and tax. Do not subtract depreciation again — that double-counts it.</div>
+</div>
+</div></section>
+
+<!-- ===== DECISION ===== -->
+<section id="decision" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s8 card-forest">
+  <div class="kicker">Analysis</div>
+  <h2>The Decision Rule</h2>
+  <div class="formula">ARR ≥ Target (hurdle) rate   → <b>ACCEPT</b>
+ARR &lt; Target (hurdle) rate  → <b>REJECT</b>
+
+Ranking projects: higher ARR is preferred.</div>
+  <table>
+    <tr><th>Project</th><th>Avg PAT</th><th>Avg investment</th><th>ARR</th><th>vs 15% target</th><th>Decision</th></tr>
+    <tr><td>Machine A (reference)</td><td>₹52,000</td><td>₹2,75,000</td><td class="good">18.91%</td><td>18.91 &gt; 15</td><td><span class="chip chip-forest">Accept ✓</span></td></tr>
+    <tr><td>Project B (₹10L, 4 yr)</td><td>₹1,37,500</td><td>₹5,00,000</td><td class="good">27.50%</td><td>27.50 &gt; 15</td><td><span class="chip chip-forest">Accept ✓</span></td></tr>
+    <tr><td>Project C (₹8L)</td><td>₹27,500</td><td>₹4,20,000</td><td class="bad">6.55%</td><td>6.55 &lt; 15</td><td><span class="chip chip-red">Reject ✗</span></td></tr>
+  </table>
+  <div class="callout-forest callout" style="margin-top:12px"><b>Ranking conflict warning:</b> ARR ranks by a percentage return, not by absolute value. A small high-percentage project can outrank a large project that adds far more rupees of profit — ARR ignores scale just as IRR can.</div>
+</div>
+<div class="card s4">
+  <h3>Why the hurdle matters</h3>
+  <div class="callout">The target ARR is usually set with reference to the firm's cost of capital and the sector's normal accounting return. It is a <b>policy threshold</b>, not a market-determined rate.</div>
+  <div class="callout-teal callout"><b>Mutual exclusivity:</b> accept the project with the highest ARR <i>provided</i> it clears the hurdle — but always cross-check against NPV, since ARR ignores timing.</div>
+</div>
+</div></section>
+
+<!-- ===== STRENGTHS ===== -->
+<section id="strengths" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s7 card-amber">
+  <div class="kicker">Analysis</div>
+  <h2>Strengths and Weaknesses</h2>
+  <h3>Advantages</h3>
+  <div class="two">
+    <div class="adv"><b>Simple and familiar.</b> Built from projected income statements; expressed as a percentage managers already use (ROI/ROCE style).</div>
+    <div class="adv"><b>Considers the whole life.</b> Unlike payback, it uses profits from every year of the project, including the tail.</div>
+    <div class="adv"><b>Easy comparison.</b> Percentage returns are readily compared across projects and with the firm's target return.</div>
+    <div class="adv"><b>Links to reported performance.</b> Post-investment, divisional ROI is measured the same way, so the appraisal yardstick matches the evaluation yardstick.</div>
+  </div>
+  <h3>Weaknesses</h3>
+  <div class="two">
+    <div class="lim"><b>Ignores the time value of money.</b> A rupee of Year-5 profit counts the same as a rupee of Year-1 profit; no discounting.</div>
+    <div class="lim"><b>Uses accounting profit, not cash flow.</b> Depreciation conventions and non-cash charges drive the number; two depreciation methods give two ARRs for the same project.</div>
+    <div class="lim"><b>Ignores the timing of profits.</b> Projects with the same average PAT but very different timing rank equally, although value differs.</div>
+    <div class="lim"><b>Arbitrary hurdle &amp; denominator.</b> Target return is judgement-based; average-vs-initial investment conventions change the result.</div>
+  </div>
+</div>
+<div class="card s5">
+  <h3>Where it fits</h3>
+  <div class="callout-teal callout"><b>Quick profitability screen</b> for small, replacement-type projects where full DCF feels disproportionate.</div>
+  <div class="callout-amber callout"><b>Reporting alignment:</b> useful where managers are evaluated on book ROI and want appraisal to mirror that metric.</div>
+  <div class="callout-red callout"><b>Never decide solely on ARR.</b> It is not NPV-consistent: it can accept negative-NPV projects (far-dated profits) or reject value-adding ones (heavy early depreciation). Use NPV/IRR to confirm.</div>
+  <div class="teacher-note"><b>Teaching note:</b> Demonstrate the timing flaw with two projects having identical average PAT but back-loaded vs front-loaded profits — ARR ties them, NPV strongly prefers the front-loaded one. This shows why "average percentage" cannot substitute for discounted cash flow.</div>
+</div>
+</div></section>
+
+<!-- ===== VS CASH FLOW ===== -->
+<section id="vs_cf" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s7 card-slate">
+  <div class="kicker">Analysis</div>
+  <h2>ARR vs the Cash-Flow Methods</h2>
+  <table>
+    <tr><th>Dimension</th><th>ARR</th><th>Payback / DPB</th><th>NPV / IRR</th></tr>
+    <tr><td>Basis</td><td>Accounting PAT</td><td>Cash flows</td><td>Cash flows</td></tr>
+    <tr><td>Time value of money</td><td class="bad">No</td><td>Only DPB</td><td class="good">Yes</td></tr>
+    <tr><td>Whole-life coverage</td><td class="good">Yes</td><td class="bad">No</td><td class="good">Yes</td></tr>
+    <tr><td>Result form</td><td>Percentage</td><td>Years</td><td>₹ / %</td></tr>
+    <tr><td>NPV-consistent?</td><td class="bad">No</td><td>DPB yes</td><td class="good">Yes</td></tr>
+    <tr><td>Affected by depreciation policy?</td><td class="bad">Yes</td><td>No</td><td>No</td></tr>
+  </table>
+  <div class="callout-slate callout" style="margin-top:12px"><b>The core divide:</b> value is created by <i>cash</i> arriving <i>early</i>. ARR measures neither — it measures accrual-profit averaged across years. That makes it a convenient accounting summary, never a substitute for DCF.</div>
+</div>
+<div class="card s5">
+  <h3>Same project, different verdicts?</h3>
+  <div class="callout">A project with large early depreciation (low early PAT) can show a modest ARR yet have strong early cash flows and positive NPV — ARR may reject it wrongly.</div>
+  <div class="callout-teal callout">Conversely, a project with steady book profits far in the future can clear the ARR hurdle while its discounted cash flows yield negative NPV.</div>
+  <div class="callout-amber callout"><b>Rule of thumb:</b> compute ARR for the accounting summary and stakeholder reporting; make the accept/reject call on NPV (with IRR/PI as cross-checks).</div>
+</div>
+</div></section>
+
+<!-- ===== CALCULATOR ===== -->
+<section id="calc_main" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s5 card-amber">
+  <div class="kicker">Calculator</div>
+  <h2>ARR Calculator</h2>
+  <label>Initial Cost of Asset (₹)</label><input id="ccCost" type="number" value="500000" step="10000">
+  <label>Salvage Value (₹)</label><input id="ccSalv" type="number" value="50000" step="10000">
+  <label>Number of years</label>
+  <select id="ccN" onchange="renderCCInputs()">
+    <option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+  </select>
+  <div id="ccInputs" style="margin-top:6px"></div>
+  <label style="margin-top:10px">Target ARR (%)</label><input id="ccTarget" type="number" value="15" step="0.5">
+  <button onclick="calcMain()" style="margin-top:16px;width:100%">Compute ARR</button>
+</div>
+<div class="card s7" id="ccResult"><h3>Results will appear here</h3><p class="muted">Enter values and click Compute.</p></div>
+</div></section>
+
+<!-- ===== EXAMPLES ===== -->
+<section id="examples" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12 card-amber">
+  <div class="kicker">Practice</div>
+  <h2>Comprehensive Worked Examples</h2>
+</div>
+<div class="card s6">
+  <h3>Example 1 — Standard ARR</h3>
+  <p>A machine costs ₹5,00,000 with ₹50,000 salvage after 5 years. Expected PAT (after depreciation &amp; tax): ₹40,000 · ₹60,000 · ₹80,000 · ₹50,000 · ₹30,000. Target ARR 15%. Decide.</p>
+  <button class="btn-sm btn-secondary" onclick="toggleAnswer('ex1')">Show / Hide Solution</button>
+  <div id="ex1" class="answer" style="display:none">
+    <p>Depreciation = (5,00,000 − 50,000)/5 = ₹90,000 p.a. Average PAT = (40+60+80+50+30)/5 = ₹52,000. Average investment = (5,00,000+50,000)/2 = ₹2,75,000.</p>
+    <p><b>ARR = 52,000/2,75,000 = 18.91% &gt; 15% → <span class="good">accept</span>.</b> (On the initial-cost basis: 52,000/5,00,000 = 10.40% — state the basis.)</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 2 — High-return project</h3>
+  <p>Equipment costs ₹10,00,000 with zero salvage over 4 years. Expected PAT: ₹1,00,000 · ₹1,50,000 · ₹1,80,000 · ₹1,20,000. Target 15%. Find ARR.</p>
+  <button class="btn-sm btn-secondary" onclick="toggleAnswer('ex2')">Show / Hide Solution</button>
+  <div id="ex2" class="answer" style="display:none">
+    <p>Average PAT = (1,00,000+1,50,000+1,80,000+1,20,000)/4 = ₹1,37,500. Average investment = (10,00,000+0)/2 = ₹5,00,000.</p>
+    <p><b>ARR = 1,37,500/5,00,000 = 27.50% &gt; 15% → <span class="good">accept</span></b>; rank above the reference machine.</p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 3 — Below-hurdle rejection</h3>
+  <p>An asset costs ₹8,00,000 with ₹40,000 salvage after 4 years. Expected PAT: ₹20,000 · ₹30,000 · ₹35,000 · ₹25,000. Target 15%. Decide.</p>
+  <button class="btn-sm btn-secondary" onclick="toggleAnswer('ex3')">Show / Hide Solution</button>
+  <div id="ex3" class="answer" style="display:none">
+    <p>Average PAT = (20,000+30,000+35,000+25,000)/4 = ₹27,500. Average investment = (8,00,000+40,000)/2 = ₹4,20,000.</p>
+    <p><b>ARR = 27,500/4,20,000 = 6.55% &lt; 15% → <span class="bad">reject</span>.</b></p>
+  </div>
+</div>
+<div class="card s6">
+  <h3>Example 4 — Ranking vs scale</h3>
+  <p>Project B (Example 2) offers ARR 27.5% on ₹10L; a small Project D offers ARR 30% on ₹1,00,000 (average PAT ₹15,000). Rank by ARR and comment on NPV logic.</p>
+  <button class="btn-sm btn-secondary" onclick="toggleAnswer('ex4')">Show / Hide Solution</button>
+  <div id="ex4" class="answer" style="display:none">
+    <p>ARR ranking: D (30%) above B (27.5%). But D earns only ₹15,000/yr on average while B earns ₹1,37,500/yr — nine times the rupee profit at a marginally lower percentage.</p>
+    <p>ARR ignores scale: under capital rationing use NPV or the Profitability Index to rank; ARR's percentage ranking is not wealth-maximising. Accept B first if funds allow both.</p>
+  </div>
+</div>
+</div></section>
+
+<!-- ===== MCQ ===== -->
+<section id="mcq" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12 card-amber">
+  <div class="kicker">Practice</div>
+  <h2>MCQ Bank — Accounting Rate of Return</h2>
+  <div id="mcqContainer"></div>
+  <button onclick="renderMCQs(8)" class="btn-secondary" style="margin-top:14px">Shuffle &amp; Reload 8 Questions</button>
+</div>
+</div></section>
+
+<!-- ===== EXAM GEN ===== -->
+<section id="exam_gen" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s5">
+  <div class="kicker">Practice</div>
+  <h2>Exam Paper Generator</h2>
+  <label>Number of MCQs</label><input id="egMCQ" type="number" value="6" min="0" max="15">
+  <label>Number of calculation problems</label><input id="egCalc" type="number" value="3" min="0" max="6">
+  <label>Include theory/essay questions?</label>
+  <select id="egTheory"><option value="1">Yes</option><option value="0">No</option></select>
+  <button onclick="generateExam()" style="margin-top:14px;width:100%">Generate Exam Paper</button>
+</div>
+<div class="card s7"><div id="egPaper"><p class="muted">Configure and click Generate.</p></div></div>
+</div></section>
+
+<!-- ===== FORMULA BANK ===== -->
+<section id="formula_bank" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s6 card-amber">
+  <div class="kicker">Reference</div>
+  <h2>Formula Bank — ARR</h2>
+  <div class="formula">Straight-line depreciation:
+  D = (Cost − Salvage) ÷ Life
+
+Average annual profit:
+  Avg PAT = (Σ PAT over life) ÷ n
+
+Average investment:
+  Avg I = (Cost + Salvage) ÷ 2
+
+<b>ARR = (Avg PAT ÷ Avg I) × 100</b>
+Variant: ARR(on cost) = Avg PAT ÷ Cost × 100</div>
+</div>
+<div class="card s6">
+  <h3>Decision rules</h3>
+  <div class="formula">ARR ≥ target (hurdle) rate → ACCEPT
+ARR &lt; target rate           → REJECT
+Mutually exclusive: highest ARR
+above the hurdle (verify with NPV).</div>
+  <div class="callout-red callout">ARR is <b>not</b> NPV-consistent: it ignores cash timing, uses accounting profit, and depends on depreciation policy. Report it as an accounting summary; decide with DCF.</div>
+</div>
+</div></section>
+
+<!-- ===== GLOSSARY ===== -->
+<section id="glossary" class="page"><div class="grid" style="margin-top:14px">
+<div class="card s12">
+  <div class="kicker">Reference</div>
+  <h2>Glossary — Accounting Rate of Return</h2>
+  <input id="glSearch" type="text" placeholder="Search terms…" oninput="filterGlossary()">
+  <div id="glList" style="margin-top:14px"></div>
+</div>
+</div></section>
+
+</div><!-- end .wrap -->
+<script>
+function $(i){return document.getElementById(i);}
+function fmtR(n){if(isNaN(n)||n===undefined||!isFinite(n))return'—';var s=n<0?'−':'';return s+'₹'+Math.round(Math.abs(n)).toLocaleString('en-IN');}
+
+function activatePage(p){
+  document.querySelectorAll('.page').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  var pg=$(p);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>{if(t.dataset.page===p)t.classList.add('active');});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.activatePage=activatePage;
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>activatePage(t.dataset.page)));
+function setMode(m){document.body.classList.toggle('teacher',m==='teacher');$('modeStudent').classList.toggle('on',m==='student');$('modeTeacher').classList.toggle('on',m==='teacher');}
+window.setMode=setMode;
+function toggleAnswer(id){var e=$(id);if(e)e.style.display=e.style.display==='none'?'block':'none';}
+window.toggleAnswer=toggleAnswer;
+
+function arrCalc(cost,salv,profits){
+  var n=profits.length,dep=(cost-salv)/n;
+  var avgP=profits.reduce((a,b)=>a+b,0)/n;
+  var avgI=(cost+salv)/2;
+  return {dep:dep,avgP:avgP,avgI:avgI,arr:avgP/avgI*100,arrCost:avgP/cost*100};
+}
+var DEFAULTS=[40000,60000,80000,50000,30000,35000,40000,45000];
+function inputsHtml(prefix,n){var h='';for(var i=0;i<n;i++)h+='<label>Year '+(i+1)+' profit after tax (₹)</label><input type="number" class="'+prefix+'-cf" value="'+(DEFAULTS[i]||40000)+'" step="5000">';return h;}
+function renderDashInputs(){$('dInputs').innerHTML=inputsHtml('d',+$('dN').value);}
+window.renderDashInputs=renderDashInputs;
+function renderCCInputs(){$('ccInputs').innerHTML=inputsHtml('cc',+$('ccN').value);}
+window.renderCCInputs=renderCCInputs;
+
+function gather(cls){return [].slice.call(document.querySelectorAll(cls)).map(e=>+e.value||0);}
+
+function buildSchedule(cost,salv,profits){
+  var dep=(cost-salv)/profits.length,bv=cost,rows='';
+  profits.forEach((p,i)=>{var start=bv;bv-=dep;rows+='<tr><td>'+(i+1)+'</td><td>'+fmtR(p)+'</td><td>'+fmtR(dep)+'</td><td>'+fmtR(start)+'</td><td>'+fmtR(bv)+'</td></tr>';});
+  return rows;
+}
+function runDash(){
+  var cost=+$('dCost').value||0,salv=+$('dSalv').value||0,target=+$('dTarget').value||0;
+  var profits=gather('.d-cf');
+  var r=arrCalc(cost,salv,profits);
+  $('dashTable').innerHTML='<tr><th>Yr</th><th>PAT (₹)</th><th>Depreciation (₹)</th><th>Book Value Start (₹)</th><th>Book Value End (₹)</th></tr>'+buildSchedule(cost,salv,profits);
+  $('dDep').textContent=fmtR(r.dep);$('dAvgP').textContent=fmtR(r.avgP);$('dAvgI').textContent=fmtR(r.avgI);
+  $('dArr').textContent=r.arr.toFixed(2)+'%';
+  var accept=r.arr>=target;
+  $('dVerdict').innerHTML=accept?'<span class="good">ACCEPT ✓</span>':'<span class="bad">REJECT ✗</span>';
+  $('dashCallout').innerHTML='<b>Summary:</b> average PAT '+fmtR(r.avgP)+' on average investment '+fmtR(r.avgI)+' gives <b>ARR '+r.arr.toFixed(2)+'%</b> (initial-cost basis: '+r.arrCost.toFixed(2)+'%) vs target '+target+'% → '+(accept?'<span class="good">project clears the hurdle</span>':'<span class="bad">project falls short of the hurdle</span>')+'. ARR is an accounting summary — confirm the wealth decision with NPV.';
+}
+window.runDash=runDash;
+
+function calcMain(){
+  var cost=+$('ccCost').value||0,salv=+$('ccSalv').value||0,target=+$('ccTarget').value||0;
+  var profits=gather('.cc-cf');
+  var r=arrCalc(cost,salv,profits),accept=r.arr>=target;
+  var verdict=accept
+    ? '<b class="good">ACCEPT</b> — ARR '+r.arr.toFixed(2)+'% exceeds the '+target+'% target.'
+    : '<b class="bad">REJECT</b> — ARR '+r.arr.toFixed(2)+'% is below the '+target+'% target.';
+  $('ccResult').innerHTML='<h3>Profit &amp; book-value schedule</h3><div class="scroll"><table><tr><th>Yr</th><th>PAT (₹)</th><th>Depreciation (₹)</th><th>Book Value Start (₹)</th><th>Book Value End (₹)</th></tr>'+buildSchedule(cost,salv,profits)+'</table></div>'+
+    '<div class="metrics cols-5" style="margin-top:14px">'+
+    '<div class="metric"><small>Depreciation/yr</small><strong style="font-size:1.02rem">'+fmtR(r.dep)+'</strong></div>'+
+    '<div class="metric"><small>Average PAT</small><strong style="font-size:1.02rem">'+fmtR(r.avgP)+'</strong></div>'+
+    '<div class="metric"><small>Average investment</small><strong style="font-size:1.02rem">'+fmtR(r.avgI)+'</strong></div>'+
+    '<div class="metric" style="background:var(--forest-l);border-color:#a0c8a0"><small>ARR</small><strong style="color:var(--forest);font-size:1.02rem">'+r.arr.toFixed(2)+'%</strong></div>'+
+    '<div class="metric"><small>Target</small><strong style="font-size:1.02rem">'+target+'%</strong></div></div>'+
+    '<div class="'+(accept?'callout':'callout-red')+'" style="margin-top:12px">'+verdict+'</div>'+
+    '<div class="callout-slate callout" style="margin-top:8px">On the initial-cost denominator the ARR would be '+r.arrCost.toFixed(2)+'%. Remember: ARR uses accounting profits, ignores the time value of money and is not NPV-consistent.</div>';
+}
+window.calcMain=calcMain;
+
+/* === MCQ === */
+var ALL_MCQ=[
+  {q:"The Accounting Rate of Return (ARR) is calculated as:",opts:["Average annual profit ÷ Average investment × 100","Initial investment ÷ Annual cash inflow","Present value of inflows ÷ Outlay","Annual cash inflow ÷ Total profit"],ans:0,exp:"ARR = average profit after tax divided by average investment (average book value), expressed as a percentage."},
+  {q:"Average investment under the standard convention is:",opts:["The initial cost","(Cost + Salvage value) ÷ 2","The salvage value","Total depreciation"],ans:1,exp:"Average investment = (initial cost + ending salvage)/2, i.e., the average book value over the asset's life."},
+  {q:"For the reference machine (₹5L cost, ₹50k salvage, avg PAT ₹52,000), ARR is approximately:",opts:["10.40%","18.91%","15.00%","27.50%"],ans:1,exp:"Average investment = ₹2,75,000; ARR = 52,000/2,75,000 = 18.91%."},
+  {q:"The decision rule for ARR is to accept when:",opts:["ARR is positive","ARR equals depreciation","ARR ≥ the target/hurdle rate","ARR is below the payback period"],ans:2,exp:"Projects clearing the firm's target accounting return are accepted; below-target projects are rejected."},
+  {q:"Which basis makes ARR different from NPV, IRR and payback?",opts:["It is expressed as a percentage","It uses accounting profits (PAT) rather than cash flows","It considers salvage value","It requires the cost of capital"],ans:1,exp:"ARR is built from accrual-based income-statement figures, including depreciation, not from cash flows."},
+  {q:"The chief theoretical weakness of ARR is that it:",opts:["Is too difficult to compute","Ignores the time value of money and the timing of profits","Considers all cash flows","Uses the salvage value"],ans:1,exp:"No discounting is applied — a rupee of Year-5 profit is weighted equally with Year-1 profit."},
+  {q:"Two projects have the same ARR but one earns its profits much earlier. ARR ranks them:",opts:["The early one higher","The late one higher","Equally","By salvage value"],ans:2,exp:"Because ARR averages profits and ignores timing, the time pattern of earnings does not affect the percentage."},
+  {q:"Changing the depreciation method for the same project would:",opts:["Leave ARR unchanged","Change the reported PAT and hence ARR","Change the cash flows","Affect NPV but not ARR"],ans:1,exp:"ARR rests on book profit after depreciation, so depreciation policy alters the measured ARR even though cash flows are identical."},
+  {q:"A small project shows ARR 30% while a large project shows ARR 27.5% but nine times the average annual profit. ARR ranking would:",opts:["Rank the large project first","Rank the small project first, ignoring scale","Reject both","Tie them"],ans:1,exp:"ARR ranks by percentage, not rupees of value — a scale-ignoring flaw; NPV/PI should rank under rationing."},
+  {q:"On the initial-cost denominator, the reference machine's ARR is:",opts:["18.91%","10.40%","15.00%","52.00%"],ans:1,exp:"52,000 ÷ 5,00,000 = 10.40%; the basis must always be stated."}
+];
+function shuffle(arr){return arr.map(v=>({v,s:Math.random()})).sort((a,b)=>a.s-b.s).map(o=>o.v);}
+function pick(arr,n){return shuffle(arr).slice(0,n);}
+function renderMCQs(n){
+  var sel=pick(ALL_MCQ,Math.min(n,ALL_MCQ.length)),html='';
+  sel.forEach((q,i)=>{
+    html+='<div class="quiz-card" id="mc'+i+'"><p><b>Q'+(i+1)+'.</b> '+q.q+'</p>';
+    q.opts.forEach((o,j)=>html+='<button class="mcq-option" data-qi="'+i+'" data-ji="'+j+'">'+String.fromCharCode(65+j)+'. '+o+'</button>');
+    html+='</div>';
+  });
+  $('mcqContainer').innerHTML=html;window._MCQ_SEL=sel;
+  document.querySelectorAll('.mcq-option').forEach(btn=>btn.addEventListener('click',()=>{
+    var qi=+btn.dataset.qi,ji=+btn.dataset.ji,qobj=window._MCQ_SEL[qi],card=$('mc'+qi);
+    card.querySelectorAll('.mcq-option').forEach((b,j)=>{b.disabled=true;if(j===qobj.ans)b.classList.add('correct');else if(j===ji)b.classList.add('wrong');});
+    if(!card.querySelector('.answer')){var d=document.createElement('div');d.className='answer';d.innerHTML='<b>'+(ji===qobj.ans?'✓ Correct!':'✗ Incorrect.')+'</b> '+qobj.exp;card.appendChild(d);}
+  }));
+}
+window.renderMCQs=renderMCQs;
+
+var CALC_QS=[
+  "A machine costs ₹5,00,000 with ₹50,000 salvage after 5 years. Expected PAT: ₹40,000 · ₹60,000 · ₹80,000 · ₹50,000 · ₹30,000. Compute ARR and decide against a 15% target.",
+  "Equipment costs ₹10,00,000, zero salvage, 4-year life; PAT ₹1,00,000 · ₹1,50,000 · ₹1,80,000 · ₹1,20,000. Compute ARR.",
+  "An asset costs ₹8,00,000 with ₹40,000 salvage after 4 years; PAT ₹20,000 · ₹30,000 · ₹35,000 · ₹25,000. Compute ARR and decide (target 15%).",
+  "A project costs ₹6,00,000, salvage ₹60,000 over 6 years, average PAT ₹45,000. Compute ARR on (a) average investment and (b) initial cost.",
+  "Explain with numbers why two projects with identical average PAT but different profit timing can have equal ARR yet different NPV."
+];
+var THEORY_QS=[
+  "Define the Accounting Rate of Return. Explain its computation using the average-investment convention and the decision rule.",
+  "Discuss the strengths and weaknesses of ARR as an appraisal method. Why is it described as 'not NPV-consistent'?",
+  "Compare ARR with discounted cash-flow methods (NPV/IRR) on the basis of cash flows, time value of money, and depreciation policy.",
+  "Why does ARR rank projects by percentage and how can this mislead when projects differ in scale? Which method should be used under capital rationing?"
+];
+function generateExam(){
+  var nMCQ=+$('egMCQ').value||0,nCalc=+$('egCalc').value||0,theory=+$('egTheory').value;
+  var html='<h3 style="font-family:DM Serif Display,serif">Accounting Rate of Return — Exam Paper</h3><ol>';
+  pick(ALL_MCQ,nMCQ).forEach(q=>{html+='<li style="margin-bottom:10px"><b>MCQ.</b> '+q.q+'<ol type="A">'+q.opts.map(o=>'<li>'+o+'</li>').join('')+'</ol></li>';});
+  pick(CALC_QS,nCalc).forEach(q=>{html+='<li style="margin-bottom:10px"><b>Problem.</b> '+q+'</li>';});
+  if(theory)pick(THEORY_QS,2).forEach(t=>{html+='<li style="margin-bottom:10px"><b>Theory.</b> '+t+'</li>';});
+  html+='</ol>';$('egPaper').innerHTML=html;
+}
+window.generateExam=generateExam;
+
+var GLOSSARY=[
+  ["Accounting Rate of Return (ARR)","Average annual profit after tax expressed as a percentage of the average investment in the project."],
+  ["Average Investment","(Initial cost + Salvage value) ÷ 2; the average book value of the asset over its life and the standard ARR denominator."],
+  ["Profit After Tax (PAT)","Accounting net income after depreciation, interest and tax; the numerator input for ARR."],
+  ["Straight-Line Depreciation","(Cost − Salvage) ÷ Life; the equal annual book charge assumed in ARR computations."],
+  ["Hurdle / Target ARR","The minimum acceptable accounting return set by management; projects below it are rejected."],
+  ["Book Value","Asset cost minus accumulated depreciation; declines linearly from cost to salvage over the life."],
+  ["Initial-Cost Basis","Alternative ARR denominator using full cost; yields a lower percentage than the average-investment basis."],
+  ["Return on Investment (ROI)","The performance-ratio family ARR belongs to; post-investment divisional ROI is computed similarly."],
+  ["Scale Ignorance","ARR's ranking flaw: percentages do not reflect the rupee size of profits or the investment base."],
+  ["NPV Consistency","The property (absent in ARR) that a method's accept signal guarantees the project adds shareholder value."]
+];
+function renderGlossary(filter){
+  if(!filter)filter='';var f=filter.toLowerCase();
+  $('glList').innerHTML=GLOSSARY.filter(p=>p[0].toLowerCase().includes(f)||p[1].toLowerCase().includes(f))
+    .map(p=>'<div class="quiz-card"><b>'+p[0]+'</b><div class="muted" style="margin-top:5px;font-size:.94rem">'+p[1]+'</div></div>').join('')||'<p class="muted">No terms match.</p>';
+}
+function filterGlossary(){renderGlossary($('glSearch').value);}
+window.filterGlossary=filterGlossary;
+
+var SEARCH_INDEX=[];
+function buildSearchIndex(){document.querySelectorAll('.tab').forEach(t=>{var pg=$(t.dataset.page);SEARCH_INDEX.push({page:t.dataset.page,title:t.textContent.trim(),body:pg?pg.textContent.replace(/\s+/g,' ').slice(0,4000):''});});}
+function runMasterSearch(){
+  var q=($('masterSearch').value||'').trim().toLowerCase(),out=$('masterSearchResults');
+  if(!q){out.innerHTML='<p class="muted">Type a keyword — e.g. depreciation, average investment, PAT, hurdle, book value — to jump to that section.</p>';return;}
+  var hits=SEARCH_INDEX.map(s=>({s,sc:(s.title.toLowerCase().includes(q)?100:0)+(s.body.toLowerCase().includes(q)?40:0),bi:s.body.toLowerCase().indexOf(q)}))
+    .filter(h=>h.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,18);
+  if(!hits.length){out.innerHTML='<p class="muted">No matches. Try a shorter keyword.</p>';return;}
+  out.innerHTML=hits.map(h=>'<div class="quiz-card"><button class="btn-sm" data-goto="'+h.s.page+'">Go to: '+h.s.title+'</button><div class="muted" style="margin-top:6px;font-size:.86rem">'+(h.bi>=0?'…'+h.s.body.slice(Math.max(0,h.bi-55),h.bi+75)+'…':'')+'</div></div>').join('');
+  out.querySelectorAll('[data-goto]').forEach(btn=>btn.addEventListener('click',()=>activatePage(btn.dataset.goto)));
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  renderDashInputs();renderCCInputs();buildSearchIndex();
+  var ms=$('masterSearch');if(ms)ms.addEventListener('input',runMasterSearch);
+  runMasterSearch();renderMCQs(8);renderGlossary();setTimeout(runDash,100);
+});
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

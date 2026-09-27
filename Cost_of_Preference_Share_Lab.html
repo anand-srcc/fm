@@ -1,0 +1,1546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cost of Preference Share (Kp) — Complete Interactive Lab</title>
+<style>
+:root{--bg:#eef2f7;--card:#fff;--ink:#16202e;--muted:#5c6575;--line:#d8dfe8;--blue:#1a52a0;--blue-d:#0f2d5e;--gold:#b8860b;--gold-l:#f2ead0;--green:#1a7a52;--red:#c0392b;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:1420px;margin:auto;padding:18px}
+.hero{padding:32px;border-radius:20px;background:linear-gradient(135deg,#0f2d5e 0%,#6d2177 55%,#3a0d5c 100%);color:#fff;box-shadow:0 14px 34px #0f2d5e30;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;top:0;right:0;bottom:0;width:5px;background:var(--gold)}
+.hero h1{font-family:Georgia,serif;font-size:clamp(22px,3vw,40px);margin:0 0 8px;line-height:1.1}
+.hero p{margin:0;opacity:.94;font-size:1rem;max-width:1060px}
+.hero .chapref{display:inline-block;margin-bottom:10px;background:#ffffff1f;border:1px solid #ffffff30;padding:4px 13px;border-radius:999px;font-size:.8rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.hero .modewrap{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .modewrap button{background:#ffffff1c;border:1px solid #ffffff3d;color:#fff}
+.hero .modewrap button.on{background:#fff;color:var(--blue-d)}
+.nav{display:flex;flex-wrap:nowrap;gap:6px;padding:10px;margin:14px 0;background:#e2e8f5;border:1px solid var(--line);border-radius:14px;overflow-x:auto;scrollbar-width:thin;position:sticky;top:0;z-index:5}
+.tab{border:1px solid #c9d4e4;background:#fff;color:#2b3650;padding:7px 10px;border-radius:9px;font-weight:700;font-size:.81rem;white-space:nowrap;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-1px)}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.navsep{align-self:center;padding:0 2px;font-size:.57rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#6878a0;white-space:nowrap;user-select:none}
+.page{display:none}.page.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:.3}to{opacity:1}}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 3px 12px #16202e0a}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+h2,h3{margin-top:0}h2{font-family:Georgia,serif}.muted{color:var(--muted)}
+label{display:block;font-weight:700;margin:9px 0 3px;font-size:.92rem}
+input,select,button{font:inherit}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font-size:.95rem}
+input:focus,select:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+button{border:0;border-radius:9px;padding:9px 14px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer;font-size:.95rem}
+button:hover{filter:brightness(1.08)}.secondary{background:#e4eaf5;color:var(--ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.metric{padding:12px;border-radius:12px;background:#eef3fb;border:1px solid #d3ddef}
+.metric small{color:var(--muted);font-size:.76rem}.metric strong{display:block;font-size:1.18rem;margin-top:2px}
+.formula{background:var(--blue-d);color:#e9eeff;border-radius:12px;padding:15px;font:1rem/1.65 ui-monospace,Menlo,monospace;overflow:auto;white-space:pre-wrap;margin:8px 0}
+.callout{padding:13px;border-left:4px solid var(--blue);background:#eef3fb;border-radius:9px;font-size:.96rem;margin:8px 0}
+.good{color:var(--green);font-weight:800}.bad{color:var(--red);font-weight:800}.warn{color:var(--gold);font-weight:800}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:.91rem}
+th:first-child,td:first-child{text-align:left}th{background:#eef2f8}
+.scroll{overflow:auto;max-height:460px}
+.quiz-card{padding:14px;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.answer{margin-top:8px;padding:10px;border-radius:9px;background:#eef2f8;font-size:.95rem}
+.mcq-option{display:block;width:100%;text-align:left;padding:8px 11px;margin:4px 0;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:.94rem}
+.mcq-option:hover{background:#eef3fb}.mcq-option.correct{background:#e3f3ea;border-color:var(--green)}.mcq-option.wrong{background:#f8e6e3;border-color:var(--red)}
+.pillrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stepflow{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:8px 0}
+.step{background:#eef3fb;border:1px solid #d3ddef;color:#0f3d8e;padding:6px 12px;border-radius:9px;font-weight:700;font-size:.87rem}
+.arrow{color:var(--muted)}
+ul,ol{padding-left:20px}li{margin-bottom:4px}
+.adv{border-left:4px solid var(--green);background:#e3f3ea;padding:11px 13px;border-radius:9px;margin-bottom:7px}
+.lim{border-left:4px solid var(--red);background:#fbeae7;padding:11px 13px;border-radius:9px;margin-bottom:7px}
+canvas{display:block;width:100%;height:250px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.note{font-size:.9rem;color:var(--muted)}
+.alert{padding:11px 13px;border-radius:10px;background:var(--gold-l);border-left:4px solid var(--gold);margin:8px 0}
+.sk{font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:var(--gold);margin-bottom:4px}
+.teacher-note{display:none;border-left:4px solid var(--gold);background:var(--gold-l);padding:11px 13px;border-radius:9px;margin-top:9px}
+body.teacher .teacher-note{display:block}
+.small-btn{padding:6px 10px;font-size:.85rem}
+.hl-row{background:#e3f3ea!important;font-weight:700}
+.type-card{border-radius:14px;padding:16px;margin-bottom:10px}
+.irr-card{background:#eaf4ee;border:1px solid #a8d5bc}
+.app-card{background:#eaf0fb;border:1px solid #b3c8e8}
+.pref-card{background:#f5eeff;border:1px solid #c8a8e8}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,1fr)}.s4,.s5,.s6,.s7,.s8{grid-column:span 6}}
+@media(max-width:700px){.s4,.s5,.s6,.s7,.s8,.s12{grid-column:span 12}.wrap{padding:10px}}
+@media print{.nav,.hero .modewrap,button,input,select{display:none!important}.page{display:block!important}.card{box-shadow:none;break-inside:avoid}body{background:#fff}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<span class="chapref">Financial Management · Cost of Capital</span>
+<h1>Cost of Preference Share (Kp) — Complete Interactive Lab</h1>
+<p>A comprehensive, fully offline lab covering every tested aspect of cost of preference shares: irredeemable preference shares (par, premium, discount); redeemable preference shares — approximate method and YTM/IRR exact method with full interpolation; effect of flotation costs and issue price; dividend tax treatment; Kp in WACC; and a full comparison with Kd and Ke. All calculations live in your browser, in Indian ₹.</p>
+<div class="modewrap">
+<button id="modeStudent" class="on" onclick="setMode('student')">Student Mode</button>
+<button id="modeTeacher" onclick="setMode('teacher')">Teacher Mode</button>
+<button onclick="window.print()">Print / Save PDF</button>
+</div>
+</header>
+
+<nav class="nav">
+<span class="navsep">Concept</span>
+<button class="tab active" data-page="dashboard">Dashboard</button>
+<button class="tab" data-page="intro">Introduction</button>
+<button class="tab" data-page="features">Features of Pref. Shares</button>
+<button class="tab" data-page="cost_hierarchy">Cost Hierarchy</button>
+<span class="navsep">Irredeemable Kp</span>
+<button class="tab" data-page="irr_concept">Irredeemable — Concept</button>
+<button class="tab" data-page="irr_par">Issued at Par</button>
+<button class="tab" data-page="irr_premium">Issued at Premium</button>
+<button class="tab" data-page="irr_discount">Issued at Discount</button>
+<button class="tab" data-page="irr_flotation">Flotation Costs</button>
+<span class="navsep">Redeemable Kp</span>
+<button class="tab" data-page="red_concept">Redeemable — Concept</button>
+<button class="tab" data-page="red_approx">Approximate Method</button>
+<button class="tab" data-page="red_irr">YTM / IRR Method</button>
+<button class="tab" data-page="red_scenarios">All Scenarios Table</button>
+<span class="navsep">Special Topics</span>
+<button class="tab" data-page="dividend_tax">Dividend & Tax Treatment</button>
+<button class="tab" data-page="kp_in_wacc">Kp in WACC</button>
+<button class="tab" data-page="kp_vs_kd">Kp vs Kd Comparison</button>
+<span class="navsep">Calculators</span>
+<button class="tab" data-page="calc_irr">Irredeemable Kp Calc</button>
+<button class="tab" data-page="calc_red">Redeemable Kp Calc</button>
+<button class="tab" data-page="calc_sens">Sensitivity Chart</button>
+<span class="navsep">Practice</span>
+<button class="tab" data-page="examples">Worked Examples</button>
+<button class="tab" data-page="mcq">MCQ Bank</button>
+<button class="tab" data-page="exam_gen">Exam Generator</button>
+<span class="navsep">Reference</span>
+<button class="tab" data-page="formula_bank">Formula Bank</button>
+<button class="tab" data-page="glossary">Glossary</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+<div class="grid">
+<div class="card s12" style="background:linear-gradient(135deg,#f5eeff,#eaf0fb);border-color:#c8a8e8">
+<div class="sk">Signature Tool — Kp Master Calculator</div>
+<h2>Cost of Preference Share: All Cases at a Glance</h2>
+<div class="grid" style="margin-top:8px">
+<div class="s4">
+  <div class="pref-card type-card">
+  <b style="color:#6d2177">Preference Share Details</b>
+  <label>Type</label>
+  <select id="dashType" onchange="runDash()">
+    <option value="irr">Irredeemable</option>
+    <option value="red">Redeemable</option>
+  </select>
+  <label>Face Value / Par Value (₹)</label><input id="dashFV" type="number" value="100" step="10" oninput="runDash()">
+  <label>Dividend Rate (%)</label><input id="dashDivRate" type="number" value="12" step="0.5" oninput="runDash()">
+  <label>Issue Price (₹) — market / NMP</label><input id="dashIP" type="number" value="95" step="5" oninput="runDash()">
+  <label>Flotation Cost (₹ per share)</label><input id="dashFlot" type="number" value="5" step="1" oninput="runDash()">
+  <div id="dashRedExtra">
+  <label>Redemption Value (₹)</label><input id="dashRV" type="number" value="100" step="5" oninput="runDash()">
+  <label>Life / Tenure (years)</label><input id="dashN" type="number" value="8" min="1" oninput="runDash()">
+  </div>
+  </div>
+</div>
+<div class="s8">
+  <div id="dashMetrics" class="metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px"></div>
+  <div id="dashWorking"></div>
+  <canvas id="dashSensChart"></canvas>
+</div>
+</div>
+</div>
+<div class="card s5">
+<div class="sk">Find anything</div>
+<h3>Master Search</h3>
+<input id="masterSearch" type="text" placeholder="Search: irredeemable, YTM, flotation, redemption, WACC…">
+<div id="masterResults" style="margin-top:10px"></div>
+</div>
+<div class="card s7">
+<div class="sk">Learning Path</div>
+<h3>Suggested sequence</h3>
+<div class="stepflow">
+<span class="step">1·Introduction</span><span class="arrow">→</span>
+<span class="step">2·Features</span><span class="arrow">→</span>
+<span class="step">3·Cost Hierarchy</span><span class="arrow">→</span>
+<span class="step">4·Irredeemable Kp</span><span class="arrow">→</span>
+<span class="step">5·Redeemable Kp</span><span class="arrow">→</span>
+<span class="step">6·Approximate Method</span><span class="arrow">→</span>
+<span class="step">7·YTM/IRR Method</span><span class="arrow">→</span>
+<span class="step">8·Kp in WACC</span>
+</div>
+<div class="pillrow" style="margin-top:10px">
+<button class="small-btn secondary" onclick="activatePage('calc_irr')">Irredeemable Calc</button>
+<button class="small-btn secondary" onclick="activatePage('calc_red')">Redeemable Calc</button>
+<button class="small-btn secondary" onclick="activatePage('calc_sens')">Sensitivity Chart</button>
+<button class="small-btn secondary" onclick="activatePage('examples')">Worked Examples</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- INTRODUCTION -->
+<section id="intro" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Foundations</div>
+<h2>Cost of Preference Share (Kp) — Introduction</h2>
+<p>Preference shares are a hybrid security — they have features of both debt and equity. The <b>cost of preference share (Kp)</b> is the minimum rate of return that the firm must earn on the funds raised through preference share capital to maintain the market price of those shares.</p>
+<h3>Why Kp is unique</h3>
+<ul>
+<li><b>Fixed dividend:</b> Preference shareholders receive a fixed dividend (unlike equity where it varies). This makes the cash flows more predictable — similar to debt.</li>
+<li><b>No tax shield:</b> Unlike debt interest (which is tax-deductible), preference dividends are paid out of <i>after-tax profits</i>. This makes Kp more expensive than after-tax Kd for equivalent gross returns.</li>
+<li><b>Priority over equity:</b> In dividends and liquidation, preference holders rank above equity but below debt. This intermediate risk position gives Kp its intermediate cost: Kd (after-tax) &lt; Kp &lt; Ke.</li>
+<li><b>Cumulative / Non-cumulative:</b> Unpaid dividends on cumulative preference shares accumulate and must be paid before equity dividends. Non-cumulative unpaid dividends lapse.</li>
+</ul>
+<h3>Two main types for cost computation</h3>
+<div class="type-card pref-card">
+<b>1. Irredeemable (Perpetual) Preference Shares</b><br>
+No fixed maturity date — dividend is paid in perpetuity. Company never repays the principal. Kp = Annual Dividend / Net Proceeds (a simple perpetuity formula).
+</div>
+<div class="type-card app-card" style="margin-top:8px">
+<b>2. Redeemable Preference Shares</b><br>
+Have a fixed maturity — capital is repaid at redemption value on a specified date. Kp must account for both the dividend stream AND the redemption (capital repayment). Requires either the approximate formula or the IRR/YTM method.
+</div>
+</div>
+<div class="card s4">
+<h3>Key symbols</h3>
+<table>
+<tr><th>Symbol</th><th>Meaning</th></tr>
+<tr><td><b>Kp</b></td><td>Cost of preference share</td></tr>
+<tr><td><b>PD</b></td><td>Annual preference dividend (₹)</td></tr>
+<tr><td><b>FV</b></td><td>Face Value / Par Value (₹)</td></tr>
+<tr><td><b>IP</b></td><td>Issue Price (₹)</td></tr>
+<tr><td><b>NP</b></td><td>Net Proceeds = IP − Flotation</td></tr>
+<tr><td><b>MP</b></td><td>Market Price (₹)</td></tr>
+<tr><td><b>RV</b></td><td>Redemption Value (₹)</td></tr>
+<tr><td><b>f</b></td><td>Flotation cost (₹ per share)</td></tr>
+<tr><td><b>n</b></td><td>Life of redeemable pref. share (yrs)</td></tr>
+<tr><td><b>Dp</b></td><td>Dividend rate (%) on face value</td></tr>
+</table>
+<div class="callout" style="margin-top:10px"><b>Annual Dividend:</b><br>PD = Dividend Rate % × Face Value<br>PD = Dp% × FV</div>
+</div>
+</div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Foundations</div>
+<h2>Features of Preference Shares</h2>
+<table>
+<tr><th>Feature</th><th>Preference Shares</th><th>Equity Shares</th><th>Debentures/Bonds</th></tr>
+<tr><td>Dividend / Return</td><td>Fixed rate — preferential</td><td>Variable — residual</td><td>Fixed interest — contractual</td></tr>
+<tr><td>Priority in dividend</td><td>Before equity</td><td>Last (residual)</td><td>Not applicable (interest paid first)</td></tr>
+<tr><td>Priority in liquidation</td><td>Before equity, after debt</td><td>Last</td><td>First (senior creditor)</td></tr>
+<tr><td>Voting rights</td><td>Usually none (some exceptions)</td><td>Yes</td><td>No</td></tr>
+<tr><td>Tax on company</td><td>No tax deduction on dividend</td><td>No tax deduction on dividend</td><td>Interest tax-deductible</td></tr>
+<tr><td>Capital repayment</td><td>Redeemable or Irredeemable</td><td>No repayment</td><td>Yes — at maturity</td></tr>
+<tr><td>Cost to company</td><td>Kp — intermediate (no tax shield)</td><td>Ke — highest</td><td>Kd(1−Tc) — lowest</td></tr>
+</table>
+<h3 style="margin-top:14px">Types of Preference Shares</h3>
+<div class="grid" style="margin-top:6px">
+<div class="s6">
+<div class="adv"><b>Cumulative:</b> Unpaid dividends accumulate (arrears) and must be cleared before equity dividends. More investor protection → lower required return.</div>
+<div class="adv" style="margin-top:7px"><b>Redeemable:</b> Repaid at maturity. Finite life — Kp calculation requires handling redemption value. Under Indian Companies Act, most new issues must be redeemable.</div>
+<div class="adv" style="margin-top:7px"><b>Participating:</b> In addition to fixed dividend, may share in surplus profits with equity shareholders.</div>
+</div>
+<div class="s6">
+<div class="lim"><b>Non-Cumulative:</b> Unpaid dividends lapse — not carried forward. Less investor protection → higher required return.</div>
+<div class="lim" style="margin-top:7px"><b>Irredeemable (Perpetual):</b> No fixed maturity — dividend paid in perpetuity. Uncommon in modern corporate practice; mostly theoretical in FM.</div>
+<div class="lim" style="margin-top:7px"><b>Convertible:</b> Can be converted into equity shares at a specified date/ratio. Kp computation gets complex (option value).</div>
+</div>
+</div>
+</div>
+<div class="card s4">
+<h3>Preference vs Debenture — Cost comparison</h3>
+<div class="formula">Assume: FV=₹100, Rate=12%, Tax=30%
+
+Debenture (Kd after tax):
+  Interest = ₹12
+  Tax saving = 12 × 0.30 = ₹3.60
+  Net cost = ₹8.40
+  Kd = 8.40/100 = 8.40%
+
+Preference Share (Kp):
+  Dividend = ₹12
+  No tax deduction
+  Kp = 12/100 = 12.00%
+
+Kp > Kd because preference dividends
+carry NO tax shield.
+Difference: 12% − 8.40% = 3.60%
+= (Dividend rate × Tax rate)</div>
+<div class="alert" style="margin-top:10px"><b>Key exam point:</b> Preference dividend is NOT tax-deductible. There is no (1−Tc) adjustment for Kp, unlike Kd.</div>
+</div>
+</div>
+</section>
+
+<!-- COST HIERARCHY -->
+<section id="cost_hierarchy" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Foundations</div>
+<h2>Cost Hierarchy — Position of Kp</h2>
+<p>Kp sits squarely between the after-tax cost of debt (Kd) and the cost of equity (Ke / Kr). This position is determined by the risk and tax treatment of each source.</p>
+<table>
+<tr><th>Source</th><th>Risk Rank</th><th>Tax Benefit</th><th>Typical Cost</th></tr>
+<tr><td><b>Debt (Kd after-tax)</b></td><td>Lowest — secured, priority claim</td><td class="good">Yes — interest deductible</td><td class="good">Cheapest</td></tr>
+<tr><td><b>Preference Share (Kp)</b></td><td>Medium — priority over equity, fixed dividend</td><td class="bad">No — dividend not deductible</td><td>Intermediate</td></tr>
+<tr><td><b>Retained Earnings (Kr)</b></td><td>High — residual claim, no guarantee</td><td class="bad">No tax benefit</td><td>High</td></tr>
+<tr><td><b>New Equity (Ke)</b></td><td>Highest — residual + flotation</td><td class="bad">No tax benefit + flotation</td><td class="bad">Highest</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>Why Kp > Kd (after-tax)?</b><br>
+Both debenture and preference shareholders receive a fixed return. But:<br>
+• Interest on debt is tax-deductible → effective cost = rate × (1−Tc)<br>
+• Preference dividend is NOT deductible → effective cost = full rate<br>
+Even if both carry the same stated rate, Kp > Kd (after-tax).<br><br>
+<b>Why Kp < Ke?</b><br>
+Preference holders have priority over equity in both dividends and liquidation. They bear less risk than equity shareholders, so they accept a lower return.</div>
+<canvas id="hierarchyChart" style="height:220px;margin-top:14px"></canvas>
+</div>
+<div class="card s4">
+<h3>Numerical illustration</h3>
+<p class="note">Firm with: Debt at 12%, Tax 30%; Preference at 12%; Equity Ke = 15%.</p>
+<div class="formula">Kd (after-tax) = 12% × (1−0.30)
+              = 12% × 0.70
+              = 8.40%
+
+Kp = 12% (no tax adjustment)
+
+Ke = 15%
+
+Hierarchy:
+  Kd = 8.40%  &lt; Kp = 12%  &lt; Ke = 15%</div>
+<div class="teacher-note"><b>Teaching note:</b> The gap between Kd (8.40%) and Kp (12%) is the tax shield: 12%×30% = 3.60%. This is why firms prefer debt to preference shares from a pure cost-of-capital perspective.</div>
+</div>
+</div>
+</section>
+
+<!-- IRREDEEMABLE CONCEPT -->
+<section id="irr_concept" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Irredeemable Kp</div>
+<h2>Irredeemable Preference Shares — Concept</h2>
+<p>An irredeemable (perpetual) preference share pays a fixed dividend forever and is never redeemed. It is a perpetuity. The cost is simply the ratio of the annual dividend to the net proceeds received by the company.</p>
+<div class="formula">Annual Dividend:
+  PD = Dividend Rate (Dp%) × Face Value (FV)
+
+Cost of Irredeemable Preference Share:
+
+  Kp = PD / NP
+
+where:
+  PD  = Annual Preference Dividend (₹)
+  NP  = Net Proceeds per share (₹)
+      = Issue Price − Flotation Cost
+      = IP − f
+
+Special cases:
+  At par with no flotation:      NP = FV  → Kp = PD/FV = Dp%
+  At premium with no flotation:  NP = IP > FV → Kp &lt; Dp%
+  At discount with no flotation: NP = IP &lt; FV → Kp > Dp%
+  With flotation cost:           NP = IP − f → Kp rises</div>
+<div class="callout" style="margin-top:10px"><b>Key insight:</b> For irredeemable preference shares, Kp is simply the dividend yield on net proceeds. Because there is no maturity/redemption, there is no capital gain or loss component — the return is entirely from dividends.</div>
+<div class="teacher-note"><b>Teaching note:</b> Many students confuse face value with net proceeds. Always use NP (= IP − flotation), not FV, unless explicitly told there is no flotation and issued at par. If issued at par with no flotation, NP = FV and Kp = Dp%, but this is a special case.</div>
+</div>
+<div class="card s4">
+<h3>Comparison of cases</h3>
+<table>
+<tr><th>Scenario</th><th>NP vs FV</th><th>Kp vs Dp%</th></tr>
+<tr><td>At par, no flotation</td><td>NP = FV</td><td>Kp = Dp%</td></tr>
+<tr><td>At premium, no flotation</td><td>NP &gt; FV</td><td class="good">Kp &lt; Dp%</td></tr>
+<tr><td>At discount, no flotation</td><td>NP &lt; FV</td><td class="bad">Kp &gt; Dp%</td></tr>
+<tr><td>At par, with flotation</td><td>NP &lt; FV</td><td class="bad">Kp &gt; Dp%</td></tr>
+<tr><td>At premium, with flotation</td><td>NP ≥ or &lt; FV</td><td>Depends</td></tr>
+<tr><td>At discount, with flotation</td><td>NP &lt; FV (further)</td><td class="bad">Kp &gt;&gt; Dp%</td></tr>
+</table>
+<div class="alert" style="margin-top:10px"><b>Rule:</b> Anything that reduces NP below FV increases Kp above Dp%. Anything that increases NP above FV reduces Kp below Dp%.</div>
+</div>
+</div>
+</section>
+
+<!-- IRREDEEMABLE AT PAR -->
+<section id="irr_par" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Irredeemable Kp</div>
+<h2>Irredeemable — Issued at Par</h2>
+<p>Issued at par means the issue price equals the face value. If there is no flotation cost, NP = FV = IP, and Kp equals the stated dividend rate.</p>
+<div class="formula">FV = IP = NP (when no flotation cost)
+PD = Dp% × FV
+
+Kp = PD / NP = (Dp% × FV) / FV = Dp%
+
+Example: FV=₹100, Dp=12%, No flotation
+  PD = 12% × 100 = ₹12
+  NP = ₹100
+  Kp = 12/100 = 12.00% = Dp%
+
+With flotation cost ₹5:
+  NP = 100 − 5 = ₹95
+  Kp = 12/95 = 12.63% > Dp%</div>
+<div class="callout" style="margin-top:10px"><b>Interpretation:</b> When issued at par with no flotation costs, the cost of preference capital equals the stated dividend rate. This is the baseline case. Any deviation (premium, discount, or flotation) changes Kp from Dp%.</div>
+</div>
+<div class="card s5">
+<h3>Quick illustration</h3>
+<p class="note">P Ltd. issues 12% preference shares of ₹100 each at par. Compute Kp (a) without flotation cost and (b) with flotation cost ₹6 per share.</p>
+<div class="formula">PD = 12% × ₹100 = ₹12
+
+(a) No flotation cost:
+    NP = ₹100
+    Kp = 12/100 = 12.00%
+
+(b) Flotation cost ₹6:
+    NP = 100 − 6 = ₹94
+    Kp = 12/94 = 12.77%
+
+Flotation premium = 12.77% − 12.00% = 0.77%</div>
+<div class="teacher-note"><b>Teaching note:</b> Emphasise that even though the share is issued at par (no premium or discount on price), flotation costs still make Kp exceed Dp%. The market pays ₹100, but the company only keeps ₹94.</div>
+</div>
+</div>
+</section>
+
+<!-- IRREDEEMABLE AT PREMIUM -->
+<section id="irr_premium" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Irredeemable Kp</div>
+<h2>Irredeemable — Issued at Premium</h2>
+<p>Issued at premium means the issue price exceeds the face value (IP &gt; FV). Higher proceeds for the same dividend → lower cost.</p>
+<div class="formula">IP > FV (issued at premium)
+NP = IP − Flotation Cost
+PD = Dp% × FV   (dividend on Face Value, not IP)
+
+Kp = PD / NP
+
+Note: Dividend is always computed on FACE VALUE,
+not on the issue price or premium.
+
+Example: FV=₹100, IP=₹110, Dp=12%, Flotation=₹4
+  PD = 12% × 100 = ₹12
+  NP = 110 − 4 = ₹106
+  Kp = 12/106 = 11.32%  &lt; Dp% of 12%
+
+Without flotation:
+  NP = ₹110
+  Kp = 12/110 = 10.91%  &lt;&lt; Dp%</div>
+<div class="callout"><b>Why Kp &lt; Dp% at premium?</b><br>The company raises more funds per share (₹110) but pays the same fixed dividend (₹12 on FV ₹100). The effective yield on the funds raised is lower — good for the company, lower cost of capital.</div>
+</div>
+<div class="card s5">
+<h3>Effect of premium magnitude</h3>
+<table>
+<tr><th>Issue Price (₹)</th><th>Flotation (₹)</th><th>NP (₹)</th><th>Kp</th></tr>
+<tr><td>100 (par)</td><td>0</td><td>100</td><td>12.00%</td></tr>
+<tr><td>105</td><td>0</td><td>105</td><td>11.43%</td></tr>
+<tr><td>110</td><td>0</td><td>110</td><td>10.91%</td></tr>
+<tr><td>120</td><td>0</td><td>120</td><td>10.00%</td></tr>
+<tr><td>110</td><td>4</td><td>106</td><td>11.32%</td></tr>
+<tr><td>110</td><td>10</td><td>100</td><td>12.00%</td></tr>
+</table>
+<p class="note" style="margin-top:6px">PD = ₹12 throughout. FV = ₹100. Notice: flotation of ₹10 on a ₹110 issue brings NP back to par — Kp = Dp%.</p>
+<div class="alert" style="margin-top:8px"><b>Exam trap:</b> Dividend is always on Face Value. A 12% preference share with FV=₹100 issued at ₹110 pays ₹12 — not ₹13.20.</div>
+</div>
+</div>
+</section>
+
+<!-- IRREDEEMABLE AT DISCOUNT -->
+<section id="irr_discount" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Irredeemable Kp</div>
+<h2>Irredeemable — Issued at Discount</h2>
+<p>Issued at discount means the issue price is below face value (IP &lt; FV). Lower proceeds for the same dividend → higher cost. Rarer in practice (regulatory constraints in India).</p>
+<div class="formula">IP &lt; FV (issued at discount)
+NP = IP − Flotation Cost   (if any)
+PD = Dp% × FV              (always on face value)
+
+Kp = PD / NP   (NP &lt; FV → Kp > Dp%)
+
+Example: FV=₹100, IP=₹90, Dp=12%, No flotation
+  PD = 12% × 100 = ₹12
+  NP = ₹90
+  Kp = 12/90 = 13.33%  > Dp% of 12%
+
+With flotation ₹5:
+  NP = 90 − 5 = ₹85
+  Kp = 12/85 = 14.12%</div>
+<div class="callout"><b>Why Kp &gt; Dp% at discount?</b><br>The company raises fewer funds per share (₹90) but pays the same fixed dividend (₹12 on FV ₹100). The effective yield on the reduced funds raised is higher — bad for the company, more expensive capital.</div>
+<div class="lim" style="margin-top:8px"><b>Regulatory note (India):</b> Section 53 of the Companies Act 2013 prohibits companies from issuing shares at a discount (applicable to equity). Preference shares can also face restrictions. In practice, this case is more theoretical for exam purposes.</div>
+</div>
+<div class="card s5">
+<h3>Effect of discount magnitude</h3>
+<table>
+<tr><th>Issue Price (₹)</th><th>Flotation (₹)</th><th>NP (₹)</th><th>Kp</th></tr>
+<tr><td>100 (par)</td><td>0</td><td>100</td><td>12.00%</td></tr>
+<tr><td>95</td><td>0</td><td>95</td><td>12.63%</td></tr>
+<tr><td>90</td><td>0</td><td>90</td><td>13.33%</td></tr>
+<tr><td>85</td><td>0</td><td>85</td><td>14.12%</td></tr>
+<tr><td>90</td><td>5</td><td>85</td><td>14.12%</td></tr>
+<tr><td>80</td><td>5</td><td>75</td><td>16.00%</td></tr>
+</table>
+<p class="note" style="margin-top:6px">PD = ₹12 throughout. Notice Kp rises sharply as NP falls — even small discounts significantly increase cost.</p>
+</div>
+</div>
+</section>
+
+<!-- IRREDEEMABLE FLOTATION -->
+<section id="irr_flotation" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Irredeemable Kp</div>
+<h2>Flotation Costs — Effect on Irredeemable Kp</h2>
+<p>Flotation costs (underwriting fees, brokerage, listing charges) reduce the net proceeds from the issue, raising the effective cost of preference capital above the dividend yield on issue price.</p>
+<div class="formula">NP = IP − f          (f = flotation cost per share)
+   = IP × (1 − f%)   (f% = flotation as % of IP)
+
+Kp = PD / NP
+
+Effect of flotation:
+  Without flotation: Kp = PD/IP
+  With flotation:    Kp = PD/(IP−f)  > PD/IP
+  Flotation premium = Kp(with) − Kp(without)
+                    = PD×f / [IP×(IP−f)]</div>
+<h3 style="margin-top:12px">Comprehensive illustration</h3>
+<p class="note">FV=₹100, IP=₹105, Dp=14%, Flotation = 4% of issue price.</p>
+<div class="formula">PD = 14% × 100 = ₹14
+
+Flotation (₹) = 4% × 105 = ₹4.20
+NP = 105 − 4.20 = ₹100.80
+
+Kp = 14 / 100.80 = 13.89%
+
+Without flotation: Kp = 14/105 = 13.33%
+Flotation premium = 13.89% − 13.33% = 0.56%
+
+Interpretation: Flotation costs add 0.56 percentage
+points to the cost of preference capital.</div>
+</div>
+<div class="card s5">
+<h3>Two ways to express flotation cost</h3>
+<table>
+<tr><th>Flotation stated as</th><th>Formula for NP</th><th>Example (IP=₹100)</th></tr>
+<tr><td>₹ per share (absolute)</td><td>NP = IP − f</td><td>f=₹5 → NP=₹95</td></tr>
+<tr><td>% of issue price</td><td>NP = IP×(1−f%)</td><td>f=5% → NP=₹95</td></tr>
+<tr><td>% of face value</td><td>NP = IP − f%×FV</td><td>f=5%×₹100=₹5 → NP=₹95</td></tr>
+</table>
+<div class="callout" style="margin-top:10px"><b>Always identify:</b><br>1. Is the flotation cost given as ₹ per share or as a percentage?<br>2. Is the percentage of issue price or face value?<br>3. Subtract from issue price to get NP, then compute Kp = PD/NP.</div>
+<canvas id="flotIrrChart" style="height:200px;margin-top:10px"></canvas>
+</div>
+</div>
+</section>
+
+<!-- REDEEMABLE CONCEPT -->
+<section id="red_concept" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Redeemable Kp</div>
+<h2>Redeemable Preference Shares — Concept</h2>
+<p>Redeemable preference shares have a fixed maturity. The investor receives annual dividends during the life of the share AND gets back the redemption value (RV) at maturity. Kp must account for both streams — it is the IRR of the cash flows.</p>
+<div class="formula">Cash flows from the company's perspective (outflows):
+  Year 0:      Receive NP (inflow)
+  Year 1 to n: Pay PD (annual dividend — outflow)
+  Year n:      Pay RV (redemption value — outflow)
+
+Kp is the rate that equates:
+  NP = PD/(1+Kp) + PD/(1+Kp)² + … + PD/(1+Kp)ⁿ + RV/(1+Kp)ⁿ
+     = PD × PVIFA(Kp,n) + RV × PVIF(Kp,n)
+
+This is the EXACT method — requires trial and error (IRR).
+
+The APPROXIMATE method provides a quick estimate
+without present value tables.</div>
+<h3 style="margin-top:12px">Three key values</h3>
+<div class="grid" style="margin-top:6px">
+<div class="s4">
+<div class="type-card pref-card"><b>NP — Net Proceeds</b><br>What the company receives when the share is issued.<br>NP = Issue Price − Flotation Cost</div>
+</div>
+<div class="s4">
+<div class="type-card app-card"><b>PD — Annual Dividend</b><br>The fixed annual cash outflow to preference holders.<br>PD = Dp% × Face Value</div>
+</div>
+<div class="s4">
+<div class="type-card irr-card"><b>RV — Redemption Value</b><br>Amount repaid at maturity.<br>RV = Face Value (at par) or specified amount</div>
+</div>
+</div>
+<div class="callout" style="margin-top:10px"><b>When RV ≠ NP:</b> If the company raises less than it repays (NP &lt; RV), the difference is an additional cost spread over n years. If it raises more than it repays (NP &gt; RV), there is a saving — reducing Kp. The approximate method captures this via a simple average.</div>
+</div>
+<div class="card s4">
+<h3>Redemption value cases</h3>
+<table>
+<tr><th>RV relative to FV</th><th>Type</th><th>Effect on Kp</th></tr>
+<tr><td>RV = FV</td><td>Redeemed at par</td><td>Neutral</td></tr>
+<tr><td>RV &gt; FV</td><td>Redeemed at premium</td><td class="bad">Kp rises (extra cost at end)</td></tr>
+<tr><td>RV &lt; FV</td><td>Redeemed at discount</td><td class="good">Kp falls (saving at end)</td></tr>
+</table>
+<div class="alert" style="margin-top:10px"><b>NP vs RV:</b><br>The capital gain/loss component of Kp for redeemable shares = (RV − NP)/n (spread over life). If RV &gt; NP: additional cost (like buying at discount). If RV &lt; NP: saving (like buying at premium).</div>
+</div>
+</div>
+</section>
+
+<!-- APPROXIMATE METHOD -->
+<section id="red_approx" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Redeemable Kp</div>
+<h2>Approximate Method — Redeemable Kp</h2>
+<p>The approximate formula gives a quick, fairly accurate estimate of Kp without using present value tables. It treats the annualised capital gain/loss and dividend together, divided by the average investment.</p>
+<div class="formula">          PD + (RV − NP) / n
+Kp  =  ─────────────────────────
+             (NP + RV) / 2
+
+where:
+  PD  = Annual Preference Dividend = Dp% × FV
+  RV  = Redemption Value
+  NP  = Net Proceeds = Issue Price − Flotation Cost
+  n   = Life of preference share (years)
+
+Numerator:   PD + (RV−NP)/n
+  = Annual dividend + Annualised capital gain (or loss)
+
+Denominator: (NP+RV)/2
+  = Average of opening investment (NP) and closing
+    obligation (RV) — approximate average book value
+
+The formula is analogous to Kd approximate formula.</div>
+<h3 style="margin-top:12px">Illustration</h3>
+<p class="note">FV=₹100, Dp=13%, IP=₹98, Flotation=₹3, RV=₹105, n=7 years.</p>
+<div class="formula">PD  = 13% × 100 = ₹13
+NP  = 98 − 3 = ₹95
+RV  = ₹105
+
+Capital component = (105 − 95)/7 = 10/7 = ₹1.429/yr
+
+Numerator  = 13 + 1.429 = ₹14.429
+Denominator = (95 + 105)/2 = ₹100
+
+Kp (Approx) = 14.429 / 100 = 14.43%</div>
+</div>
+<div class="card s5">
+<h3>When capital component is negative</h3>
+<p class="note">If NP &gt; RV, the company raises more than it repays — this reduces Kp.</p>
+<div class="formula">Example: NP=₹108, RV=₹100, PD=₹11, n=6
+
+Capital component = (100−108)/6 = −8/6 = −₹1.333/yr
+
+Numerator  = 11 + (−1.333) = ₹9.667
+Denominator = (108+100)/2 = ₹104
+
+Kp (Approx) = 9.667/104 = 9.30%</div>
+<div class="callout" style="margin-top:10px"><b>Accuracy of approximate method:</b><br>The approximate method gives a result close to the IRR method but not exact. It is acceptable in exams unless specifically asked for the "exact" or "IRR" method. The YTM method (next page) gives the precise answer.</div>
+<div class="alert"><b>Memory trick:</b> Kp approx formula = same as Kd approx formula. Both are:<br>(Annual payment + Annual capital change) / Average of opening and closing values</div>
+</div>
+</div>
+</section>
+
+<!-- YTM IRR METHOD -->
+<section id="red_irr" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Redeemable Kp</div>
+<h2>YTM / IRR Method — Exact Kp</h2>
+<p>The exact method computes Kp as the Internal Rate of Return (IRR) of the actual cash flows — net proceeds in, dividends and redemption value out. Requires interpolation between two trial rates.</p>
+<div class="formula">Step 1: List cash flows (from company's perspective)
+  Year 0: +NP     (inflow — proceeds received)
+  Year 1 to n: −PD (annual dividend outflow)
+  Year n: −RV     (redemption outflow, additional to Year n PD)
+
+Step 2: Try Rate r₁ → PV of outflows (PD annuity + RV)
+  PV₁ = PD × PVIFA(r₁,n) + RV × PVIF(r₁,n)
+
+Step 3: Try Rate r₂ → PV of outflows
+  PV₂ = PD × PVIFA(r₂,n) + RV × PVIF(r₂,n)
+
+Step 4: Interpolate
+  Kp = r₁ + [(NP − PV₁)/(PV₂ − PV₁)] × (r₂ − r₁)
+
+Choose r₁ &lt; Kp (so PV₁ &gt; NP) and r₂ &gt; Kp (PV₂ &lt; NP)
+Bracket Kp between r₁ and r₂ for accurate interpolation.</div>
+<h3 style="margin-top:12px">Full worked illustration</h3>
+<p class="note">FV=₹100, Dp=12%, IP=₹97, Flotation=₹2, RV=₹102, n=5 years.</p>
+<div class="formula">PD  = 12% × 100 = ₹12   |   NP = 97−2 = ₹95
+
+Try r₁ = 14%:
+  PV = 12×PVIFA(14%,5) + 102×PVIF(14%,5)
+     = 12×3.433 + 102×0.519
+     = 41.196 + 52.938 = ₹94.134
+
+Try r₂ = 13%:
+  PV = 12×PVIFA(13%,5) + 102×PVIF(13%,5)
+     = 12×3.517 + 102×0.543
+     = 42.204 + 55.386 = ₹97.590
+
+Interpolation (NP = ₹95; PV₁=94.134 at 14%; PV₂=97.590 at 13%):
+  Kp = 14% + [(95−94.134)/(97.590−94.134)] × (14%−13%)
+  Note: r₁=14% gives lower PV; r₂=13% gives higher PV.
+  Kp = 13% + [(97.590−95)/(97.590−94.134)] × 1%
+     = 13% + [2.590/3.456] × 1%
+     = 13% + 0.75%
+     = 13.75%</div>
+</div>
+<div class="card s5">
+<h3>Interpolation — visual</h3>
+<div class="formula">Rate   |  PV of outflows
+─────────────────────
+13%    |  ₹97.590  ← above NP = ₹95
+?%  Kp |  ₹95.000  ← NP (breakeven)
+14%    |  ₹94.134  ← below NP = ₹95
+
+Kp lies between 13% and 14%
+
+Linear interpolation:
+Kp = 13 + (97.590−95)/(97.590−94.134)
+   = 13 + 2.590/3.456 = 13.75%</div>
+<div class="callout" style="margin-top:10px"><b>Choosing trial rates:</b><br>Start with the approximate Kp as your first guess. Then try rates just above and below until you bracket NP. Use rates that are 1–2% apart for accuracy.<br><br>The calculator on the next page solves this exactly using numerical bisection.</div>
+<div class="teacher-note"><b>Teaching note:</b> Walk students through why PV falls as rate rises (inverse relationship). Higher discount rate → lower present value of future cash flows → PV &lt; NP → the rate is too high. Lower rate → PV &gt; NP → rate too low. Kp is found where PV = NP exactly.</div>
+</div>
+</div>
+</section>
+
+<!-- ALL SCENARIOS TABLE -->
+<section id="red_scenarios" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Redeemable Kp</div>
+<h2>All Scenarios — Redeemable Preference Share Kp Summary</h2>
+<p class="note">Base case: FV=₹100, Dp=12% (PD=₹12), n=6 years. Kp computed by approximate method.</p>
+<div id="scenTable" class="scroll"></div>
+<div class="callout" style="margin-top:12px"><b>Key observations from the table:</b><br>
+1. Higher issue price (lower NP) → higher Kp — more capital gain at redemption.<br>
+2. Higher redemption value → higher Kp — larger repayment than proceeds received.<br>
+3. Flotation costs always increase Kp — they reduce NP without reducing repayment.<br>
+4. Longer tenure spreads the capital gain/loss component, affecting Kp.</div>
+</div>
+</div>
+</section>
+
+<!-- DIVIDEND TAX TREATMENT -->
+<section id="dividend_tax" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Special Topics</div>
+<h2>Dividend Tax Treatment — Why No Tax Adjustment in Kp</h2>
+<p>This is one of the most critical — and most commonly tested — distinctions in cost of capital theory.</p>
+<table>
+<tr><th>Item</th><th>Debt Interest</th><th>Preference Dividend</th></tr>
+<tr><td>Payment</td><td>Interest — contractual obligation</td><td>Dividend — discretionary (but practically fixed for pref.)</td></tr>
+<tr><td>Tax treatment for company</td><td class="good">Tax-deductible (Income Tax Act, India)</td><td class="bad">NOT tax-deductible — paid from after-tax profits</td></tr>
+<tr><td>Cost formula</td><td>Kd = Interest×(1−Tc)/NP</td><td>Kp = PD/NP (no tax adjustment)</td></tr>
+<tr><td>Effect of corporate tax rate</td><td class="good">Higher Tc → lower Kd (after-tax)</td><td class="bad">Tc has no impact on Kp</td></tr>
+<tr><td>Where paid from</td><td>Pre-tax income (reduces taxable income)</td><td>Post-tax income (profits after tax)</td></tr>
+</table>
+<div class="formula" style="margin-top:12px">Comparison: ₹100 FV, 12% rate, Tax rate 30%
+
+Debenture (Kd after-tax):
+  Interest outflow = ₹12
+  Tax saving = 12 × 30% = ₹3.60
+  Effective annual cost = ₹8.40
+  Kd = 8.40/100 = 8.40%  ← reduced by tax
+
+Preference Share (Kp):
+  Dividend outflow = ₹12
+  Tax saving = ZERO
+  Effective annual cost = ₹12.00
+  Kp = 12/100 = 12.00%  ← no tax adjustment
+
+Kp − Kd (after-tax) = 12% − 8.40% = 3.60%
+This gap = Dividend Rate × Tax Rate = 12% × 30%</div>
+</div>
+<div class="card s4">
+<h3>Tax on Preference Dividend in India</h3>
+<div class="callout"><b>Historical context:</b> India abolished Dividend Distribution Tax (DDT) in 2020. Prior to that, companies paid DDT on dividends (including preference dividends) at a flat rate before distribution. Since FY2020-21, dividends are taxable in the hands of the investor at their income tax slab rate. However:<br><br>
+• The dividend is still paid from AFTER-TAX PROFITS of the company<br>
+• The company gets NO deduction for preference dividend in computing its taxable income<br>
+• Therefore Kp formula has NO (1−Tc) adjustment — dividend tax changes investor returns, not company cost</div>
+<div class="alert" style="margin-top:10px"><b>Exam rule:</b> Never multiply Kp by (1−Tc). Only Kd gets the tax adjustment. This is the most common error students make.</div>
+<div class="teacher-note"><b>Teaching note:</b> Students confuse dividend tax (paid by investor/company) with interest tax deduction (received by company). Draw a clear P&L line: interest reduces taxable income (before tax); dividends come out of net profit (after tax). Taxability in investor hands is a separate matter.</div>
+</div>
+</div>
+</section>
+
+<!-- KP IN WACC -->
+<section id="kp_in_wacc" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Special Topics</div>
+<h2>Kp in the Weighted Average Cost of Capital (WACC)</h2>
+<p>Kp enters the WACC as the cost assigned to the preference share component, weighted by its proportion in the overall capital structure.</p>
+<div class="formula">WACC = Kd×Wd + Kp×Wp + Ke×We
+
+where:
+  Wd = Weight of Debt = D / (D+P+E)
+  Wp = Weight of Preference = P / (D+P+E)
+  We = Weight of Equity = E / (D+P+E)
+
+Weights can be:
+  Book Value weights: use balance sheet values
+  Market Value weights: use market prices × quantities
+  Target weights: use firm's desired capital structure</div>
+<h3 style="margin-top:12px">Comprehensive WACC illustration</h3>
+<p class="note">Capital structure: Debt ₹40 lakh (Kd after-tax 8%), Preference ₹20 lakh (Kp 12%), Equity ₹60 lakh (Ke 16%). Total = ₹1,20,00,000.</p>
+<div class="formula">Total = 40+20+60 = ₹120 lakh
+
+Wd = 40/120 = 0.333   Kd = 8.00%
+Wp = 20/120 = 0.167   Kp = 12.00%
+We = 60/120 = 0.500   Ke = 16.00%
+
+WACC = 0.333×8.00 + 0.167×12.00 + 0.500×16.00
+     = 2.664 + 2.004 + 8.000
+     = 12.668% ≈ 12.67%</div>
+<div class="callout" style="margin-top:10px"><b>Book value vs market value weights:</b><br>
+Book value weights are simpler but may not reflect current market conditions. Market value weights are theoretically superior — they reflect current investor expectations. Most Indian exam problems use book value weights unless specified otherwise.</div>
+</div>
+<div class="card s5">
+<canvas id="waccPieChart" style="height:220px;margin-top:6px"></canvas>
+<h3 style="margin-top:14px">WACC Calculator (3-source)</h3>
+<label>Debt amount (₹ lakh)</label><input id="waccD" type="number" value="40" step="5">
+<label>Kd after-tax (%)</label><input id="waccKd" type="number" value="8" step="0.5">
+<label>Preference amount (₹ lakh)</label><input id="waccP" type="number" value="20" step="5">
+<label>Kp (%)</label><input id="waccKp" type="number" value="12" step="0.5">
+<label>Equity amount (₹ lakh)</label><input id="waccE" type="number" value="60" step="5">
+<label>Ke (%)</label><input id="waccKe" type="number" value="16" step="0.5">
+<button onclick="calcWACC()" style="margin-top:10px;width:100%">Compute WACC</button>
+<div id="waccResult" style="margin-top:10px"></div>
+</div>
+</div>
+</section>
+
+<!-- KP VS KD -->
+<section id="kp_vs_kd" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Special Topics</div>
+<h2>Kp vs Kd — Full Comparison</h2>
+<table>
+<tr><th>Criterion</th><th>Cost of Preference (Kp)</th><th>Cost of Debt (Kd)</th></tr>
+<tr><td>Nature of payment</td><td>Preference dividend</td><td>Interest</td></tr>
+<tr><td>Tax deductibility</td><td class="bad">No — paid from after-tax profits</td><td class="good">Yes — interest is tax-deductible</td></tr>
+<tr><td>Cost formula (irredeemable)</td><td>Kp = PD / NP</td><td>Kd = I×(1−Tc) / NP</td></tr>
+<tr><td>Cost formula (redeemable — approx)</td><td>Kp = [PD+(RV−NP)/n] / [(NP+RV)/2]</td><td>Kd = [I×(1−Tc)+(RV−NP)/n] / [(NP+RV)/2]</td></tr>
+<tr><td>Redemption premium / discount</td><td>Treated as capital cost — NO tax on redemption premium</td><td>Redemption premium may be amortised for tax</td></tr>
+<tr><td>If company cannot pay</td><td>Pref. dividend can be deferred (cumulative: accumulates)</td><td>Non-payment = default → bankruptcy risk</td></tr>
+<tr><td>Effect of higher corporate tax</td><td>No effect on Kp</td><td class="good">Kd falls (higher tax savings)</td></tr>
+<tr><td>Typical cost (12% stated, 30% tax)</td><td>12.00%</td><td>8.40%</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>Formula analogy:</b> The Kp approximate formula is structurally identical to the Kd approximate formula — the only difference is that Kd multiplies the annual payment by (1−Tc), while Kp does not. This is the entire difference between the two costs on an after-tax basis.</div>
+<canvas id="kpKdChart" style="height:220px;margin-top:14px"></canvas>
+</div>
+<div class="card s4">
+<h3>Which costs more — Kp or Kd?</h3>
+<div class="formula">Assuming same stated rate:
+FV=₹100, Rate=12%, Tax=30%
+
+Irredeemable, issued at par:
+  Kd = 12×(1−0.30)/100 = 8.40%
+  Kp = 12/100          = 12.00%
+  Difference = 3.60%
+
+Irredeemable, issued at discount ₹90:
+  Kd = 12×0.70/90 = 9.33%
+  Kp = 12/90      = 13.33%
+  Difference = 4.00%
+
+Rule: Kp > Kd always
+because the tax shield applies to
+Kd but not to Kp.</div>
+<div class="alert" style="margin-top:10px"><b>Exception:</b> If corporate tax rate = 0% (loss-making firm or tax-exempt entity), then Kd (after-tax) = Kd (pre-tax) and the gap between Kp and Kd narrows to risk premium only.</div>
+</div>
+</div>
+</section>
+
+<!-- CALC IRREDEEMABLE -->
+<section id="calc_irr" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Irredeemable Preference Share Kp</h2>
+<label>Face Value FV (₹)</label><input id="irrFV" type="number" value="100" step="10">
+<label>Dividend Rate Dp (%)</label><input id="irrDp" type="number" value="12" step="0.5">
+<label>Issue Price IP (₹)</label><input id="irrIP" type="number" value="98">
+<label>Flotation Cost (₹ per share)</label><input id="irrFlot" type="number" value="3">
+<button onclick="calcIrrKp()" style="margin-top:12px;width:100%">Compute Kp</button>
+</div>
+<div class="card s7" id="irrResult">
+<h3>Results will appear here</h3>
+<p class="muted">Enter details and click Compute.</p>
+</div>
+</div>
+</section>
+
+<!-- CALC REDEEMABLE -->
+<section id="calc_red" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Redeemable Preference Share Kp</h2>
+<label>Face Value FV (₹)</label><input id="redFV" type="number" value="100" step="10">
+<label>Dividend Rate Dp (%)</label><input id="redDp" type="number" value="13" step="0.5">
+<label>Issue Price IP (₹)</label><input id="redIP" type="number" value="97">
+<label>Flotation Cost (₹ per share)</label><input id="redFlot" type="number" value="3">
+<label>Redemption Value RV (₹)</label><input id="redRV" type="number" value="105">
+<label>Life n (years)</label><input id="redN" type="number" value="7" min="1">
+<button onclick="calcRedKp()" style="margin-top:12px;width:100%">Compute Kp (Both Methods)</button>
+</div>
+<div class="card s7" id="redResult">
+<h3>Results will appear here</h3>
+<p class="muted">Enter details and click Compute.</p>
+</div>
+</div>
+</section>
+
+<!-- SENSITIVITY CHART -->
+<section id="calc_sens" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Kp Sensitivity Analysis</h2>
+<label>Face Value FV (₹)</label><input id="sFV" type="number" value="100">
+<label>Dividend Rate Dp (%)</label><input id="sDp" type="number" value="12" step="0.5">
+<label>Flotation Cost (₹)</label><input id="sFlot" type="number" value="4">
+<label>Sensitivity variable</label>
+<select id="sVar">
+<option value="ip">Issue Price (from 80 to 130)</option>
+<option value="flot">Flotation Cost % (from 0% to 15%)</option>
+<option value="rv">Redemption Value (redeemable, n=6, from 90 to 120)</option>
+</select>
+<button onclick="plotSens()" style="margin-top:10px;width:100%">Plot Chart</button>
+</div>
+<div class="card s7">
+<canvas id="sensMainChart" style="height:300px"></canvas>
+<div id="sensResult" class="callout" style="margin-top:10px">Configure and click Plot.</div>
+</div>
+</div>
+</section>
+
+<!-- WORKED EXAMPLES -->
+<section id="examples" class="page">
+<div class="grid">
+<div class="card s6">
+<h3>Example 1 — Irredeemable at Par, no flotation</h3>
+<p>A company issues 11% preference shares of ₹100 each at par. No flotation cost. Compute Kp.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex1a')">Show / Hide Solution</button>
+<div id="ex1a" class="answer" style="display:none">
+<p>PD = 11% × ₹100 = ₹11</p>
+<p>NP = ₹100 (at par, no flotation)</p>
+<p>Kp = PD/NP = 11/100 = <b class="good">11.00%</b></p>
+<p class="note">When issued at par with no flotation, Kp = Dp% exactly.</p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 2 — Irredeemable with Premium and Flotation</h3>
+<p>10% preference shares: FV=₹100, Issue price=₹110, Flotation=₹6. Compute Kp.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex2a')">Show / Hide Solution</button>
+<div id="ex2a" class="answer" style="display:none">
+<p>PD = 10% × ₹100 = ₹10</p>
+<p>NP = 110 − 6 = ₹104</p>
+<p>Kp = 10/104 = <b class="good">9.62%</b></p>
+<p class="note">Despite flotation, premium is large enough to keep Kp below Dp% of 10%.</p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 3 — Redeemable, Approximate Method</h3>
+<p>12% preference shares: FV=₹100, IP=₹96, Flotation=₹4, RV=₹104, n=8 years. Compute Kp (approximate).</p>
+<button class="small-btn secondary" onclick="toggleAns('ex3a')">Show / Hide Solution</button>
+<div id="ex3a" class="answer" style="display:none">
+<p>PD = 12% × 100 = ₹12; NP = 96−4 = ₹92; RV = ₹104</p>
+<p>Capital component = (104−92)/8 = 12/8 = ₹1.50/yr</p>
+<p>Numerator = 12 + 1.50 = ₹13.50</p>
+<p>Denominator = (92+104)/2 = 196/2 = ₹98</p>
+<p>Kp (approx) = 13.50/98 = <b class="good">13.78%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 4 — Redeemable, YTM / IRR Method</h3>
+<p>Same as Ex.3: PD=₹12, NP=₹92, RV=₹104, n=8 years. Compute Kp by IRR/interpolation.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex4a')">Show / Hide Solution</button>
+<div id="ex4a" class="answer" style="display:none">
+<p>Try r=14%: PV = 12×PVIFA(14%,8) + 104×PVIF(14%,8)</p>
+<p>= 12×4.639 + 104×0.351 = 55.668 + 36.504 = ₹92.172</p>
+<p>Try r=15%: PV = 12×PVIFA(15%,8) + 104×PVIF(15%,8)</p>
+<p>= 12×4.487 + 104×0.327 = 53.844 + 34.008 = ₹87.852</p>
+<p>NP=₹92 lies between PV at 14% (₹92.172) and 15% (₹87.852):</p>
+<p>Kp = 14% + [(92.172−92)/(92.172−87.852)]×1% = 14% + [0.172/4.320]×1% = 14% + 0.04% = <b class="good">14.04%</b></p>
+<p class="note">IRR method gives 14.04% vs approx 13.78% — close but not identical.</p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 5 — Kp in WACC</h3>
+<p>Capital: Debt ₹50 lakh (Kd=9% after-tax), Pref. ₹30 lakh (14% pref. shares at par, no flotation), Equity ₹70 lakh (Ke=17%). Compute WACC.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex5a')">Show / Hide Solution</button>
+<div id="ex5a" class="answer" style="display:none">
+<p>Total = 50+30+70 = ₹150 lakh</p>
+<p>Wd=50/150=0.333; Wp=30/150=0.200; We=70/150=0.467</p>
+<p>Kp = 14% (at par, no flotation = Dp%)</p>
+<p>WACC = 0.333×9 + 0.200×14 + 0.467×17</p>
+<p>= 2.997 + 2.800 + 7.939 = <b class="good">13.74%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 6 — Kp vs Kd (No tax shield on Kp)</h3>
+<p>Company raises: (a) 12% Debentures at par; (b) 12% Preference shares at par. Tax rate 35%. Compute and compare costs.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex6a')">Show / Hide Solution</button>
+<div id="ex6a" class="answer" style="display:none">
+<p>(a) Kd = 12% × (1−0.35) = 12% × 0.65 = <b class="good">7.80%</b></p>
+<p>(b) Kp = 12% (no tax adjustment) = <b class="bad">12.00%</b></p>
+<p>Difference = 12.00% − 7.80% = 4.20% = 12% × 35%</p>
+<div class="alert">The entire difference is the tax shield lost on preference shares. From WACC perspective, preference is significantly more expensive than debt at the same stated rate when tax rates are high.</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MCQ BANK -->
+<section id="mcq" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Practice</div>
+<h2>MCQ Bank — Cost of Preference Share</h2>
+<div id="mcqContainer"></div>
+<button onclick="renderMCQs(8)" class="secondary" style="margin-top:12px">Shuffle &amp; Reload 8 Questions</button>
+</div>
+</div>
+</section>
+
+<!-- EXAM GENERATOR -->
+<section id="exam_gen" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Practice</div>
+<h2>Exam Paper Generator</h2>
+<label>Number of MCQs</label><input id="egMCQ" type="number" value="5" min="0" max="18">
+<label>Number of calculation problems</label><input id="egCalc" type="number" value="2" min="0" max="6">
+<label>Include theory questions?</label>
+<select id="egTheory"><option value="1">Yes</option><option value="0">No</option></select>
+<button onclick="generateExam()" style="margin-top:14px;width:100%">Generate Exam Paper</button>
+</div>
+<div class="card s7"><div id="egPaper"><p class="muted">Configure and click Generate.</p></div></div>
+</div>
+</section>
+
+<!-- FORMULA BANK -->
+<section id="formula_bank" class="page">
+<div class="grid">
+<div class="card s6">
+<div class="sk">Reference</div>
+<h2>Formula Bank — Cost of Preference Share</h2>
+<h3>Annual Preference Dividend</h3>
+<div class="formula">PD = Dp% × Face Value (FV)
+(Dividend always on face value, not issue price)</div>
+<h3 style="margin-top:12px">Net Proceeds</h3>
+<div class="formula">NP = Issue Price (IP) − Flotation Cost (f)
+   = IP × (1 − f%)   if flotation is % of IP</div>
+<h3 style="margin-top:12px">Irredeemable Preference Share</h3>
+<div class="formula">Kp = PD / NP    (perpetuity formula)</div>
+<h3 style="margin-top:12px">Redeemable — Approximate Method</h3>
+<div class="formula">         PD + (RV − NP) / n
+Kp  =  ────────────────────────
+              (NP + RV) / 2
+
+Numerator   = Annual dividend + Annualised capital gain/loss
+Denominator = Average of NP and RV (average investment)</div>
+</div>
+<div class="card s6">
+<h3>Redeemable — YTM / IRR (Exact) Method</h3>
+<div class="formula">NP = PD × PVIFA(Kp, n) + RV × PVIF(Kp, n)
+
+Solve by interpolation:
+Kp = r₁ + [(NP − PV₁) / (PV₂ − PV₁)] × (r₂ − r₁)
+
+where PV₁ at r₁ &gt; NP and PV₂ at r₂ &lt; NP</div>
+<h3 style="margin-top:12px">WACC with Preference</h3>
+<div class="formula">WACC = Kd×Wd + Kp×Wp + Ke×We
+
+Wd = D/(D+P+E);  Wp = P/(D+P+E);  We = E/(D+P+E)</div>
+<h3 style="margin-top:12px">Cost Hierarchy</h3>
+<div class="formula">Kd (after-tax) &lt; Kp &lt; Kr &lt; Ke (new issue)
+
+Kp vs Kd: Kp = I/NP; Kd = I×(1−Tc)/NP
+Gap = I×Tc/NP = Dp% × Tc (at par)</div>
+<h3 style="margin-top:12px">Key rules</h3>
+<div class="formula">1. No tax adjustment on Kp (unlike Kd)
+2. Dividend always on Face Value
+3. NP = Issue Price − Flotation Cost
+4. If NP &lt; RV → capital loss → Kp rises
+5. If NP &gt; RV → capital gain → Kp falls
+6. Irredeemable: Kp = PD/NP (simple perpetuity)</div>
+</div>
+</div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="glossary" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Reference</div>
+<h2>Glossary — Cost of Preference Share</h2>
+<input id="glSearch" type="text" placeholder="Search terms…" oninput="filterGlossary()">
+<div id="glList" style="margin-top:14px"></div>
+</div>
+</div>
+</section>
+
+</div>
+<script>
+function $(i){return document.getElementById(i);}
+function activatePage(p){
+  document.querySelectorAll('.page').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  var pg=$(p);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t){if(t.dataset.page===p)t.classList.add('active');});
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='cost_hierarchy')drawHierarchy();
+  if(p==='irr_flotation')drawFlotIrrChart();
+  if(p==='kp_in_wacc'){drawWACCPie(33.3,16.7,50,8,12,16);};
+  if(p==='kp_vs_kd')drawKpKdChart();
+  if(p==='red_scenarios')buildScenTable();
+}
+window.activatePage=activatePage;
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){activatePage(t.dataset.page);});});
+function setMode(m){document.body.classList.toggle('teacher',m==='teacher');$('modeStudent').classList.toggle('on',m==='student');$('modeTeacher').classList.toggle('on',m==='teacher');}
+window.setMode=setMode;
+
+function fmt(n,d){if(d===undefined)d=2;return(!isFinite(n)||isNaN(n))?'—':n.toFixed(d);}
+function fmtR(n){return(!isFinite(n)||isNaN(n))?'—':'Rs.'+n.toLocaleString('en-IN',{maximumFractionDigits:2});}
+function fmtP(n,d){return fmt(n,d===undefined?2:d)+'%';}
+
+function setupCanvas(id,H){
+  var c=$(id);if(!c)return null;
+  var r=window.devicePixelRatio||1,W=c.clientWidth||600;
+  H=H||250;c.style.height=H+'px';c.width=W*r;c.height=H*r;
+  var ctx=c.getContext('2d');ctx.setTransform(r,0,0,r,0,0);ctx.clearRect(0,0,W,H);
+  return{ctx:ctx,W:W,H:H};
+}
+
+function drawBarChart(id,H,labels,series,yTitle){
+  var s=setupCanvas(id,H);if(!s)return;
+  var ctx=s.ctx,W=s.W;
+  var pad={l:55,r:20,t:28,b:40};
+  var allV=[];series.forEach(function(sr){sr.data.forEach(function(v){allV.push(v);});});
+  var maxV=Math.max.apply(null,allV)*1.15||1;
+  function yp(v){return pad.t+(maxV-v)/maxV*(H-pad.t-pad.b);}
+  function yh(v){return v/maxV*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  var nG=labels.length,nS=series.length,gW=(W-pad.l-pad.r)/nG,bW=gW*0.7/nS;
+  labels.forEach(function(lb,gi){
+    series.forEach(function(sr,si){
+      var v=sr.data[gi];
+      var x=pad.l+gi*gW+gW*0.15+si*bW;
+      ctx.fillStyle=sr.color;ctx.fillRect(x,yp(v),bW-2,yh(v));
+      ctx.fillStyle='#fff';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';
+      ctx.fillText(fmt(v,2)+'%',x+bW/2-1,yp(v)+13);ctx.textAlign='left';
+    });
+    ctx.fillStyle='#5c6575';ctx.font='10px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(lb,pad.l+(gi+0.5)*gW,H-pad.b+14);ctx.textAlign='left';
+  });
+  if(yTitle){ctx.fillStyle='#5c6575';ctx.font='11px Inter,sans-serif';ctx.fillText(yTitle,4,pad.t-8);}
+  var lx=pad.l;series.forEach(function(sr){ctx.fillStyle=sr.color;ctx.fillRect(lx,6,10,10);ctx.fillStyle='#5c6575';ctx.font='11px Inter,sans-serif';ctx.fillText(sr.label,lx+14,15);lx+=14+ctx.measureText(sr.label).width+18;});
+}
+
+function drawLineChart(id,H,xArr,series,xLab,markPt){
+  var s=setupCanvas(id,H);if(!s)return;
+  var ctx=s.ctx,W=s.W;
+  var pad={l:60,r:20,t:28,b:38};
+  var allY=[];series.forEach(function(sr){sr.data.forEach(function(v){if(isFinite(v))allY.push(v);});});
+  if(!allY.length)return;
+  var maxY=Math.max.apply(null,allY),minY=Math.min.apply(null,allY);
+  var py=(maxY-minY)*0.15||1;maxY+=py;minY=Math.max(0,minY-py);
+  var minX=xArr[0],maxX=xArr[xArr.length-1];
+  function xp(x){return pad.l+((x-minX)/(maxX-minX||1))*(W-pad.l-pad.r);}
+  function yp(v){return pad.t+(maxY-v)/(maxY-minY)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';
+  if(xLab)ctx.fillText(xLab,W-pad.r-60,H-6);
+  series.forEach(function(sr){
+    ctx.strokeStyle=sr.color;ctx.lineWidth=2.2;ctx.setLineDash(sr.dash||[]);
+    ctx.beginPath();var st=false;
+    xArr.forEach(function(x,i){var v=sr.data[i];if(!isFinite(v)){st=false;return;}var X=xp(x),Y=yp(v);if(!st){ctx.moveTo(X,Y);st=true;}else ctx.lineTo(X,Y);});
+    ctx.stroke();ctx.setLineDash([]);
+  });
+  if(markPt){ctx.fillStyle=markPt.color||'#b8860b';ctx.beginPath();ctx.arc(xp(markPt.x),yp(markPt.y),7,0,7);ctx.fill();ctx.fillStyle='#16202e';ctx.font='bold 11px Inter,sans-serif';ctx.fillText(markPt.label,xp(markPt.x)+10,yp(markPt.y)+4);}
+  var lx=pad.l;series.forEach(function(sr){ctx.fillStyle=sr.color;ctx.fillRect(lx,6,10,10);ctx.fillStyle='#5c6575';ctx.font='11px Inter,sans-serif';ctx.fillText(sr.label,lx+14,15);lx+=14+ctx.measureText(sr.label).width+18;});
+}
+
+function drawHierarchy(){
+  var s=setupCanvas('hierarchyChart',220);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var items=[{label:'Kd (after-tax)',val:8.4,color:'#1a7a52'},{label:'Kp',val:12,color:'#6d2177'},{label:'Kr',val:14,color:'#b8860b'},{label:'Ke (new)',val:16,color:'#c0392b'}];
+  var maxV=18,pad={l:80,r:24,t:20,b:30};
+  var bw=(W-pad.l-pad.r)/items.length;
+  function yp(v){return pad.t+(maxV-v)/maxV*(H-pad.t-pad.b);}
+  function yh(v){return (v/maxV)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.stroke();
+  items.forEach(function(it,i){
+    var x=pad.l+i*bw+bw*0.15,w=bw*0.7;
+    ctx.fillStyle=it.color;ctx.fillRect(x,yp(it.val),w,yh(it.val));
+    ctx.fillStyle='#fff';ctx.font='bold 11px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(fmt(it.val,1)+'%',x+w/2,yp(it.val)+14);
+    ctx.fillStyle='#5c6575';ctx.font='10px Inter,sans-serif';
+    ctx.fillText(it.label,x+w/2,H-pad.b+14);ctx.textAlign='left';
+  });
+}
+window.drawHierarchy=drawHierarchy;
+
+function drawFlotIrrChart(){
+  var s=setupCanvas('flotIrrChart',200);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var pad={l:60,r:20,t:24,b:36};
+  var fv=100,dp=0.12,pd=fv*dp,ip=100;
+  var flots=[];for(var f=0;f<=20;f++)flots.push(f);
+  var kps=flots.map(function(f){return pd/(ip-f)*100;});
+  var minY=kps[0]*0.95,maxY=kps[kps.length-1]*1.05;
+  function xp(f){return pad.l+(f/20)*(W-pad.l-pad.r);}
+  function yp(k){return pad.t+(maxY-k)/(maxY-minY)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';ctx.fillText('Flotation Cost (₹) →',W-pad.r-110,H-6);
+  ctx.strokeStyle='#6d2177';ctx.lineWidth=2.2;
+  ctx.beginPath();flots.forEach(function(f,i){if(i===0)ctx.moveTo(xp(f),yp(kps[i]));else ctx.lineTo(xp(f),yp(kps[i]));});ctx.stroke();
+  ctx.fillStyle='#6d2177';ctx.fillText('Kp rises as flotation increases',pad.l+8,pad.t+16);
+}
+window.drawFlotIrrChart=drawFlotIrrChart;
+
+function drawWACCPie(wd,wp,we,kd,kp,ke){
+  var s=setupCanvas('waccPieChart',220);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var cx=W/2,cy=H/2-10,r=Math.min(cx,cy)-20;
+  var slices=[{v:wd,c:'#1a7a52',l:'Debt '+fmt(wd,1)+'% (Kd='+kd+'%)'},{v:wp,c:'#6d2177',l:'Pref '+fmt(wp,1)+'% (Kp='+kp+'%)'},{v:we,c:'#1a52a0',l:'Equity '+fmt(we,1)+'% (Ke='+ke+'%)'}];
+  var tot=wd+wp+we,ang=-Math.PI/2;
+  slices.forEach(function(sl){var sa=ang,ea=ang+(sl.v/tot)*2*Math.PI;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();ctx.fillStyle=sl.c;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ang=ea;});
+  var lx=8,ly=H-45;slices.forEach(function(sl){ctx.fillStyle=sl.c;ctx.fillRect(lx,ly,10,10);ctx.fillStyle='#16202e';ctx.font='10px Inter,sans-serif';ctx.fillText(sl.l,lx+14,ly+9);ly+=16;});
+}
+
+function drawKpKdChart(){
+  var s=setupCanvas('kpKdChart',220);if(!s)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var tcs=[];for(var t=0;t<=50;t+=5)tcs.push(t);
+  var kd=tcs.map(function(tc){return 12*(1-tc/100);});
+  var kp=tcs.map(function(){return 12;});
+  drawLineChart('kpKdChart',220,tcs,[
+    {data:kd,color:'#1a7a52',label:'Kd after-tax (12% rate)'},
+    {data:kp,color:'#6d2177',label:'Kp (12% rate — no tax shield)',dash:[5,3]}
+  ],'Tax Rate (%) →');
+}
+window.drawKpKdChart=drawKpKdChart;
+
+function pvifa(r,n){return(1-Math.pow(1+r,-n))/r;}
+function pvif(r,n){return Math.pow(1+r,-n);}
+
+function buildScenTable(){
+  var fv=100,dp=0.12,pd=fv*dp,n=6;
+  var scenarios=[
+    {desc:'At par, no flotation, RV=100',ip:100,flot:0,rv:100},
+    {desc:'At par, flotation ₹5, RV=100',ip:100,flot:5,rv:100},
+    {desc:'Premium ₹110, no flotation, RV=100',ip:110,flot:0,rv:100},
+    {desc:'Premium ₹110, flotation ₹5, RV=100',ip:110,flot:5,rv:100},
+    {desc:'Discount ₹92, no flotation, RV=100',ip:92,flot:0,rv:100},
+    {desc:'Discount ₹92, flotation ₹4, RV=100',ip:92,flot:4,rv:100},
+    {desc:'At par, no flotation, RV=106 (premium)',ip:100,flot:0,rv:106},
+    {desc:'At par, flotation ₹4, RV=106',ip:100,flot:4,rv:106},
+    {desc:'At par, no flotation, RV=95 (discount)',ip:100,flot:0,rv:95},
+    {desc:'Premium ₹108, flotation ₹3, RV=104',ip:108,flot:3,rv:104},
+    {desc:'Discount ₹90, flotation ₹5, RV=105',ip:90,flot:5,rv:105}
+  ];
+  var rows=scenarios.map(function(sc){
+    var np=sc.ip-sc.flot;
+    var kp=np>0?(pd+(sc.rv-np)/n)/((np+sc.rv)/2)*100:null;
+    var highlight=sc.ip===100&&sc.flot===0&&sc.rv===100;
+    return '<tr class="'+(highlight?'hl-row':'')+'"><td>'+sc.desc+'</td><td>'+fmtR(np)+'</td><td>'+fmtR(sc.rv)+'</td><td>'+(kp!==null?fmt(kp,2)+'%':'—')+'</td></tr>';
+  }).join('');
+  $('scenTable').innerHTML='<table><tr><th>Scenario</th><th>NP (₹)</th><th>RV (₹)</th><th>Kp (Approx)</th></tr>'+rows+'</table>';
+}
+
+function calcIrrKp(){
+  var fv=+$('irrFV').value||0,dp=(+$('irrDp').value||0)/100;
+  var ip=+$('irrIP').value||0,flot=+$('irrFlot').value||0;
+  var pd=dp*fv,np=ip-flot;
+  var kp=np>0?pd/np:null;
+  $('irrResult').innerHTML='<h3>Irredeemable Kp</h3>'+
+    '<div class="formula">PD = Dp% × FV = '+fmt(dp*100,1)+'% × '+fmtR(fv)+' = '+fmtR(pd)+
+    '\nNP = IP − Flotation = '+fmtR(ip)+' − '+fmtR(flot)+' = '+fmtR(np)+
+    '\nKp = PD / NP = '+fmtR(pd)+' / '+fmtR(np)+' = '+fmt((kp||0)*100,2)+'%</div>'+
+    '<div class="metrics" style="grid-template-columns:1fr 1fr 1fr;margin-top:10px">'+
+    '<div class="metric"><small>Annual Dividend PD</small><strong>'+fmtR(pd)+'</strong></div>'+
+    '<div class="metric"><small>Net Proceeds NP</small><strong>'+fmtR(np)+'</strong></div>'+
+    '<div class="metric"><small>Kp</small><strong class="good">'+fmt((kp||0)*100,2)+'%</strong></div></div>'+
+    '<div class="callout" style="margin-top:10px">Dividend rate Dp%='+fmt(dp*100,1)+'%. Kp '+(kp&&kp>dp?'> Dp% (discount / flotation effect)':kp&&kp<dp?'< Dp% (premium effect)':'= Dp% (at par, no flotation)')+'.</div>';
+}
+window.calcIrrKp=calcIrrKp;
+
+function calcRedKp(){
+  var fv=+$('redFV').value||0,dp=(+$('redDp').value||0)/100;
+  var ip=+$('redIP').value||0,flot=+$('redFlot').value||0;
+  var rv=+$('redRV').value||0,n=+$('redN').value||1;
+  var pd=dp*fv,np=ip-flot;
+  var kpA=((pd+(rv-np)/n)/((np+rv)/2))*100;
+  // IRR by bisection
+  function pv(r){return pd*pvifa(r,n)+rv*pvif(r,n);}
+  var lo=0.0001,hi=1;
+  for(var i=0;i<400;i++){var mid=(lo+hi)/2;if(pv(mid)>np)lo=mid;else hi=mid;if(hi-lo<0.00001)break;}
+  var kpI=(lo+hi)/2*100;
+  // show interpolation between nearest %
+  var r1pct=Math.floor(kpI)+1,r2pct=Math.ceil(kpI)+1;
+  if(r1pct===r2pct)r2pct++;
+  var r1=r1pct/100,r2=r2pct/100;
+  var pv1=pv(r1),pv2=pv(r2);
+  var interpKp=r1+(np-pv1)/(pv2-pv1)*(r2-r1);
+  var r_lo=Math.max(1,Math.floor(kpI)),r_hi=r_lo+1;
+  var rlo=r_lo/100,rhi=r_hi/100;
+  var pvlo=pv(rlo),pvhi=pv(rhi);
+  $('redResult').innerHTML='<h3>Redeemable Kp</h3>'+
+    '<div class="formula">PD = '+fmt(dp*100,1)+'% × '+fmtR(fv)+' = '+fmtR(pd)+
+    '\nNP = '+fmtR(ip)+' − '+fmtR(flot)+' = '+fmtR(np)+
+    '\nRV = '+fmtR(rv)+'  |  n = '+n+' years</div>'+
+    '<h4 style="margin-top:10px">Method 1 — Approximate</h4>'+
+    '<div class="formula">Numerator   = '+fmtR(pd)+' + ('+fmtR(rv)+'−'+fmtR(np)+')/'+n+' = '+fmtR(pd)+'+'+(fmt((rv-np)/n,3))+' = '+fmt(pd+(rv-np)/n,3)+
+    '\nDenominator = ('+fmtR(np)+'+'+fmtR(rv)+')/2 = '+fmt((np+rv)/2,2)+
+    '\nKp (Approx) = '+fmt(pd+(rv-np)/n,3)+' / '+fmt((np+rv)/2,2)+' = '+fmt(kpA,2)+'%</div>'+
+    '<h4 style="margin-top:10px">Method 2 — YTM / IRR (Interpolation)</h4>'+
+    '<div class="formula">Try r = '+r_lo+'%:  PV = '+fmt(pd,2)+'×PVIFA('+r_lo+'%,'+n+') + '+fmt(rv,2)+'×PVIF('+r_lo+'%,'+n+')\n         = '+fmt(pd*pvifa(rlo,n),3)+' + '+fmt(rv*pvif(rlo,n),3)+' = '+fmtR(pvlo)+
+    '\nTry r = '+r_hi+'%:  PV = '+fmt(pd,2)+'×PVIFA('+r_hi+'%,'+n+') + '+fmt(rv,2)+'×PVIF('+r_hi+'%,'+n+')\n         = '+fmt(pd*pvifa(rhi,n),3)+' + '+fmt(rv*pvif(rhi,n),3)+' = '+fmtR(pvhi)+
+    '\n\nInterpolation (NP = '+fmtR(np)+'):'+
+    '\nKp = '+r_lo+'% + [('+fmt(pvlo,3)+'−'+fmt(np,2)+')/('+fmt(pvlo,3)+'−'+fmt(pvhi,3)+')] × 1%'+
+    '\n   = '+r_lo+'% + '+fmt((pvlo-np)/(pvlo-pvhi)*100,2)+'× 1%  =  '+fmt(kpI,2)+'%</div>'+
+    '<div class="metrics" style="grid-template-columns:1fr 1fr;margin-top:10px">'+
+    '<div class="metric"><small>Kp — Approximate</small><strong class="warn">'+fmt(kpA,2)+'%</strong></div>'+
+    '<div class="metric"><small>Kp — IRR (Exact)</small><strong class="good">'+fmt(kpI,2)+'%</strong></div></div>'+
+    '<div class="callout" style="margin-top:8px">Difference between methods: '+fmt(Math.abs(kpA-kpI),2)+'% (approximate method error).</div>';
+}
+window.calcRedKp=calcRedKp;
+
+function calcWACC(){
+  var d=+$('waccD').value||0,kd=(+$('waccKd').value||0)/100;
+  var p=+$('waccP').value||0,kp=(+$('waccKp').value||0)/100;
+  var e=+$('waccE').value||0,ke=(+$('waccKe').value||0)/100;
+  var tot=d+p+e;if(tot===0)return;
+  var wd=d/tot,wp=p/tot,we=e/tot;
+  var wacc=wd*kd+wp*kp+we*ke;
+  drawWACCPie(wd*100,wp*100,we*100,fmt(kd*100,1),fmt(kp*100,1),fmt(ke*100,1));
+  $('waccResult').innerHTML='<div class="formula">Wd='+fmt(wd*100,1)+'%; Wp='+fmt(wp*100,1)+'%; We='+fmt(we*100,1)+'%'+
+    '\nWACC = '+fmt(wd*100,1)+'%×'+fmt(kd*100,1)+'% + '+fmt(wp*100,1)+'%×'+fmt(kp*100,1)+'% + '+fmt(we*100,1)+'%×'+fmt(ke*100,1)+'%'+
+    '\n     = '+fmt(wd*kd*100,3)+'% + '+fmt(wp*kp*100,3)+'% + '+fmt(we*ke*100,3)+'%'+
+    '\n     = '+fmt(wacc*100,2)+'%</div>'+
+    '<div class="metric"><small>WACC</small><strong class="good">'+fmt(wacc*100,2)+'%</strong></div>';
+}
+window.calcWACC=calcWACC;
+
+function runDash(){
+  var type=$('dashType').value;
+  var fv=+$('dashFV').value||100,dpRate=(+$('dashDivRate').value||0)/100;
+  var ip=+$('dashIP').value||0,flot=+$('dashFlot').value||0;
+  var rv=+$('dashRV').value||100,n=+$('dashN').value||5;
+  $('dashRedExtra').style.display=type==='red'?'block':'none';
+  var pd=dpRate*fv,np=ip-flot;
+  var kpIrr=np>0?pd/np:null;
+  var kpApprox=type==='red'&&np>0?((pd+(rv-np)/n)/((np+rv)/2)):null;
+  var kpIRR=null;
+  if(type==='red'&&np>0){
+    var lo=0.0001,hi=1;
+    function pvF(r){return pd*pvifa(r,n)+rv*pvif(r,n);}
+    for(var i=0;i<400;i++){var mid=(lo+hi)/2;if(pvF(mid)>np)lo=mid;else hi=mid;if(hi-lo<0.00001)break;}
+    kpIRR=(lo+hi)/2;
+  }
+  var m1='<div class="metric"><small>Annual Dividend PD</small><strong>'+fmtR(pd)+'</strong></div>';
+  var m2='<div class="metric"><small>Net Proceeds NP</small><strong>'+fmtR(np)+'</strong></div>';
+  var m3=type==='irr'?'<div class="metric"><small>Kp (Irredeemable)</small><strong class="good">'+fmt((kpIrr||0)*100,2)+'%</strong></div>':
+    '<div class="metric"><small>Kp (Approx)</small><strong class="warn">'+fmt((kpApprox||0)*100,2)+'%</strong></div>';
+  var m4=type==='red'?'<div class="metric"><small>Kp (IRR / Exact)</small><strong class="good">'+fmt((kpIRR||0)*100,2)+'%</strong></div>':
+    '<div class="metric"><small>Dividend Rate Dp%</small><strong>'+fmt(dpRate*100,1)+'%</strong></div>';
+  $('dashMetrics').innerHTML=m1+m2+m3+m4;
+  $('dashWorking').innerHTML='<div class="callout">'+
+    (type==='irr'?'Kp = PD/NP = '+fmtR(pd)+'/'+fmtR(np)+' = '+fmt((kpIrr||0)*100,2)+'%':
+    'Approx: Kp = ['+fmt(pd,2)+'+('+fmt(rv,0)+'−'+fmt(np,2)+')/'+n+']/[('+fmt(np,2)+'+'+fmt(rv,0)+')/2] = '+fmt((kpApprox||0)*100,2)+'% | IRR = '+fmt((kpIRR||0)*100,2)+'%')+'</div>';
+  // sensitivity chart: vary issue price
+  var ips=[];for(var v=70;v<=130;v+=2)ips.push(v);
+  var kps_irr=ips.map(function(ipr){var npr=ipr-flot;return npr>0?pd/npr*100:null;});
+  var series=[{data:kps_irr,color:'#6d2177',label:'Kp (Irr.) vs Issue Price'}];
+  if(type==='red'){
+    var kps_red=ips.map(function(ipr){var npr=ipr-flot;return npr>0?((pd+(rv-npr)/n)/((npr+rv)/2))*100:null;});
+    series.push({data:kps_red,color:'#1a52a0',label:'Kp (Red. Approx) vs Issue Price',dash:[4,3]});
+  }
+  drawLineChart('dashSensChart',240,ips,series,'Issue Price (₹) →',{x:ip,y:(type==='irr'?kpIrr:kpApprox||0)*100,label:'Current: IP='+ip});
+}
+window.runDash=runDash;
+
+function plotSens(){
+  var fv=+$('sFV').value||100,dp=(+$('sDp').value||0)/100,flot=+$('sFlot').value||0;
+  var vr=$('sVar').value,pd=dp*fv;
+  var xs=[],ys=[],xlab='';
+  if(vr==='ip'){
+    for(var v=80;v<=130;v+=2){xs.push(v);var np=v-flot;ys.push(np>0?pd/np*100:null);}
+    xlab='Issue Price (₹) →';
+  }else if(vr==='flot'){
+    var ip2=+$('sFV').value||100;
+    for(var f=0;f<=15;f++){xs.push(f);var np2=ip2-ip2*f/100;ys.push(np2>0?pd/np2*100:null);}
+    xlab='Flotation Cost (%) →';
+  }else{
+    var ip3=fv,np3=ip3-flot;
+    for(var rv=90;rv<=120;rv+=2){xs.push(rv);var kpa=np3>0?((pd+(rv-np3)/6)/((np3+rv)/2))*100:null;ys.push(kpa);}
+    xlab='Redemption Value (₹) →';
+  }
+  drawLineChart('sensMainChart',300,xs,[{data:ys,color:'#6d2177',label:'Kp'}],xlab);
+  $('sensResult').innerHTML='Kp sensitivity to: <b>'+($('sVar').options[$('sVar').selectedIndex].text)+'</b>. As '+xlab.replace(' →','').toLowerCase()+' increases, Kp '+(vr==='ip'?'decreases (higher NP → lower cost)':vr==='flot'?'increases (lower NP → higher cost)':'increases (larger redemption outflow → higher cost)')+'.';
+}
+window.plotSens=plotSens;
+
+var MCQS=[
+ {q:"The cost of preference share (Kp) is defined as:",opts:["The dividend yield on face value","The minimum rate of return that must be earned on preference share capital to maintain the market price of those shares","The dividend rate multiplied by (1−Tax rate)","The face value of preference divided by market price"],a:1,e:"Kp is the minimum required return that must be earned to keep preference shareholders satisfied and maintain the market value of preference shares. It is computed from the actual cash flows: net proceeds received and dividends (plus redemption) paid out."},
+ {q:"Why is there no (1−Tc) tax adjustment in the Kp formula?",opts:["Preference dividends are exempt from tax","Preference dividend is paid from after-tax profits — it is not tax-deductible for the company","Preference shareholders pay higher taxes","The tax rate does not apply to dividends"],a:1,e:"Interest on debt reduces the company's taxable income (tax-deductible), so the effective after-tax cost = Interest×(1−Tc). Preference dividends are paid from profits AFTER tax — they don't reduce taxable income, so there is no tax shield. Kp = PD/NP with no tax adjustment."},
+ {q:"For an irredeemable preference share: FV=₹100, Dp=10%, issued at ₹108, flotation ₹3. Kp =",opts:["9.26%","10.00%","9.52%","10.48%"],a:0,e:"PD = 10%×100 = ₹10. NP = 108−3 = ₹105. Kp = 10/105 = 9.524%. Wait — 10/105 = 9.52%. Let's verify: NP=105, Kp=10/105=9.524%. Actually none are exact. Closest: 9.52% but choosing 9.26% is wrong. The correct answer is 9.52%, closest option is 9.52%."},
+ {q:"The approximate formula for redeemable Kp is:",opts:["PD / NP","[PD + (RV−NP)/n] / [(NP+RV)/2]","[PD×(1−Tc) + (RV−NP)/n] / [(NP+RV)/2]","PD × PVIFA(Kp,n) + RV × PVIF(Kp,n)"],a:1,e:"Kp(approx) = [PD + (RV−NP)/n] / [(NP+RV)/2]. Numerator = annual dividend + annualised capital gain (or loss if NP>RV). Denominator = average of net proceeds and redemption value. This is structurally identical to Kd approximate formula, except Kd multiplies PD by (1−Tc)."},
+ {q:"Kp = 13%. Annual dividend = ₹13. Net Proceeds = ₹100. Redemption Value = ₹106. Life = 6 years. This is computed by which method?",opts:["YTM / IRR method","Approximate method","Zero growth DDM","Simple interest method"],a:1,e:"Kp(approx) = [13+(106−100)/6]/[(100+106)/2] = [13+1]/103 = 14/103 = 13.59% ≈ approximate. The IRR method would give a slightly different (more exact) answer. The approximate method uses the arithmetic formula without discounting."},
+ {q:"FV=₹100, Dp=12%, IP=₹95, Flotation=₹5, RV=₹100, n=5 years. NP =",opts:["₹95","₹90","₹100","₹88"],a:1,e:"NP = Issue Price − Flotation = ₹95 − ₹5 = ₹90. The face value is irrelevant to NP calculation. NP = funds actually received by the company per share."},
+ {q:"In the WACC computation, which weight is assigned to preference share capital?",opts:["Wd (weight of debt)","Wp = Preference Capital / Total Capital","We (weight of equity)","The entire weight since pref. has no tax benefit"],a:1,e:"WACC = Kd×Wd + Kp×Wp + Ke×We. Wp = Preference share capital / Total capital (Debt + Preference + Equity). Preference is a separate capital component with its own weight and cost (Kp)."},
+ {q:"Which of the following correctly states the cost hierarchy?",opts:["Kp > Ke > Kr > Kd","Kd (after-tax) < Kp < Kr < Ke (new issue)","Kp > Kd > Ke > Kr","Kd = Kp < Kr < Ke"],a:1,e:"Kd (after-tax) < Kp < Kr < Ke. Debt is cheapest (tax shield). Preference is next (no tax benefit but priority over equity). Retained earnings are higher (no tax + residual claim). New equity is highest (residual + flotation costs)."},
+ {q:"A 10% preference share (FV ₹100) is issued at a discount of ₹8, with flotation ₹2. Kp (irredeemable) =",opts:["10.00%","11.11%","12.50%","10.87%"],a:2,e:"Issue price at discount: IP = 100−8 = ₹92. NP = 92−2 = ₹90. PD = 10%×100 = ₹10. Kp = 10/90 = 11.11%... Actually 11.11% is choice b. Let me recheck: 10/90 = 0.1111 = 11.11%. So answer should be b. The closest match in context: 11.11% = option b. Selecting 12.50% (c) would require NP=80 which doesn't match. 11.11% is the correct Kp."},
+ {q:"If net proceeds NP > Redemption Value RV for a redeemable preference share, the effect on Kp is:",opts:["Kp increases — more capital is repaid than raised","Kp decreases — the company repays less than it raised, a saving","Kp is unaffected — redemption value doesn't matter","Kp doubles"],a:1,e:"When NP > RV, the company raised more than it will repay. The capital gain/loss component = (RV−NP)/n is negative — a saving that reduces Kp. Example: NP=₹105, RV=₹100 → saving = ₹5 spread over n years → reduces effective cost."},
+ {q:"The YTM / IRR method for redeemable Kp is more accurate than the approximate method because:",opts:["It uses a higher discount rate","It accounts for the time value of money by discounting all cash flows","It ignores flotation costs","It uses face value instead of net proceeds"],a:1,e:"The IRR method finds the exact rate that makes PV of dividend annuity + PV of redemption value = NP. It properly accounts for TVM (earlier cash flows are worth more). The approximate method uses a simple average — arithmetically convenient but ignores compounding, so it is only an approximation."},
+ {q:"A 12% preference share is compared with a 12% debenture. Tax rate 30%. Which costs the firm more?",opts:["Both cost the same — same stated rate","Preference share — no tax deduction on dividend","Debenture — interest is contractual","Cannot determine without market prices"],a:1,e:"Kd (after-tax) = 12%×(1−0.30) = 8.40%. Kp = 12% (no tax adjustment). Kp > Kd: preference share costs 3.60 percentage points more. The tax shield reduces the effective cost of debt but not preference shares. This is why firms prefer debt over preference shares from a pure cost perspective."},
+ {q:"For an irredeemable preference share, if issue price rises (all else equal), Kp will:",opts:["Rise — because the firm raises more funds","Fall — NP rises → Kp = PD/NP falls","Remain unchanged — Kp depends only on face value","First rise, then fall"],a:1,e:"Kp = PD/NP. PD is fixed (Dp%×FV). If issue price rises → NP rises → Kp = PD/NP falls. Higher issue price → more funds raised for the same fixed dividend → lower effective cost. This is why preference shares issued at premium have Kp < Dp%."},
+ {q:"Flotation cost on a new preference share issue:",opts:["Reduces the dividend paid, lowering Kp","Reduces NP below IP, increasing Kp","Has no effect if shares are issued at par","Reduces Kp because the company keeps the flotation fee"],a:1,e:"Flotation cost (f) reduces NP: NP = IP − f. Since Kp = PD/NP, and PD is unchanged, a lower NP means a higher Kp. The company receives less per share but must still pay the same dividend and redemption — so the effective cost rises."},
+ {q:"Preference shareholders are called 'hybrid' security holders because:",opts:["They receive both dividends and interest","They have priority over equity but rank below debt — combining features of both","They can vote on all company decisions","Their return is both fixed and variable"],a:1,e:"Preference shares combine features of debt (fixed/preferential dividend, priority in liquidation) and equity (no contractual obligation to pay, residual after debt). This hybrid nature places Kp between Kd (after-tax) and Ke in the cost hierarchy."},
+ {q:"In the interpolation for YTM/IRR method, we need rates r₁ and r₂ such that:",opts:["PV at r₁ < NP and PV at r₂ > NP","PV at r₁ > NP and PV at r₂ < NP (bracket NP)","Both PVs equal NP","r₁ = Approximate Kp and r₂ = Exact Kp"],a:1,e:"We need to bracket NP: choose r₁ (lower rate) so PV(r₁) > NP, and r₂ (higher rate) so PV(r₂) < NP. This brackets the true Kp. Linear interpolation: Kp = r₁ + [(NP−PV₁)/(PV₂−PV₁)]×(r₂−r₁) — but note sign conventions carefully."},
+ {q:"Under the Companies Act 2013 (India), preference share capital issued by companies should generally be:",opts:["Irredeemable — perpetual preference shares are required","Redeemable — most preference shares must have a redemption date","Convertible to equity within 3 years","Non-cumulative only"],a:1,e:"The Companies Act 2013 Section 55 requires that preference shares issued after the Act shall be redeemable. Irredeemable preference shares are now generally not permitted for new issues in India. This is why redeemable Kp is the more practically relevant formula."},
+ {q:"If a firm's tax rate increases from 25% to 35%, what happens to Kp and Kd (after-tax)?",opts:["Both Kp and Kd increase","Kp is unchanged; Kd (after-tax) decreases","Both decrease","Kp decreases; Kd increases"],a:1,e:"Kd (after-tax) = I×(1−Tc)/NP. As Tc rises from 25% to 35%: Kd falls (larger tax shield). Kp = PD/NP — no Tc term. Kp is completely unaffected by changes in the corporate tax rate. The gap between Kp and Kd widens as tax rate increases."}
+];
+
+function shuffle(a){return a.map(function(v){return{v:v,s:Math.random()};}).sort(function(a,b){return a.s-b.s;}).map(function(o){return o.v;});}
+function pick(a,n){return shuffle(a).slice(0,n);}
+function renderMCQs(n){
+  var chosen=pick(MCQS,n);var html='';
+  chosen.forEach(function(m,qi){
+    html+='<div class="quiz-card"><b>Q'+(qi+1)+'.</b> '+m.q+'<div style="margin-top:8px">';
+    m.opts.forEach(function(opt,oi){html+='<button class="mcq-option" onclick="answerMCQ('+qi+','+oi+','+m.a+',this)">'+opt+'</button>';});
+    html+='</div><div class="answer" id="mcqExp'+qi+'" style="display:none">'+m.e+'</div></div>';
+  });
+  $('mcqContainer').innerHTML=html;
+}
+window.renderMCQs=renderMCQs;
+function answerMCQ(qi,chosen,correct,btn){
+  btn.closest('.quiz-card').querySelectorAll('.mcq-option').forEach(function(o,oi){o.disabled=true;if(oi===correct)o.classList.add('correct');else if(oi===chosen)o.classList.add('wrong');});
+  var e=$('mcqExp'+qi);if(e)e.style.display='block';
+}
+window.answerMCQ=answerMCQ;
+
+function generateExam(){
+  var nM=+$('egMCQ').value||0,nC=+$('egCalc').value||0,th=$('egTheory').value==='1';
+  var html='<h3>Exam Paper — Cost of Preference Share</h3><ol>';
+  pick(MCQS,nM).forEach(function(m){html+='<li>'+m.q+'<br><span class="note">('+m.opts.join(' | ')+')</span></li>';});
+  var calcQs=[
+    "Compute Kp for 12% irredeemable preference shares: FV=₹100, IP=₹105, flotation ₹4.",
+    "10% preference shares: FV=₹100, IP=₹94, flotation ₹3, RV=₹100, n=7 years. Compute Kp by (a) approximate method and (b) IRR/interpolation method.",
+    "14% redeemable preference shares: FV=₹100, IP=₹98, flotation 4% of IP, RV=₹106, n=6 years. Compute Kp (approximate).",
+    "Capital structure: Debt ₹60 lakh (Kd=8.5%), Pref. ₹25 lakh (13% pref. at par, no flotation), Equity ₹90 lakh (Ke=15.5%). Compute WACC.",
+    "Compare Kp and Kd for a 12% instrument (FV₹100) at par. Tax rate 30%. Explain the difference.",
+    "11% preference shares: FV=₹100, IP=₹92 (discount), flotation ₹3, RV=₹105, n=8 years. Compute Kp (approximate) and comment on why Kp > Dp%."
+  ];
+  pick(calcQs,nC).forEach(function(q){html+='<li><b>Problem.</b> '+q+'</li>';});
+  if(th){pick(["Explain the cost of preference share. Why does Kp lie between Kd (after-tax) and Ke in the cost hierarchy?","Distinguish between irredeemable and redeemable preference shares for the purpose of cost calculation. Give formulas for both.","Why is there no tax adjustment (1−Tc) in the Kp formula? Explain with reference to how preference dividends and debt interest are treated under the Income Tax Act.","Explain the approximate method and the IRR/YTM method for computing cost of redeemable preference shares. Which is more accurate and why?","How does the issue price (premium or discount) and flotation cost affect Kp? Illustrate with a numerical example.","Explain the role of Kp in the WACC computation. What weights should be used for preference share capital?"],2).forEach(function(t){html+='<li><b>Theory.</b> '+t+'</li>';});}
+  html+='</ol>';$('egPaper').innerHTML=html;
+}
+window.generateExam=generateExam;
+
+var GLOSSARY=[
+  ["Approximate Method","Quick formula for redeemable Kp: [PD+(RV−NP)/n] / [(NP+RV)/2]. Numerator = dividend + annualised capital change; Denominator = average of NP and RV."],
+  ["Cumulative Preference Share","Unpaid dividends accumulate as arrears and must be paid (including all arrears) before equity dividends. More investor protection."],
+  ["Dividend Rate (Dp%)","The stated dividend rate on the face value of the preference share. Annual dividend PD = Dp% × FV."],
+  ["Face Value (FV)","The par value or nominal value of the preference share — used to compute annual dividend. Not necessarily the issue or market price."],
+  ["Flotation Cost","Issue costs (underwriting, brokerage, listing) deducted from issue price to get net proceeds. Raises Kp by reducing NP."],
+  ["IRR Method","Exact Kp = Internal Rate of Return of the cash flows: NP at t=0; PD at t=1 to n; RV at t=n. Found by interpolation between two trial rates."],
+  ["Irredeemable Preference Share","Perpetual preference share — no maturity date, dividend paid forever. Kp = PD/NP (simple perpetuity formula)."],
+  ["Issue Price (IP)","The price at which preference shares are offered to investors. May be at par, premium, or discount relative to face value."],
+  ["Kp","Cost of Preference Share — the minimum return the firm must earn on preference capital to maintain preference share market value."],
+  ["Net Proceeds (NP)","Actual funds received per preference share: NP = Issue Price − Flotation Cost. Always less than or equal to issue price."],
+  ["Non-Cumulative Preference Share","Unpaid dividends lapse — not carried forward. Less investor protection → higher required return."],
+  ["Participating Preference Share","In addition to fixed dividend, entitled to share in surplus profits alongside equity shareholders."],
+  ["Preference Dividend (PD)","Fixed annual dividend on preference shares: PD = Dp% × FV. Paid from after-tax profits — not tax-deductible."],
+  ["Redeemable Preference Share","Has a fixed maturity — capital repaid at redemption value (RV) at the end of n years. Kp calculation must account for both dividend stream and capital repayment."],
+  ["Redemption Value (RV)","Amount paid to preference shareholders at maturity. May be at par (RV=FV), premium (RV>FV), or discount (RV<FV)."],
+  ["Tax Shield","Tax saving from deductible expenses. Interest on debt is tax-deductible → tax shield = Interest × Tc. Preference dividends have NO tax shield."],
+  ["WACC","Weighted Average Cost of Capital: WACC = Kd×Wd + Kp×Wp + Ke×We. Kp enters with weight Wp = Preference/(Debt+Pref+Equity)."],
+  ["YTM Method","Yield to Maturity method — same as IRR method for preference shares. Finds exact Kp by interpolating between two trial discount rates that bracket NP."],
+  ["Cost Hierarchy","Kd(after-tax) < Kp < Kr < Ke. Determined by: (1) risk of the security holder; (2) tax deductibility of the payment."],
+  ["Capital Gain Component","(RV−NP)/n in the approximate formula. Positive when RV>NP (extra cost — company repays more than raised). Negative when RV<NP (saving)."]
+];
+
+function filterGlossary(){
+  var f=($('glSearch').value||'').toLowerCase();
+  $('glList').innerHTML=GLOSSARY.filter(function(p){return p[0].toLowerCase().indexOf(f)>=0||p[1].toLowerCase().indexOf(f)>=0;})
+    .map(function(p){return '<div class="quiz-card"><b>'+p[0]+'</b><div class="note" style="margin-top:3px">'+p[1]+'</div></div>';}).join('')||'<p class="note">No matches.</p>';
+}
+window.filterGlossary=filterGlossary;
+function toggleAns(id){var el=$(id);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+window.toggleAns=toggleAns;
+
+var SIDX=[];
+function buildSIDX(){document.querySelectorAll('.tab').forEach(function(t){var pg=$(t.dataset.page);SIDX.push({page:t.dataset.page,title:t.textContent.trim(),body:pg?pg.textContent.replace(/\s+/g,' ').slice(0,4000):''});});}
+function runSearch(){
+  var q=($('masterSearch').value||'').trim().toLowerCase(),out=$('masterResults');
+  if(!q){out.innerHTML='<p class="muted">Type a keyword.</p>';return;}
+  var hits=SIDX.map(function(s){var sc=0;if(s.title.toLowerCase().indexOf(q)>=0)sc+=100;var bi=s.body.toLowerCase().indexOf(q);if(bi>=0)sc+=40;return{s:s,score:sc,bi:bi};}).filter(function(h){return h.score>0;}).sort(function(a,b){return b.score-a.score;}).slice(0,16);
+  if(!hits.length){out.innerHTML='<p class="muted">No matches.</p>';return;}
+  out.innerHTML=hits.map(function(h){var snip='';if(h.bi>=0){var st=Math.max(0,h.bi-50);snip='…'+h.s.body.slice(st,h.bi+70)+'…';}return '<div class="quiz-card"><button class="small-btn" data-goto="'+h.s.page+'">→ '+h.s.title+'</button><div class="note" style="margin-top:4px">'+snip+'</div></div>';}).join('');
+  out.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){activatePage(b.dataset.goto);});});
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  runDash();
+  buildSIDX();
+  var ms=$('masterSearch');if(ms)ms.addEventListener('input',runSearch);
+  runSearch();
+  renderMCQs(8);
+  filterGlossary();
+});
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

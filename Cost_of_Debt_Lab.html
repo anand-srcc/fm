@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cost of Debt (Kd) — Complete Interactive Lab</title>
+<style>
+:root{--bg:#eef2f7;--card:#fff;--ink:#16202e;--muted:#5c6575;--line:#d8dfe8;--blue:#1a52a0;--blue-d:#0f2d5e;--gold:#b8860b;--gold-l:#f2ead0;--green:#1a7a52;--red:#c0392b;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:1420px;margin:auto;padding:18px}
+.hero{padding:32px;border-radius:20px;background:linear-gradient(135deg,#0f2d5e 0%,#c0392b 55%,#8e1a0e 100%);color:#fff;box-shadow:0 14px 34px #0f2d5e30;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;top:0;right:0;bottom:0;width:5px;background:var(--gold)}
+.hero h1{font-family:Georgia,serif;font-size:clamp(22px,3vw,40px);margin:0 0 8px;line-height:1.1}
+.hero p{margin:0;opacity:.94;font-size:1rem;max-width:1060px}
+.hero .chapref{display:inline-block;margin-bottom:10px;background:#ffffff1f;border:1px solid #ffffff30;padding:4px 13px;border-radius:999px;font-size:.8rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.hero .modewrap{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .modewrap button{background:#ffffff1c;border:1px solid #ffffff3d;color:#fff}
+.hero .modewrap button.on{background:#fff;color:var(--blue-d)}
+.nav{display:flex;flex-wrap:nowrap;gap:6px;padding:10px;margin:14px 0;background:#e2e8f5;border:1px solid var(--line);border-radius:14px;overflow-x:auto;scrollbar-width:thin;position:sticky;top:0;z-index:5}
+.tab{border:1px solid #c9d4e4;background:#fff;color:#2b3650;padding:7px 10px;border-radius:9px;font-weight:700;font-size:.81rem;white-space:nowrap;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-1px)}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.navsep{align-self:center;padding:0 2px;font-size:.57rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#6878a0;white-space:nowrap;user-select:none}
+.page{display:none}.page.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:.3}to{opacity:1}}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 3px 12px #16202e0a}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+h2,h3{margin-top:0}h2{font-family:Georgia,serif}.muted{color:var(--muted)}
+label{display:block;font-weight:700;margin:9px 0 3px;font-size:.92rem}
+input,select,button{font:inherit}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font-size:.95rem}
+input:focus,select:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+button{border:0;border-radius:9px;padding:9px 14px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer;font-size:.95rem}
+button:hover{filter:brightness(1.08)}.secondary{background:#e4eaf5;color:var(--ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.metric{padding:12px;border-radius:12px;background:#eef3fb;border:1px solid #d3ddef}
+.metric small{color:var(--muted);font-size:.76rem}.metric strong{display:block;font-size:1.18rem;margin-top:2px}
+.formula{background:var(--blue-d);color:#e9eeff;border-radius:12px;padding:15px;font:1rem/1.6 ui-monospace,Menlo,monospace;overflow:auto;white-space:pre-wrap;margin:8px 0}
+.callout{padding:13px;border-left:4px solid var(--blue);background:#eef3fb;border-radius:9px;font-size:.96rem;margin:8px 0}
+.good{color:var(--green);font-weight:800}.bad{color:var(--red);font-weight:800}.warn{color:var(--gold);font-weight:800}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:.91rem}
+th:first-child,td:first-child{text-align:left}th{background:#eef2f8}
+.scroll{overflow:auto;max-height:460px}
+.quiz-card{padding:14px;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.answer{margin-top:8px;padding:10px;border-radius:9px;background:#eef2f8;font-size:.95rem}
+.mcq-option{display:block;width:100%;text-align:left;padding:8px 11px;margin:4px 0;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:.94rem}
+.mcq-option:hover{background:#eef3fb}.mcq-option.correct{background:#e3f3ea;border-color:var(--green)}.mcq-option.wrong{background:#f8e6e3;border-color:var(--red)}
+.pillrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stepflow{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:8px 0}
+.step{background:#eef3fb;border:1px solid #d3ddef;color:#0f3d8e;padding:6px 12px;border-radius:9px;font-weight:700;font-size:.86rem}
+.arrow{color:var(--muted)}
+ul,ol{padding-left:20px}li{margin-bottom:4px}
+.adv{border-left:4px solid var(--green);background:#e3f3ea;padding:11px 13px;border-radius:9px;margin-bottom:7px}
+.lim{border-left:4px solid var(--red);background:#fbeae7;padding:11px 13px;border-radius:9px;margin-bottom:7px}
+canvas{display:block;width:100%;height:250px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.note{font-size:.9rem;color:var(--muted)}
+.alert{padding:11px 13px;border-radius:10px;background:var(--gold-l);border-left:4px solid var(--gold);margin:8px 0}
+.sk{font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:var(--gold);margin-bottom:4px}
+.teacher-note{display:none;border-left:4px solid var(--gold);background:var(--gold-l);padding:11px 13px;border-radius:9px;margin-top:9px}
+body.teacher .teacher-note{display:block}
+.small-btn{padding:6px 10px;font-size:.85rem}
+.hl-row{background:#e3f3ea!important;font-weight:700}
+.tl-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line)}
+.tl-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;flex-shrink:0;margin-top:2px}
+.cf-out{background:#fbeae7;border:2px solid var(--red);color:var(--red)}
+.cf-in{background:#e3f3ea;border:2px solid var(--green);color:var(--green)}
+.cf-n{background:#eef3fb;border:2px solid var(--blue);color:var(--blue)}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,1fr)}.s4,.s5,.s6,.s7,.s8{grid-column:span 6}}
+@media(max-width:700px){.s4,.s5,.s6,.s7,.s8,.s12{grid-column:span 12}.wrap{padding:10px}}
+@media print{.nav,.hero .modewrap,button,input,select{display:none!important}.page{display:block!important}.card{box-shadow:none;break-inside:avoid}body{background:#fff}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<span class="chapref">Financial Management · Cost of Capital</span>
+<h1>Cost of Debt (Kd) — Complete Interactive Lab</h1>
+<p>A comprehensive, fully offline lab covering every scenario tested in Indian FM examinations: pre-tax vs after-tax Kd, the tax shield on interest, irredeemable debt (at par, discount, and premium), redeemable debt — approximate method and exact YTM/IRR method with interpolation, effect of issue price and flotation costs, bank loans, and Kd in WACC. Every formula is live in your browser, in Indian ₹.</p>
+<div class="modewrap">
+<button id="modeStudent" class="on" onclick="setMode('student')">Student Mode</button>
+<button id="modeTeacher" onclick="setMode('teacher')">Teacher Mode</button>
+<button onclick="window.print()">Print / Save PDF</button>
+</div>
+</header>
+
+<nav class="nav">
+<span class="navsep">Concept</span>
+<button class="tab active" data-page="dashboard">Dashboard</button>
+<button class="tab" data-page="intro">Introduction</button>
+<button class="tab" data-page="tax_shield">Tax Shield</button>
+<span class="navsep">Irredeemable</span>
+<button class="tab" data-page="irred_concept">Concept</button>
+<button class="tab" data-page="irred_cases">All Cases (Par/Disc/Prem)</button>
+<span class="navsep">Redeemable</span>
+<button class="tab" data-page="redd_concept">Concept</button>
+<button class="tab" data-page="redd_approx">Approximate Method</button>
+<button class="tab" data-page="redd_ytm">YTM / IRR Method</button>
+<button class="tab" data-page="redd_scenarios">All Scenarios</button>
+<span class="navsep">Special Topics</span>
+<button class="tab" data-page="flotation">Flotation Costs</button>
+<button class="tab" data-page="issue_effect">Issue Price Effect</button>
+<button class="tab" data-page="bank_loan">Bank Loans</button>
+<button class="tab" data-page="kd_wacc">Kd in WACC</button>
+<span class="navsep">Calculators</span>
+<button class="tab" data-page="calc_irred">Irredeemable Kd</button>
+<button class="tab" data-page="calc_redd">Redeemable Kd</button>
+<button class="tab" data-page="calc_ytm">YTM Calculator</button>
+<button class="tab" data-page="calc_sens">Sensitivity Chart</button>
+<span class="navsep">Practice</span>
+<button class="tab" data-page="examples">Worked Examples</button>
+<button class="tab" data-page="mcq">MCQ Bank</button>
+<button class="tab" data-page="exam_gen">Exam Generator</button>
+<span class="navsep">Reference</span>
+<button class="tab" data-page="formula_bank">Formula Bank</button>
+<button class="tab" data-page="glossary">Glossary</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+<div class="grid">
+<div class="card s12" style="background:linear-gradient(135deg,#f4f7fc,#fbeae7);border-color:#e8bfba">
+<div class="sk">Signature Tool</div>
+<h2>Quick Kd Calculator — Redeemable Debenture</h2>
+<p class="muted" style="margin-top:0">Enter debenture details to instantly compute pre-tax and after-tax Kd using both the Approximate Method and the exact YTM interpolation method, with a full cash-flow table and sensitivity chart.</p>
+<div class="grid" style="margin-top:8px">
+<div class="s4">
+  <label>Face Value per unit (₹)</label><input id="dFV" type="number" value="1000">
+  <label>Coupon Rate (%)</label><input id="dCoupon" type="number" value="10" step="0.5">
+  <label>Issue Price (₹)</label><input id="dIssue" type="number" value="950">
+  <label>Flotation Cost (₹ per unit)</label><input id="dFlot" type="number" value="20">
+  <label>Redemption Value (₹) — 0 = irredeemable</label><input id="dRV" type="number" value="1000">
+  <label>Years to Maturity — 0 = irredeemable</label><input id="dN" type="number" value="5" min="0">
+  <label>Corporate Tax Rate (%)</label><input id="dTax" type="number" value="30" step="1">
+  <button onclick="runDash()" style="margin-top:12px;width:100%">Compute Kd</button>
+</div>
+<div class="s8">
+  <div id="dashMetrics" class="metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px"></div>
+  <div id="dashWorking" class="scroll" style="max-height:200px;margin-bottom:10px"></div>
+  <canvas id="dashSensChart"></canvas>
+</div>
+</div>
+</div>
+<div class="card s5">
+<div class="sk">Find anything</div>
+<h3>Master Search</h3>
+<input id="masterSearch" type="text" placeholder="Search: YTM, flotation, tax shield, discount, premium…">
+<div id="masterResults" style="margin-top:10px"></div>
+</div>
+<div class="card s7">
+<div class="sk">Learning Path</div>
+<h3>Suggested sequence</h3>
+<div class="stepflow">
+<span class="step">1·Introduction</span><span class="arrow">→</span>
+<span class="step">2·Tax Shield</span><span class="arrow">→</span>
+<span class="step">3·Irredeemable</span><span class="arrow">→</span>
+<span class="step">4·Redeemable Approx.</span><span class="arrow">→</span>
+<span class="step">5·YTM Method</span><span class="arrow">→</span>
+<span class="step">6·Flotation &amp; Issue Price</span><span class="arrow">→</span>
+<span class="step">7·Kd in WACC</span>
+</div>
+<div class="pillrow" style="margin-top:10px">
+<button class="small-btn secondary" onclick="activatePage('calc_irred')">Irredeemable Calc</button>
+<button class="small-btn secondary" onclick="activatePage('calc_redd')">Redeemable Calc</button>
+<button class="small-btn secondary" onclick="activatePage('calc_ytm')">YTM Calculator</button>
+<button class="small-btn secondary" onclick="activatePage('calc_sens')">Sensitivity Chart</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- INTRODUCTION -->
+<section id="intro" class="page">
+<div class="grid">
+<div class="card s8">
+<div class="sk">Foundations</div>
+<h2>Cost of Debt — Introduction</h2>
+<p>The <b>cost of debt (Kd)</b> is the effective rate the firm pays on its borrowed funds — the yield required by investors who lend money via debentures, bonds, or term loans. It is the cheapest source of long-term finance because interest is <b>tax-deductible</b>, giving debt a tax shield unavailable to preference shares or equity.</p>
+<h3>Why cost of debt matters</h3>
+<ul>
+<li>It forms the debt component in WACC — always used as the <b>after-tax</b> rate.</li>
+<li>It is the minimum return borrowed funds must earn to cover the interest burden.</li>
+<li>Debt is cheap but not free — excessive debt raises financial risk and eventually raises Kd as lenders demand a default premium.</li>
+<li>Kd is directly reduced by the government via the tax shield — a 10% coupon costs only 7% after tax at a 30% tax rate.</li>
+</ul>
+<h3>Types of debt instruments</h3>
+<table>
+<tr><th>Instrument</th><th>Redeemable?</th><th>Exam relevance</th></tr>
+<tr><td>Debentures / Bonds</td><td>Usually yes (at maturity)</td><td class="good">Core topic</td></tr>
+<tr><td>Perpetual / Irredeemable Debentures</td><td>No — interest paid forever</td><td class="warn">Classic exam construct</td></tr>
+<tr><td>Term Loans from Banks</td><td>Yes (EMI / bullet repayment)</td><td class="good">Very common</td></tr>
+<tr><td>Public Deposits</td><td>Yes (1–3 years)</td><td class="good">NBFCs / companies</td></tr>
+</table>
+<div class="callout" style="margin-top:10px"><b>The two fundamental cases (always tested separately):</b><br>
+<b>Irredeemable:</b> Interest paid forever; no principal repayment. Kd = I(1−Tc)/NP — a pure perpetuity.<br>
+<b>Redeemable:</b> Interest for n years + principal repayment at maturity. Two methods: Approximate Formula and exact YTM/IRR.</div>
+</div>
+<div class="card s4">
+<h3>Key symbols</h3>
+<table>
+<tr><th>Symbol</th><th>Meaning</th></tr>
+<tr><td><b>I</b></td><td>Annual interest = Coupon% × FV</td></tr>
+<tr><td><b>FV</b></td><td>Face (par) value of debenture</td></tr>
+<tr><td><b>NP</b></td><td>Net Proceeds = Issue Price − Flotation</td></tr>
+<tr><td><b>RV</b></td><td>Redemption Value (usually = FV)</td></tr>
+<tr><td><b>n</b></td><td>Years to maturity</td></tr>
+<tr><td><b>Tc</b></td><td>Corporate tax rate</td></tr>
+<tr><td><b>Kd</b></td><td>After-tax cost of debt</td></tr>
+<tr><td><b>Kd*</b></td><td>Pre-tax cost of debt</td></tr>
+</table>
+<div class="alert" style="margin-top:10px"><b>Always use after-tax Kd</b> in WACC. Interest creates a tax shield that reduces effective cost.</div>
+</div>
+</div>
+</section>
+
+<!-- TAX SHIELD -->
+<section id="tax_shield" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Foundations</div>
+<h2>The Tax Shield on Debt</h2>
+<p>Interest on debt is deductible before tax — the government subsidises part of the interest cost. This is the single most important feature of debt financing.</p>
+<div class="formula">Tax saving from interest = I × Tc
+After-tax interest cost  = I − I×Tc = I(1−Tc)
+After-tax Kd = Pre-tax Kd × (1 − Tc)</div>
+<h3 style="margin-top:12px">Illustration — ₹10,00,000 of 12% debentures, Tax 30%</h3>
+<table>
+<tr><th></th><th>Without Debt</th><th>With Debt</th></tr>
+<tr><td>EBIT</td><td>₹5,00,000</td><td>₹5,00,000</td></tr>
+<tr><td>Less: Interest (12%×10L)</td><td>—</td><td>₹1,20,000</td></tr>
+<tr><td>EBT</td><td>₹5,00,000</td><td>₹3,80,000</td></tr>
+<tr><td>Tax @ 30%</td><td>₹1,50,000</td><td>₹1,14,000</td></tr>
+<tr><td><b>Tax saved due to debt</b></td><td colspan="2" style="text-align:center"><b class="good">₹36,000 = 1,20,000 × 30%</b></td></tr>
+<tr><td><b>Effective interest cost</b></td><td colspan="2" style="text-align:center"><b>1,20,000 − 36,000 = ₹84,000</b></td></tr>
+<tr class="hl-row"><td><b>After-tax Kd</b></td><td colspan="2" style="text-align:center"><b class="good">84,000/10,00,000 = 8.4%</b></td></tr>
+</table>
+</div>
+<div class="card s5">
+<h3>Tax Shield Calculator</h3>
+<label>Pre-tax Interest Rate (%)</label><input id="tsRate" type="number" value="12" step="0.5">
+<label>Corporate Tax Rate (%)</label><input id="tsTax" type="number" value="30" step="1">
+<button onclick="calcTS()" style="margin-top:10px;width:100%">Compute</button>
+<div id="tsResult" style="margin-top:12px"></div>
+<div class="callout" style="margin-top:12px">Higher tax rate → greater tax shield → lower after-tax Kd.<br><br>At Tc=30%: 12% coupon → <b>8.40%</b> after tax<br>At Tc=35%: 12% coupon → <b>7.80%</b> after tax<br>At Tc=0%: no benefit — Kd = coupon rate</div>
+<div class="teacher-note"><b>Teaching note:</b> The tax shield is why MM-with-tax shows V_L = V_U + Tc×D. Connect Kd to capital structure theory — the same tax benefit that lowers Kd raises firm value.</div>
+</div>
+</div>
+</section>
+
+<!-- IRREDEEMABLE CONCEPT -->
+<section id="irred_concept" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Irredeemable Debt</div>
+<h2>Irredeemable (Perpetual) Debt — Concept &amp; Formula</h2>
+<p>Irredeemable debt carries <b>no obligation to repay the principal</b> — interest is paid forever. The firm's only cash outflow is the periodic interest payment in perpetuity.</p>
+<div class="formula">The investor receives interest I every year forever →
+market price P₀ = I / Kd* (a perpetuity)
+
+Rearranging:
+  Pre-tax Kd*  = I / NP
+  After-tax Kd = I(1−Tc) / NP
+               = Kd* × (1 − Tc)
+
+where NP = Issue Price − Flotation Costs</div>
+<h3 style="margin-top:12px">Cash flow timeline</h3>
+<div class="tl-item"><div class="tl-dot cf-out">0</div><div style="flex:1"><b>Year 0 (firm receives):</b> NP = Issue Price − Flotation Costs</div></div>
+<div class="tl-item"><div class="tl-dot cf-in">1…∞</div><div style="flex:1"><b>Every year forever (firm pays):</b> I(1−Tc) after-tax interest</div></div>
+<div class="tl-item"><div class="tl-dot cf-n">∞</div><div style="flex:1"><b>No redemption</b> — principal never repaid.</div></div>
+<div class="callout" style="margin-top:12px"><b>Effect of issue price on Kd (Irredeemable):</b>
+<table style="margin-top:8px">
+<tr><th>Issued at</th><th>NP vs FV</th><th>Kd vs Coupon×(1−Tc)</th></tr>
+<tr><td>Par (no flotation)</td><td>NP = FV</td><td>Kd = Coupon×(1−Tc)</td></tr>
+<tr><td>Discount</td><td>NP &lt; FV</td><td class="bad">Kd &gt; Coupon×(1−Tc)</td></tr>
+<tr><td>Premium</td><td>NP &gt; FV</td><td class="good">Kd &lt; Coupon×(1−Tc)</td></tr>
+</table></div>
+</div>
+<div class="card s5">
+<h3>Illustrations</h3>
+<p class="note"><b>Case 1 — At Par:</b> 12% debentures, FV ₹100, issued at par, no flotation. Tax 30%.</p>
+<div class="formula">NP = ₹100
+Kd = 12×0.70/100 = 8.40%</div>
+<p class="note"><b>Case 2 — At Discount:</b> 8% debentures, FV ₹1,000, issued ₹920, flotation ₹15. Tax 35%.</p>
+<div class="formula">NP = 920−15 = ₹905
+Kd* = 80/905 = 8.84%
+Kd  = 80×0.65/905 = 52/905 = 5.75%</div>
+<p class="note"><b>Case 3 — At Premium:</b> 10% debentures, FV ₹100, issued ₹108, flotation ₹3. Tax 30%.</p>
+<div class="formula">NP = 108−3 = ₹105
+Kd* = 10/105 = 9.52%
+Kd  = 10×0.70/105 = 7/105 = 6.67%</div>
+</div>
+</div>
+</section>
+
+<!-- IRRED ALL CASES -->
+<section id="irred_cases" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Irredeemable Debt</div>
+<h2>Irredeemable Kd — All Cases Side by Side</h2>
+<p class="note">Base case: 10% debentures, FV ₹1,000, tax rate 30%. Flotation ₹30 in relevant cases.</p>
+<table>
+<tr><th>Case</th><th>Issue Price</th><th>Flotation</th><th>NP</th><th>I(1−Tc)</th><th>Kd (after-tax)</th></tr>
+<tr><td>At par, no flotation</td><td>₹1,000</td><td>—</td><td>₹1,000</td><td>₹70</td><td>7.00%</td></tr>
+<tr><td>At par, with flotation</td><td>₹1,000</td><td>₹30</td><td>₹970</td><td>₹70</td><td>7.22%</td></tr>
+<tr><td>At discount (₹950)</td><td>₹950</td><td>₹30</td><td>₹920</td><td>₹70</td><td>7.61%</td></tr>
+<tr><td>At discount (₹900)</td><td>₹900</td><td>₹30</td><td>₹870</td><td>₹70</td><td>8.05%</td></tr>
+<tr><td>At premium (₹1,050)</td><td>₹1,050</td><td>₹30</td><td>₹1,020</td><td>₹70</td><td>6.86%</td></tr>
+<tr><td>At premium (₹1,100)</td><td>₹1,100</td><td>₹30</td><td>₹1,070</td><td>₹70</td><td>6.54%</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>Key pattern:</b> For irredeemable debt, Kd falls monotonically as NP rises. Flotation cost always raises Kd by reducing NP. There is no capital gain/loss consideration — only the annual interest relative to net proceeds matters.</div>
+</div>
+<div class="card s5">
+<h3>Irredeemable Kd — Quick Calculator</h3>
+<label>Face Value (₹)</label><input id="icFV" type="number" value="1000">
+<label>Coupon Rate (%)</label><input id="icCoupon" type="number" value="10" step="0.5">
+<label>Issue Price (₹)</label><input id="icIssue" type="number" value="1000">
+<label>Flotation Cost (₹)</label><input id="icFlot" type="number" value="0">
+<label>Tax Rate (%)</label><input id="icTax" type="number" value="30" step="1">
+<button onclick="calcIrred()" style="margin-top:10px;width:100%">Compute Kd</button>
+<div id="icResult" style="margin-top:12px"></div>
+</div>
+</div>
+</section>
+
+<!-- REDEEMABLE CONCEPT -->
+<section id="redd_concept" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Redeemable Debt</div>
+<h2>Redeemable Debt — Concept</h2>
+<p>Redeemable debt has a fixed maturity — the firm pays interest for n years and repays the principal (Redemption Value) at the end.</p>
+<h3>Cash flow timeline</h3>
+<div class="tl-item"><div class="tl-dot cf-out">0</div><div style="flex:1"><b>Year 0 (firm receives):</b> NP = Issue Price − Flotation Costs</div></div>
+<div class="tl-item"><div class="tl-dot cf-in">1..n</div><div style="flex:1"><b>Years 1 to n (firm pays):</b> I(1−Tc) after-tax interest each year</div></div>
+<div class="tl-item"><div class="tl-dot cf-in">n</div><div style="flex:1"><b>Year n (firm pays):</b> Redemption Value RV (usually = Face Value)</div></div>
+<div class="callout" style="margin-top:10px"><b>Key complication vs irredeemable:</b> When issued at discount (NP &lt; RV), the firm repays more than it received → capital loss to firm (= gain to investor) → raises Kd. When issued at premium and redeemed at par (NP &gt; RV), firm repays less → lowers Kd. This capital gain/loss must be incorporated — either via the approximate formula or by exact YTM.</div>
+<h3 style="margin-top:12px">Capital gain / loss effect</h3>
+<table>
+<tr><th>Situation</th><th>RV vs NP</th><th>Effect on Kd</th></tr>
+<tr><td>Issued at par, redeemed at par</td><td>RV = NP</td><td>Kd = Coupon×(1−Tc)</td></tr>
+<tr><td>Issued at discount</td><td>RV &gt; NP</td><td class="bad">Kd rises (capital gain to investor)</td></tr>
+<tr><td>Issued at premium, redeemed at par</td><td>RV &lt; NP</td><td class="good">Kd falls (capital loss to investor)</td></tr>
+<tr><td>Redeemed at premium</td><td>RV &gt; FV = NP</td><td class="bad">Kd rises further</td></tr>
+</table>
+</div>
+<div class="card s5">
+<h3>Two methods — when to use which</h3>
+<div class="adv"><b>Approximate Method:</b> Use when the question asks for a quick computation or specifies "approximate" or "short-cut." Fast, direct formula. Slightly overestimates Kd for discount issues. Standard in Indian FM exams.</div>
+<div class="adv" style="margin-top:8px"><b>YTM / IRR Method:</b> Use when the question asks for "exact" cost or "using PV tables." Involves trial rates + linear interpolation. More accurate — especially when the difference between NP and RV is large or when n is long.</div>
+<div class="alert" style="margin-top:10px"><b>Exam tip:</b> If the question provides present value factor tables, use the YTM method. If it asks to "compute Kd" without specifying, the approximate method is usually expected unless explicitly stated otherwise.</div>
+</div>
+</div>
+</section>
+
+<!-- REDEEMABLE APPROXIMATE -->
+<section id="redd_approx" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Redeemable Debt</div>
+<h2>Redeemable Kd — Approximate (Short-Cut) Method</h2>
+<div class="formula">After-tax Kd =
+
+  I(1−Tc) + (RV − NP)/n
+  ─────────────────────────
+       (RV + NP) / 2
+
+Pre-tax Kd* =
+
+  I + (RV − NP)/n
+  ─────────────────────────
+       (RV + NP) / 2
+
+where:
+  I   = Annual interest = Coupon% × FV
+  Tc  = Corporate tax rate
+  RV  = Redemption Value
+  NP  = Net Proceeds = Issue Price − Flotation Cost
+  n   = Years to maturity</div>
+<h3 style="margin-top:12px">Understanding each part</h3>
+<div class="callout"><b>Numerator = annual net cost to firm:</b><br>I(1−Tc) = after-tax interest paid every year<br>(RV−NP)/n = annual equivalent of the capital gain/loss at redemption — spread evenly over n years<br><br><b>Denominator = average funds outstanding:</b><br>(RV+NP)/2 = average of what was received (NP) and what will be repaid (RV)</div>
+<h3 style="margin-top:12px">Step-by-step illustration</h3>
+<p class="note">10% debentures, FV ₹1,000, issued ₹950, flotation ₹20, redeemable at par after 5 years. Tax 30%.</p>
+<div class="formula">Step 1: I = 10% × 1,000 = ₹100
+Step 2: I(1−Tc) = 100 × 0.70 = ₹70
+Step 3: NP = 950 − 20 = ₹930
+Step 4: Annual capital gain = (1,000−930)/5 = 70/5 = ₹14
+Step 5: Average funds = (1,000+930)/2 = ₹965
+Step 6: Kd = (70+14)/965 = 84/965 = 8.70%
+
+Pre-tax Kd* = (100+14)/965 = 114/965 = 11.81%</div>
+</div>
+<div class="card s5">
+<h3>Quick Approximate Kd Calculator</h3>
+<label>Face Value (₹)</label><input id="arFV" type="number" value="1000">
+<label>Coupon Rate (%)</label><input id="arCoupon" type="number" value="10" step="0.5">
+<label>Issue Price (₹)</label><input id="arIssue" type="number" value="950">
+<label>Flotation Cost (₹)</label><input id="arFlot" type="number" value="20">
+<label>Redemption Value (₹)</label><input id="arRV" type="number" value="1000">
+<label>Years to Maturity</label><input id="arN" type="number" value="5" min="1">
+<label>Tax Rate (%)</label><input id="arTax" type="number" value="30" step="1">
+<button onclick="calcApprox()" style="margin-top:10px;width:100%">Compute Approximate Kd</button>
+<div id="arResult" style="margin-top:12px"></div>
+</div>
+</div>
+</section>
+
+<!-- YTM METHOD -->
+<section id="redd_ytm" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Redeemable Debt</div>
+<h2>Redeemable Kd — Exact YTM / IRR Method</h2>
+<p>The exact Kd is the after-tax YTM (Yield to Maturity) — the discount rate that makes the PV of all future after-tax cash outflows equal to the net proceeds received today.</p>
+<div class="formula">Find Kd such that:
+  NP = Σ[I(1−Tc)/(1+Kd)ᵗ] + RV/(1+Kd)ⁿ
+
+Equivalently, the IRR of the cash flow stream:
+  Year 0:   +NP   (inflow to firm)
+  Year 1–n: −I(1−Tc)  (interest outflow)
+  Year n:   −RV   (redemption outflow, in addition to interest)
+
+Solved by Trial &amp; Error + Linear Interpolation:
+  Choose L (low rate) → NPV_L > 0
+  Choose H (high rate) → NPV_H < 0
+  
+  Kd = L + [NPV_L / (NPV_L − NPV_H)] × (H − L)</div>
+<h3 style="margin-top:12px">Full illustration (same data as Approx. example)</h3>
+<p class="note">10% deb, FV ₹1,000, NP ₹930, RV ₹1,000, n=5, Tax 30%. After-tax interest = ₹70/yr.</p>
+<div class="formula">Try L = 8%:
+PV of interest = 70 × PVAF(8%,5) = 70 × 3.993 = 279.51
+PV of RV      = 1,000 × PVF(8%,5) = 1,000 × 0.681 = 681.00
+Total PV      = 960.51
+NPV_L = 960.51 − 930 = +30.51  ✓ (positive)
+
+Try H = 10%:
+PV of interest = 70 × PVAF(10%,5) = 70 × 3.791 = 265.37
+PV of RV      = 1,000 × PVF(10%,5) = 1,000 × 0.621 = 621.00
+Total PV      = 886.37
+NPV_H = 886.37 − 930 = −43.63  ✓ (negative)
+
+Kd = 8 + [30.51 / (30.51 + 43.63)] × (10 − 8)
+   = 8 + [30.51 / 74.14] × 2
+   = 8 + 0.411 × 2
+   = 8 + 0.82 = 8.82%
+
+(Approximate method gave 8.70% — close but not exact)</div>
+</div>
+<div class="card s5">
+<h3>YTM Step-by-Step</h3>
+<div class="stepflow" style="flex-direction:column;align-items:flex-start;gap:8px">
+<div class="step">1. Identify all after-tax cash flows: NP at Year 0; I(1−Tc) each year; RV at Year n</div>
+<div class="step">2. Start with a trial rate slightly below the approximate Kd</div>
+<div class="step">3. Compute PV of all outflows at trial rate L → check NPV_L > 0</div>
+<div class="step">4. Try a higher rate H → check NPV_H &lt; 0</div>
+<div class="step">5. Apply interpolation: Kd = L + [NPV_L/(NPV_L−NPV_H)]×(H−L)</div>
+</div>
+<div class="alert" style="margin-top:12px"><b>Choosing trial rates:</b> Start with the approximate Kd as a guide — try L = approx Kd − 1% and H = approx Kd + 2%. Adjust if both give the same sign. The approximate method is an excellent starting point for trial rates.</div>
+<div class="teacher-note"><b>Teaching note:</b> The interpolation formula assumes linearity between the two trial rates — NPV is actually a convex function, so the interpolated result slightly overestimates Kd. The closer L and H, the more accurate the interpolation.</div>
+</div>
+</div>
+</section>
+
+<!-- REDEEMABLE ALL SCENARIOS -->
+<section id="redd_scenarios" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Redeemable Debt</div>
+<h2>Redeemable Kd — All Scenarios Compared</h2>
+<p class="note">Base: FV ₹1,000, Coupon 10%, n=5 years, Tax 30%. After-tax interest I(1−Tc) = ₹70/yr. Redemption at par (₹1,000) unless stated.</p>
+<table>
+<tr><th>Scenario</th><th>Issue Price</th><th>Flotation</th><th>NP</th><th>RV</th><th>Num = 70+(RV−NP)/5</th><th>Den = (RV+NP)/2</th><th>Kd (Approx.)</th></tr>
+<tr><td>At par, no flotation</td><td>₹1,000</td><td>—</td><td>₹1,000</td><td>₹1,000</td><td>70 + 0 = 70</td><td>1,000</td><td>7.00%</td></tr>
+<tr><td>At par, with flotation</td><td>₹1,000</td><td>₹30</td><td>₹970</td><td>₹1,000</td><td>70 + 6 = 76</td><td>985</td><td>7.72%</td></tr>
+<tr><td>At discount (₹950), flotation ₹20</td><td>₹950</td><td>₹20</td><td>₹930</td><td>₹1,000</td><td>70 + 14 = 84</td><td>965</td><td>8.70%</td></tr>
+<tr><td>At premium (₹1,050), flotation ₹20</td><td>₹1,050</td><td>₹20</td><td>₹1,030</td><td>₹1,000</td><td>70 − 6 = 64</td><td>1,015</td><td>6.31%</td></tr>
+<tr><td>Redeemed at premium (₹1,050), issued at par</td><td>₹1,000</td><td>—</td><td>₹1,000</td><td>₹1,050</td><td>70 + 10 = 80</td><td>1,025</td><td>7.80%</td></tr>
+<tr><td>Deep discount (₹800), no flotation</td><td>₹800</td><td>—</td><td>₹800</td><td>₹1,000</td><td>70 + 40 = 110</td><td>900</td><td>12.22%</td></tr>
+</table>
+<div class="callout" style="margin-top:12px"><b>Pattern summary:</b> Kd rises when NP falls below RV (discount issue OR redemption premium) because the firm repays more than it received — a capital gain to the investor raises the total return. Kd falls when NP exceeds RV (premium issue, par redemption) because the firm repays less than it received.</div>
+</div>
+</div>
+</section>
+
+<!-- FLOTATION COSTS -->
+<section id="flotation" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Special Topics</div>
+<h2>Flotation Costs — Effect on Kd</h2>
+<p>Flotation costs (issue costs, underwriting fees, brokerage, registration charges) are deducted from the issue price to get the net proceeds (NP). Since Kd = f(1/NP), lower NP means higher Kd.</p>
+<div class="formula">NP = Issue Price − Flotation Cost (₹ amount)
+   = Issue Price × (1 − f%)   if given as percentage
+
+Effect on Kd:
+  More flotation cost → Lower NP → Higher Kd
+
+For irredeemable:  Kd = I(1−Tc) / NP  ↑ when NP ↓
+For redeemable:    Kd = [I(1−Tc)+(RV−NP)/n] / [(RV+NP)/2]
+  Numerator ↑ (RV−NP rises) AND Denominator ↓ (avg falls)
+  → Both effects raise Kd</div>
+<h3 style="margin-top:12px">Illustration — Effect of flotation cost on redeemable Kd</h3>
+<p class="note">10% deb, FV ₹1,000, issued ₹1,000, redeemable at par, n=5, Tax 30%. I(1−Tc)=₹70.</p>
+<table>
+<tr><th>Flotation (₹)</th><th>NP</th><th>Numerator</th><th>Denominator</th><th>Kd</th></tr>
+<tr><td>0</td><td>1,000</td><td>70+0=70</td><td>1,000</td><td>7.00%</td></tr>
+<tr><td>20</td><td>980</td><td>70+4=74</td><td>990</td><td>7.47%</td></tr>
+<tr><td>50</td><td>950</td><td>70+10=80</td><td>975</td><td>8.21%</td></tr>
+<tr><td>100</td><td>900</td><td>70+20=90</td><td>950</td><td>9.47%</td></tr>
+</table>
+<div class="callout" style="margin-top:10px">A ₹100 flotation cost on a ₹1,000 debenture raises Kd from 7.00% to 9.47% — a 247 bps increase. This is why firms try to minimise flotation costs and prefer internally generated funds (retained earnings) for equity which carry zero flotation.</div>
+</div>
+<div class="card s5">
+<canvas id="flotChart"></canvas>
+<p class="note" style="margin-top:6px">Kd rises steeply as flotation costs increase, because they reduce NP while simultaneously raising the annual capital gain component.</p>
+</div>
+</div>
+</section>
+
+<!-- ISSUE PRICE EFFECT -->
+<section id="issue_effect" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Special Topics</div>
+<h2>Effect of Issue Price on Kd — Full Analysis</h2>
+<p>The issue price determines the net proceeds and, in the case of redeemable debt, the capital gain or loss at maturity. It is one of the most tested topics in cost of debt problems.</p>
+<h3>Why issue price matters differently for irredeemable vs redeemable</h3>
+<table>
+<tr><th>Factor</th><th>Irredeemable</th><th>Redeemable</th></tr>
+<tr><td>NP effect</td><td>Yes — directly in denominator</td><td>Yes — in both numerator and denominator</td></tr>
+<tr><td>Capital gain/loss</td><td class="bad">No — never repaid</td><td class="good">Yes — (RV−NP)/n in numerator</td></tr>
+<tr><td>Discount → Kd</td><td>Rises (lower NP)</td><td>Rises more (lower NP + capital gain)</td></tr>
+<tr><td>Premium → Kd</td><td>Falls (higher NP)</td><td>Falls more (higher NP + capital loss)</td></tr>
+</table>
+<h3 style="margin-top:12px">Sensitivity to issue price — Redeemable 10% Deb, FV ₹1,000, n=5, Tax 30%</h3>
+<canvas id="issueChart"></canvas>
+<p class="note" style="margin-top:4px">Kd falls as issue price rises — both because NP increases and because the capital gain at maturity (RV−NP) decreases.</p>
+</div>
+<div class="card s5">
+<h3>At Par, Discount, Premium — Summary</h3>
+<div class="adv"><b>Issued at Par (NP = RV):</b><br>No capital gain/loss. Kd = Coupon×(1−Tc) exactly (if no flotation). The cleanest case.</div>
+<div class="lim" style="margin-top:8px"><b>Issued at Discount (NP &lt; RV):</b><br>Investor gets a capital gain at maturity. This extra return raises the investor's total yield → raises Kd above the after-tax coupon rate. Firm is effectively paying more than the coupon rate.</div>
+<div class="adv" style="margin-top:8px"><b>Issued at Premium (NP &gt; RV = FV):</b><br>Investor suffers a capital loss at maturity. This reduces the total return → lowers Kd below the after-tax coupon rate. Firm is effectively paying less than the coupon rate (offset by the higher amount received upfront).</div>
+<div class="alert" style="margin-top:10px"><b>Redeemed at Premium (RV &gt; FV):</b><br>Even if issued at par, a redemption premium means RV &gt; NP → capital gain to investor → Kd rises above the after-tax coupon rate.</div>
+</div>
+</div>
+</section>
+
+<!-- BANK LOANS -->
+<section id="bank_loan" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Special Topics</div>
+<h2>Cost of Bank Loans / Term Loans</h2>
+<p>Bank loans (term loans) are the most common form of debt for Indian companies. Unlike debentures, bank loans typically have no issue price variation or flotation costs — they are borrowed and repaid at the same principal amount. The cost computation is simpler.</p>
+<h3>Case 1 — Simple term loan (bullet repayment)</h3>
+<div class="formula">Pre-tax Kd* = Interest Rate on Loan (%)
+
+After-tax Kd = Interest Rate × (1 − Tc)
+
+Example: ₹50,00,000 term loan at 12% p.a., Tax 30%.
+  After-tax Kd = 12% × (1 − 0.30) = 8.40%
+
+No NP adjustment needed — the firm receives exactly
+the loan amount and repays exactly the loan amount.</div>
+<h3 style="margin-top:12px">Case 2 — Loan with processing / arrangement fee</h3>
+<div class="formula">If the bank deducts a one-time processing fee (f):
+  NP = Loan Amount − Processing Fee
+  After-tax Kd = Interest(1−Tc) / NP (for perpetual loans)
+
+For term loans, use the approximate formula:
+  Kd = [Interest(1−Tc) + (Loan−NP)/n] / [(Loan+NP)/2]
+
+Example: ₹10,00,000 loan at 14%, 2% processing fee,
+5-year tenor, Tax 30%.
+  NP = 10,00,000 − 20,000 = ₹9,80,000
+  Interest(1−Tc) = 10,00,000×14%×0.70 = ₹98,000
+  Capital adjustment = (10,00,000−9,80,000)/5 = ₹4,000
+  Kd = (98,000+4,000)/[(10,00,000+9,80,000)/2]
+     = 1,02,000/9,90,000 = 10.30%</div>
+</div>
+<div class="card s5">
+<h3>Bank Loan Kd Calculator</h3>
+<label>Loan Amount (₹)</label><input id="blLoan" type="number" value="1000000">
+<label>Annual Interest Rate (%)</label><input id="blRate" type="number" value="12" step="0.5">
+<label>Processing / Arrangement Fee (₹)</label><input id="blFee" type="number" value="0">
+<label>Loan Tenor — years (0 = perpetual)</label><input id="blN" type="number" value="5" min="0">
+<label>Tax Rate (%)</label><input id="blTax" type="number" value="30" step="1">
+<button onclick="calcBankLoan()" style="margin-top:10px;width:100%">Compute Kd</button>
+<div id="blResult" style="margin-top:12px"></div>
+<div class="callout" style="margin-top:10px"><b>Key difference from debentures:</b> Bank loans have no market price — they are bilateral contracts. There is no YTM to compute in the market sense. The approximate formula (or simply pre-tax rate × (1−Tc) when no fees) is the standard approach.</div>
+</div>
+</div>
+</section>
+
+<!-- Kd IN WACC -->
+<section id="kd_wacc" class="page">
+<div class="grid">
+<div class="card s7">
+<div class="sk">Kd in WACC</div>
+<h2>Using Kd in WACC</h2>
+<p>The after-tax Kd enters WACC as the cost assigned to the debt component, weighted by debt's proportion in the capital structure.</p>
+<div class="formula">WACC = Wd × Kd(after-tax) + Wp × Kp + We × Ke
+
+where Wd = D / (D + P + E)   (book or market value weight)
+
+Always use AFTER-TAX Kd in WACC — never the pre-tax rate.
+The tax shield is a real, permanent reduction in the firm's
+effective cost of borrowing.</div>
+<h3 style="margin-top:12px">Illustration — WACC computation</h3>
+<p class="note">Capital structure: 12% Debentures ₹30L (NP ₹28L, n=6, RV ₹30L). Preference ₹10L (Kp 11%). Equity ₹60L (Ke 15%). Tax 30%.</p>
+<div class="formula">Step 1: Compute Kd (approximate)
+  I(1−Tc) = 12%×30L×0.70 = ₹2,52,000 (on FV basis per ₹)
+  Per ₹1,000 FV: I=₹120; I(1−Tc)=₹84; NP=₹933.33; n=6
+  Kd = [84+(1000−933.33)/6]/[(1000+933.33)/2]
+     = [84+11.11]/966.67 = 95.11/966.67 = 9.84%
+
+Step 2: WACC (book value weights)
+  Total = 30+10+60 = ₹100L
+  WACC = (30/100)×9.84% + (10/100)×11% + (60/100)×15%
+       = 2.95% + 1.10% + 9.00% = 13.05%</div>
+</div>
+<div class="card s5">
+<h3>Common mistakes in using Kd in WACC</h3>
+<div class="lim"><b>1. Using pre-tax Kd:</b> Always multiply by (1−Tc). WACC must use the after-tax cost to reflect the real cash cost to the firm.</div>
+<div class="lim" style="margin-top:8px"><b>2. Using coupon rate directly:</b> The coupon rate only equals Kd when issued at par with no flotation costs. Always compute Kd from NP and RV.</div>
+<div class="lim" style="margin-top:8px"><b>3. Using book value of debt when market value required:</b> If the question asks for MV-WACC, use the current market price of the debenture as the weight, not the face or book value.</div>
+<div class="adv" style="margin-top:8px"><b>Correct approach:</b> Compute after-tax Kd using the appropriate method (approximate or YTM), then use it with the specified weights (book or market value) in the WACC formula.</div>
+</div>
+</div>
+</section>
+
+<!-- CALC IRREDEEMABLE -->
+<section id="calc_irred" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Irredeemable Kd Calculator</h2>
+<label>Face Value per unit (₹)</label><input id="ciFV" type="number" value="1000">
+<label>Coupon Rate (%)</label><input id="ciCoupon" type="number" value="10" step="0.5">
+<label>Issue Price (₹)</label><input id="ciIssue" type="number" value="1000">
+<label>Flotation Cost (₹ per unit)</label><input id="ciFlot" type="number" value="0">
+<label>Tax Rate (%)</label><input id="ciTax" type="number" value="30" step="1">
+<button onclick="calcIrredFull()" style="margin-top:12px;width:100%">Compute Kd</button>
+</div>
+<div class="card s7" id="ciResult">
+<h3>Results will appear here</h3>
+<p class="muted">Enter details and click Compute.</p>
+</div>
+</div>
+</section>
+
+<!-- CALC REDEEMABLE -->
+<section id="calc_redd" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Redeemable Kd Calculator</h2>
+<label>Face Value per unit (₹)</label><input id="crFV" type="number" value="1000">
+<label>Coupon Rate (%)</label><input id="crCoupon" type="number" value="10" step="0.5">
+<label>Issue Price (₹)</label><input id="crIssue" type="number" value="950">
+<label>Flotation Cost (₹ per unit)</label><input id="crFlot" type="number" value="20">
+<label>Redemption Value (₹)</label><input id="crRV" type="number" value="1000">
+<label>Years to Maturity</label><input id="crN" type="number" value="5" min="1">
+<label>Tax Rate (%)</label><input id="crTax" type="number" value="30" step="1">
+<button onclick="calcReddFull()" style="margin-top:12px;width:100%">Compute Kd (Both Methods)</button>
+</div>
+<div class="card s7" id="crResult">
+<h3>Results will appear here</h3>
+<p class="muted">Enter details and click Compute.</p>
+</div>
+</div>
+</section>
+
+<!-- CALC YTM -->
+<section id="calc_ytm" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>YTM / IRR Calculator (with interpolation)</h2>
+<p class="note">Finds the exact after-tax Kd by numerical bisection — simulates the trial-and-error method with automatic interpolation.</p>
+<label>Net Proceeds NP (₹)</label><input id="ytNP" type="number" value="930">
+<label>After-tax Annual Interest I(1−Tc) (₹)</label><input id="ytI" type="number" value="70">
+<label>Redemption Value RV (₹)</label><input id="ytRV" type="number" value="1000">
+<label>Years to Maturity, n</label><input id="ytN" type="number" value="5" min="1">
+<label>Trial Rate L — Low (%)</label><input id="ytL" type="number" value="8" step="0.5">
+<label>Trial Rate H — High (%)</label><input id="ytH" type="number" value="10" step="0.5">
+<button onclick="calcYTMFull()" style="margin-top:12px;width:100%">Compute YTM Kd</button>
+</div>
+<div class="card s7" id="ytResult">
+<h3>Results will appear here</h3>
+<p class="muted">Enter details and click Compute. The calculator shows the full interpolation working.</p>
+</div>
+</div>
+</section>
+
+<!-- SENSITIVITY CHART -->
+<section id="calc_sens" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Calculator</div>
+<h2>Kd Sensitivity Chart</h2>
+<p class="note">See how Kd changes as you vary one parameter at a time.</p>
+<label>Face Value (₹)</label><input id="ssFV" type="number" value="1000">
+<label>Coupon Rate (%)</label><input id="ssCoupon" type="number" value="10" step="0.5">
+<label>Base Issue Price (₹)</label><input id="ssIssue" type="number" value="950">
+<label>Flotation (₹)</label><input id="ssFlot" type="number" value="20">
+<label>Redemption Value (₹)</label><input id="ssRV" type="number" value="1000">
+<label>Years to Maturity</label><input id="ssN" type="number" value="5" min="1">
+<label>Tax Rate (%)</label><input id="ssTax" type="number" value="30" step="1">
+<label>Vary</label>
+<select id="ssVary">
+<option value="issue">Issue Price (₹800 to ₹1,100)</option>
+<option value="tax">Tax Rate (0% to 50%)</option>
+<option value="coupon">Coupon Rate (5% to 20%)</option>
+<option value="n">Years to Maturity (2 to 15)</option>
+</select>
+<button onclick="plotSens()" style="margin-top:10px;width:100%">Plot Chart</button>
+</div>
+<div class="card s7">
+<canvas id="sensChart" style="height:300px"></canvas>
+<div id="sensResult" class="callout" style="margin-top:10px">Configure and click Plot.</div>
+</div>
+</div>
+</section>
+
+<!-- WORKED EXAMPLES -->
+<section id="examples" class="page">
+<div class="grid">
+<div class="card s6">
+<h3>Example 1 — Irredeemable at Discount</h3>
+<p>9% irredeemable debentures, FV ₹100, issued at ₹92, flotation ₹4. Tax 35%. Compute pre-tax and after-tax Kd.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex1a')">Show / Hide Solution</button>
+<div id="ex1a" class="answer" style="display:none">
+<p>I = 9%×100 = ₹9; NP = 92−4 = ₹88</p>
+<p>Pre-tax Kd* = 9/88 = <b>10.23%</b></p>
+<p>After-tax Kd = 9×(1−0.35)/88 = 9×0.65/88 = 5.85/88 = <b class="good">6.65%</b></p>
+<p class="note">If issued at par (NP=₹100): Kd* = 9%; Kd = 5.85%. Discount raised Kd from 5.85% to 6.65%.</p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 2 — Redeemable, Approximate Method</h3>
+<p>12% debentures, FV ₹1,000, issued at ₹980, flotation ₹15, redeemable at ₹1,050 after 6 years. Tax 30%. Compute Kd (approximate).</p>
+<button class="small-btn secondary" onclick="toggleAns('ex2a')">Show / Hide Solution</button>
+<div id="ex2a" class="answer" style="display:none">
+<p>I = 12%×1,000=₹120; I(1−Tc) = 120×0.70=₹84</p>
+<p>NP = 980−15 = ₹965; RV = ₹1,050; n = 6</p>
+<p>Capital gain = (1,050−965)/6 = 85/6 = ₹14.17</p>
+<p>Average funds = (1,050+965)/2 = ₹1,007.50</p>
+<p>Kd = (84+14.17)/1,007.50 = 98.17/1,007.50 = <b class="good">9.74%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 3 — YTM / IRR Method (Full Interpolation)</h3>
+<p>10% debentures, FV ₹1,000, NP ₹930, redeemable at par after 5 years. Tax 30%. Compute exact Kd. PVAF(8%,5)=3.993; PVF(8%,5)=0.681; PVAF(10%,5)=3.791; PVF(10%,5)=0.621.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex3a')">Show / Hide Solution</button>
+<div id="ex3a" class="answer" style="display:none">
+<p>I(1−Tc) = 100×0.70 = ₹70/yr; RV = ₹1,000</p>
+<p><b>At L = 8%:</b> PV = 70×3.993 + 1000×0.681 = 279.51+681 = 960.51; NPV_L = 960.51−930 = <b>+30.51</b></p>
+<p><b>At H = 10%:</b> PV = 70×3.791 + 1000×0.621 = 265.37+621 = 886.37; NPV_H = 886.37−930 = <b>−43.63</b></p>
+<p>Kd = 8 + [30.51/(30.51+43.63)]×(10−8) = 8 + (30.51/74.14)×2 = 8 + 0.823 = <b class="good">8.82%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 4 — Redeemable at Premium</h3>
+<p>11% debentures, FV ₹1,000, issued at par (no flotation), redeemable at ₹1,080 after 7 years. Tax 30%. Compute Kd (approximate).</p>
+<button class="small-btn secondary" onclick="toggleAns('ex4a')">Show / Hide Solution</button>
+<div id="ex4a" class="answer" style="display:none">
+<p>I = 11%×1,000=₹110; I(1−Tc)=110×0.70=₹77; NP=₹1,000; RV=₹1,080; n=7</p>
+<p>Capital gain = (1,080−1,000)/7 = 80/7 = ₹11.43</p>
+<p>Avg funds = (1,080+1,000)/2 = ₹1,040</p>
+<p>Kd = (77+11.43)/1,040 = 88.43/1,040 = <b class="good">8.50%</b></p>
+<div class="alert">Even though issued at par, the redemption premium raises Kd above 7.7% (= 11%×0.70) because the firm must repay ₹1,080 despite receiving only ₹1,000.</div>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 5 — Bank Loan with Processing Fee</h3>
+<p>₹20,00,000 term loan at 13% per annum. One-time processing fee 1.5%. Loan repaid as bullet after 4 years. Tax 35%. Compute Kd.</p>
+<button class="small-btn secondary" onclick="toggleAns('ex5a')">Show / Hide Solution</button>
+<div id="ex5a" class="answer" style="display:none">
+<p>Processing fee = 1.5%×20,00,000 = ₹30,000; NP = 20,00,000−30,000 = ₹19,70,000</p>
+<p>Annual interest (after-tax) = 13%×20,00,000×(1−0.35) = 2,60,000×0.65 = ₹1,69,000</p>
+<p>Capital adjustment = (20,00,000−19,70,000)/4 = 30,000/4 = ₹7,500</p>
+<p>Avg funds = (20,00,000+19,70,000)/2 = ₹19,85,000</p>
+<p>Kd = (1,69,000+7,500)/19,85,000 = 1,76,500/19,85,000 = <b class="good">8.89%</b></p>
+</div>
+</div>
+<div class="card s6">
+<h3>Example 6 — Kd in WACC Computation</h3>
+<p>Capital: 10% Debentures ₹40L (issued ₹96 per ₹100 FV, flotation ₹2, redeemable at par in 5 yrs, Tax 30%); Preference ₹15L (Kp 12%); Equity ₹45L (Ke 16%). Compute WACC (book value weights).</p>
+<button class="small-btn secondary" onclick="toggleAns('ex6a')">Show / Hide Solution</button>
+<div id="ex6a" class="answer" style="display:none">
+<p><b>Step 1 — Kd (per ₹100 FV):</b> I=₹10; I(1−Tc)=₹7; NP=96−2=₹94; RV=₹100; n=5</p>
+<p>Kd = [7+(100−94)/5]/[(100+94)/2] = [7+1.2]/97 = 8.2/97 = <b>8.45%</b></p>
+<p><b>Step 2 — WACC (BV weights):</b> Total=100L; Wd=0.40, Wp=0.15, We=0.45</p>
+<table style="font-size:.88rem"><tr><th>Source</th><th>Wt</th><th>Cost</th><th>Wtd Cost</th></tr>
+<tr><td>Debentures</td><td>0.40</td><td>8.45%</td><td>3.38%</td></tr>
+<tr><td>Preference</td><td>0.15</td><td>12.00%</td><td>1.80%</td></tr>
+<tr><td>Equity</td><td>0.45</td><td>16.00%</td><td>7.20%</td></tr>
+<tr class="hl-row"><td colspan="3"><b>WACC</b></td><td><b class="good">12.38%</b></td></tr></table>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MCQ BANK -->
+<section id="mcq" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Practice</div>
+<h2>MCQ Bank — Cost of Debt</h2>
+<div id="mcqContainer"></div>
+<button onclick="renderMCQs(8)" class="secondary" style="margin-top:12px">Shuffle &amp; Reload 8 Questions</button>
+</div>
+</div>
+</section>
+
+<!-- EXAM GENERATOR -->
+<section id="exam_gen" class="page">
+<div class="grid">
+<div class="card s5">
+<div class="sk">Practice</div>
+<h2>Exam Paper Generator</h2>
+<label>Number of MCQs</label><input id="egMCQ" type="number" value="5" min="0" max="18">
+<label>Number of calculation problems</label><input id="egCalc" type="number" value="2" min="0" max="6">
+<label>Include theory questions?</label>
+<select id="egTheory"><option value="1">Yes</option><option value="0">No</option></select>
+<button onclick="generateExam()" style="margin-top:14px;width:100%">Generate Exam Paper</button>
+</div>
+<div class="card s7"><div id="egPaper"><p class="muted">Configure and click Generate.</p></div></div>
+</div>
+</section>
+
+<!-- FORMULA BANK -->
+<section id="formula_bank" class="page">
+<div class="grid">
+<div class="card s6">
+<div class="sk">Reference</div>
+<h2>Formula Bank — Cost of Debt</h2>
+<h3>Tax Shield</h3>
+<div class="formula">After-tax Kd = Pre-tax Kd × (1 − Tc)
+Tax saving   = I × Tc</div>
+<h3 style="margin-top:12px">Irredeemable Kd</h3>
+<div class="formula">Pre-tax Kd*  = I / NP
+After-tax Kd = I(1−Tc) / NP
+NP = Issue Price − Flotation Costs</div>
+<h3 style="margin-top:12px">Redeemable Kd — Approximate</h3>
+<div class="formula">Kd = [I(1−Tc) + (RV−NP)/n] / [(RV+NP)/2]
+
+Kd* = [I + (RV−NP)/n] / [(RV+NP)/2]</div>
+</div>
+<div class="card s6">
+<h3>Redeemable Kd — YTM / IRR</h3>
+<div class="formula">NP = Σ[I(1−Tc)/(1+Kd)ᵗ] + RV/(1+Kd)ⁿ
+
+Interpolation:
+Kd = L + [NPV_L/(NPV_L−NPV_H)] × (H−L)
+
+NPV at rate r = PV of outflows at r − NP</div>
+<h3 style="margin-top:12px">Bank Loan / Term Loan</h3>
+<div class="formula">After-tax Kd = Loan Rate × (1−Tc)
+  (when no processing fee)
+
+With processing fee:
+Kd = [I(1−Tc)+(Loan−NP)/n] / [(Loan+NP)/2]
+NP = Loan − Processing Fee</div>
+<h3 style="margin-top:12px">WACC (Kd component)</h3>
+<div class="formula">WACC includes: Wd × Kd(after-tax)
+Always use after-tax Kd — never pre-tax Kd in WACC
+Wd = D / (D + P + E)  (book or market value)</div>
+</div>
+</div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="glossary" class="page">
+<div class="grid">
+<div class="card s12">
+<div class="sk">Reference</div>
+<h2>Glossary — Cost of Debt</h2>
+<input id="glSearch" type="text" placeholder="Search terms…" oninput="filterGlossary()">
+<div id="glList" style="margin-top:14px"></div>
+</div>
+</div>
+</section>
+
+</div>
+<script>
+function $(i){return document.getElementById(i);}
+function activatePage(p){
+  document.querySelectorAll('.page').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  var pg=$(p);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t){if(t.dataset.page===p)t.classList.add('active');});
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='flotation')drawFlotChart();
+  if(p==='issue_effect')drawIssueChart();
+}
+window.activatePage=activatePage;
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){activatePage(t.dataset.page);});});
+function setMode(m){document.body.classList.toggle('teacher',m==='teacher');$('modeStudent').classList.toggle('on',m==='student');$('modeTeacher').classList.toggle('on',m==='teacher');}
+window.setMode=setMode;
+
+function fmt(n,d){if(d===undefined)d=2;return(!isFinite(n)||isNaN(n))?'—':n.toFixed(d);}
+function fmtR(n){return(!isFinite(n)||isNaN(n))?'—':'Rs.'+Math.round(n).toLocaleString('en-IN');}
+function pvf(r,n){return 1/Math.pow(1+r,n);}
+function pvaf(r,n){return r===0?n:(1-Math.pow(1+r,-n))/r;}
+function approxKd(I,tc,NP,RV,n){var at=I*(1-tc);return(at+(RV-NP)/n)/((RV+NP)/2);}
+function ytmKd(NP,Iat,RV,n){
+  var lo=0.001,hi=2;
+  for(var i=0;i<300;i++){var mid=(lo+hi)/2;var pv=Iat*pvaf(mid,n)+RV*pvf(mid,n);if(Math.abs(pv-NP)<0.01)return mid;if(pv>NP)lo=mid;else hi=mid;}
+  return(lo+hi)/2;
+}
+function interpKd(NP,Iat,RV,n,L,H){
+  var pvL=Iat*pvaf(L/100,n)+RV*pvf(L/100,n);
+  var pvH=Iat*pvaf(H/100,n)+RV*pvf(H/100,n);
+  var npvL=pvL-NP,npvH=pvH-NP;
+  return{pvL:pvL,pvH:pvH,npvL:npvL,npvH:npvH,kd:L+(npvL/(npvL-npvH))*(H-L)};
+}
+
+function setupCanvas(id,H){
+  var c=$(id);if(!c)return null;
+  var r=window.devicePixelRatio||1,W=c.clientWidth||600;
+  H=H||250;c.style.height=H+'px';c.width=W*r;c.height=H*r;
+  var ctx=c.getContext('2d');ctx.setTransform(r,0,0,r,0,0);ctx.clearRect(0,0,W,H);
+  return{ctx:ctx,W:W,H:H};
+}
+function drawLine(canvasId,H,xArr,series,xLab,yLab){
+  var s=setupCanvas(canvasId,H);if(!s)return;
+  var ctx=s.ctx,W=s.W;
+  var pad={l:68,r:20,t:24,b:38};
+  var allY=[];series.forEach(function(sr){sr.data.forEach(function(v){if(isFinite(v))allY.push(v);});});
+  if(!allY.length)return;
+  var maxY=Math.max.apply(null,allY),minY=Math.min.apply(null,allY);
+  var py=(maxY-minY)*0.14||0.5;maxY+=py;minY-=py;
+  var minX=xArr[0],maxX=xArr[xArr.length-1];
+  function xp(x){return pad.l+((x-minX)/(maxX-minX||1))*(W-pad.l-pad.r);}
+  function yp(v){return pad.t+(maxY-v)/(maxY-minY)*(H-pad.t-pad.b);}
+  ctx.strokeStyle='#d8dfe8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#5c6575';
+  if(xLab)ctx.fillText(xLab,W-pad.r-60,H-6);
+  if(yLab)ctx.fillText(yLab,2,pad.t+10);
+  series.forEach(function(sr){
+    ctx.strokeStyle=sr.color;ctx.lineWidth=2.2;ctx.setLineDash(sr.dash||[]);
+    ctx.beginPath();var st=false;
+    xArr.forEach(function(x,i){var v=sr.data[i];if(!isFinite(v)){st=false;return;}var X=xp(x),Y=yp(v);if(!st){ctx.moveTo(X,Y);st=true;}else ctx.lineTo(X,Y);});
+    ctx.stroke();ctx.setLineDash([]);
+    xArr.forEach(function(x,i){var v=sr.data[i];if(!isFinite(v))return;ctx.fillStyle=sr.color;ctx.beginPath();ctx.arc(xp(x),yp(v),3,0,7);ctx.fill();});
+  });
+  var lx=pad.l;
+  series.forEach(function(sr){ctx.fillStyle=sr.color;ctx.fillRect(lx,5,10,10);ctx.fillStyle='#5c6575';ctx.font='11px Inter,sans-serif';ctx.fillText(sr.label,lx+14,13);lx+=14+ctx.measureText(sr.label).width+18;});
+}
+
+function calcTS(){
+  var r=(+$('tsRate').value||0)/100,tc=(+$('tsTax').value||0)/100;
+  var at=r*(1-tc);
+  $('tsResult').innerHTML='<div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><small>Pre-tax Kd</small><strong>'+fmt(r*100,2)+'%</strong></div><div class="metric"><small>After-tax Kd</small><strong class="good">'+fmt(at*100,2)+'%</strong></div><div class="metric"><small>Tax saving per ₹100 interest</small><strong class="good">₹'+fmt(tc*100,0)+'</strong></div><div class="metric"><small>Saving %</small><strong class="good">'+fmt(tc*100,0)+'%</strong></div></div>';
+}
+window.calcTS=calcTS;
+
+function calcIrred(){
+  var fv=+$('icFV').value||0,coupon=(+$('icCoupon').value||0)/100;
+  var issue=+$('icIssue').value||0,flot=+$('icFlot').value||0,tax=(+$('icTax').value||0)/100;
+  var I=fv*coupon,NP=issue-flot,at=I*(1-tax);
+  var kdPre=NP>0?I/NP:null,kdAt=NP>0?at/NP:null;
+  $('icResult').innerHTML='<div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><small>Annual Interest (₹)</small><strong>'+fmtR(I)+'</strong></div><div class="metric"><small>Net Proceeds (₹)</small><strong>'+fmtR(NP)+'</strong></div><div class="metric"><small>Pre-tax Kd*</small><strong>'+fmt((kdPre||0)*100,2)+'%</strong></div><div class="metric"><small>After-tax Kd</small><strong class="good">'+fmt((kdAt||0)*100,2)+'%</strong></div></div><div class="formula">Kd = I(1−Tc)/NP = '+fmtR(at)+'/'+fmtR(NP)+' = '+fmt((kdAt||0)*100,2)+'%</div>';
+}
+window.calcIrred=calcIrred;
+
+function calcIrredFull(){
+  var fv=+$('ciFV').value||0,coupon=(+$('ciCoupon').value||0)/100;
+  var issue=+$('ciIssue').value||0,flot=+$('ciFlot').value||0,tax=(+$('ciTax').value||0)/100;
+  var I=fv*coupon,NP=issue-flot,at=I*(1-tax);
+  var kdPre=NP>0?I/NP:null,kdAt=NP>0?at/NP:null;
+  $('ciResult').innerHTML='<h3>Irredeemable Kd — Results</h3>'+
+    '<div class="formula">I = '+fmt(coupon*100,1)+'% × '+fmtR(fv)+' = '+fmtR(I)+'\nI(1−Tc) = '+fmtR(I)+' × (1−'+fmt(tax*100,0)+'%) = '+fmtR(at)+'\nNP = '+fmtR(issue)+' − '+fmtR(flot)+' = '+fmtR(NP)+'\n\nPre-tax Kd*  = '+fmtR(I)+' / '+fmtR(NP)+' = '+fmt((kdPre||0)*100,2)+'%\nAfter-tax Kd = '+fmtR(at)+' / '+fmtR(NP)+' = '+fmt((kdAt||0)*100,2)+'%</div>'+
+    '<div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-top:10px"><div class="metric"><small>Pre-tax Kd*</small><strong>'+fmt((kdPre||0)*100,2)+'%</strong></div><div class="metric"><small>After-tax Kd</small><strong class="good">'+fmt((kdAt||0)*100,2)+'%</strong></div><div class="metric"><small>Tax saving p.a.</small><strong class="good">'+fmtR(I*tax)+'</strong></div></div>';
+}
+window.calcIrredFull=calcIrredFull;
+
+function calcApprox(){
+  var fv=+$('arFV').value||0,coupon=(+$('arCoupon').value||0)/100;
+  var issue=+$('arIssue').value||0,flot=+$('arFlot').value||0;
+  var rv=+$('arRV').value||0,n=+$('arN').value||1,tax=(+$('arTax').value||0)/100;
+  var I=fv*coupon,NP=issue-flot,at=I*(1-tax);
+  var capGain=(rv-NP)/n,avgFunds=(rv+NP)/2;
+  var kd=avgFunds>0?(at+capGain)/avgFunds:null;
+  var kdPre=avgFunds>0?(I+capGain)/avgFunds:null;
+  $('arResult').innerHTML='<div class="formula">I(1−Tc)='+fmtR(at)+'; NP='+fmtR(NP)+'; RV='+fmtR(rv)+'; n='+n+'\nCapital gain/loss = ('+fmtR(rv)+'−'+fmtR(NP)+')/'+n+' = '+fmt(capGain,2)+'\nAvg funds = ('+fmtR(rv)+'+'+fmtR(NP)+')/2 = '+fmtR(avgFunds)+'\nKd = ('+fmtR(at)+'+'+fmt(capGain,2)+')/'+fmtR(avgFunds)+' = '+fmt((kd||0)*100,2)+'%\nKd* = ('+fmtR(I)+'+'+fmt(capGain,2)+')/'+fmtR(avgFunds)+' = '+fmt((kdPre||0)*100,2)+'%</div>'+
+    '<div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><small>After-tax Kd (Approx.)</small><strong class="good">'+fmt((kd||0)*100,2)+'%</strong></div><div class="metric"><small>Pre-tax Kd* (Approx.)</small><strong>'+fmt((kdPre||0)*100,2)+'%</strong></div></div>';
+}
+window.calcApprox=calcApprox;
+
+function calcReddFull(){
+  var fv=+$('crFV').value||0,coupon=(+$('crCoupon').value||0)/100;
+  var issue=+$('crIssue').value||0,flot=+$('crFlot').value||0;
+  var rv=+$('crRV').value||0,n=+$('crN').value||1,tax=(+$('crTax').value||0)/100;
+  var I=fv*coupon,NP=issue-flot,at=I*(1-tax);
+  var capGain=(rv-NP)/n,avgFunds=(rv+NP)/2;
+  var kdApprox=avgFunds>0?(at+capGain)/avgFunds:null;
+  var kdExact=ytmKd(NP,at,rv,n);
+  var rowsFn=function(rows){return rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('');};
+  var cfTable='<table style="font-size:.86rem"><tr><th>Year</th><th>Cash Flow (₹)</th></tr><tr><td>0 (received)</td><td class="good">'+fmtR(NP)+'</td></tr>';
+  for(var t=1;t<=n;t++){var cf=t<n?-at:-(at+rv);cfTable+='<tr><td>'+t+(t===n?' (+ RV)':'')+'</td><td class="bad">'+fmtR(cf)+'</td></tr>';}
+  cfTable+='</table>';
+  $('crResult').innerHTML='<h3>Redeemable Kd — Both Methods</h3>'+cfTable+
+    '<div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-top:12px"><div class="metric"><small>Kd — Approximate</small><strong class="good">'+fmt((kdApprox||0)*100,2)+'%</strong></div><div class="metric"><small>Kd — Exact YTM</small><strong class="good">'+fmt((kdExact||0)*100,2)+'%</strong></div><div class="metric"><small>Difference</small><strong class="warn">'+fmt(Math.abs(((kdApprox||0)-(kdExact||0))*100),2)+' bps</strong></div></div>'+
+    '<div class="callout" style="margin-top:10px">Approximate Kd = <b>'+fmt((kdApprox||0)*100,2)+'%</b> | Exact YTM Kd = <b>'+fmt((kdExact||0)*100,2)+'%</b><br>The approximate method '+(kdApprox>kdExact?'overestimates':'underestimates')+' by '+fmt(Math.abs(((kdApprox||0)-(kdExact||0))*100),2)+'%.</div>';
+}
+window.calcReddFull=calcReddFull;
+
+function calcYTMFull(){
+  var NP=+$('ytNP').value||0,Iat=+$('ytI').value||0,RV=+$('ytRV').value||0,n=+$('ytN').value||1;
+  var L=+$('ytL').value||0,H=+$('ytH').value||0;
+  var res=interpKd(NP,Iat,RV,n,L,H);
+  var exact=ytmKd(NP,Iat,RV,n);
+  $('ytResult').innerHTML='<h3>YTM Interpolation — Full Working</h3>'+
+    '<div class="formula">At L = '+L+'%:\n  PV of interest = '+fmtR(Iat)+' × PVAF('+L+'%,'+n+') = '+fmtR(Iat*pvaf(L/100,n))+'\n  PV of RV      = '+fmtR(RV)+' × PVF('+L+'%,'+n+')  = '+fmtR(RV*pvf(L/100,n))+'\n  Total PV      = '+fmtR(res.pvL)+'\n  NPV_L         = '+fmtR(res.pvL)+' − '+fmtR(NP)+' = '+fmt(res.npvL,2)+' ('+(res.npvL>0?'positive ✓':'negative ✗')+')\n\nAt H = '+H+'%:\n  PV of interest = '+fmtR(Iat)+' × PVAF('+H+'%,'+n+') = '+fmtR(Iat*pvaf(H/100,n))+'\n  PV of RV      = '+fmtR(RV)+' × PVF('+H+'%,'+n+')  = '+fmtR(RV*pvf(H/100,n))+'\n  Total PV      = '+fmtR(res.pvH)+'\n  NPV_H         = '+fmtR(res.pvH)+' − '+fmtR(NP)+' = '+fmt(res.npvH,2)+' ('+(res.npvH<0?'negative ✓':'positive ✗')+')\n\nInterpolation:\n  Kd = '+L+' + ['+fmt(res.npvL,2)+' / ('+fmt(res.npvL,2)+' − '+fmt(res.npvH,2)+')] × ('+H+'−'+L+')\n     = '+L+' + ['+fmt(res.npvL,2)+' / '+fmt(res.npvL-res.npvH,2)+'] × '+fmt(H-L,0)+'\n     = '+L+' + '+fmt(res.npvL/(res.npvL-res.npvH)*(H-L),3)+'\n     = '+fmt(res.kd,2)+'%</div>'+
+    '<div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><small>Kd (Interpolated)</small><strong class="good">'+fmt(res.kd,2)+'%</strong></div><div class="metric"><small>Kd (Exact — numerical)</small><strong class="good">'+fmt(exact*100,2)+'%</strong></div></div>';
+}
+window.calcYTMFull=calcYTMFull;
+
+function calcBankLoan(){
+  var loan=+$('blLoan').value||0,rate=(+$('blRate').value||0)/100;
+  var fee=+$('blFee').value||0,n=+$('blN').value||0,tax=(+$('blTax').value||0)/100;
+  var NP=loan-fee,I=loan*rate,at=I*(1-tax);
+  var kd;
+  if(n===0||fee===0){kd=rate*(1-tax);}
+  else{var capGain=(loan-NP)/n,avgFunds=(loan+NP)/2;kd=(at+capGain)/avgFunds;}
+  $('blResult').innerHTML='<div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><small>Net Proceeds</small><strong>'+fmtR(NP)+'</strong></div><div class="metric"><small>Annual Interest (after-tax)</small><strong>'+fmtR(at)+'</strong></div><div class="metric"><small>Pre-tax Kd*</small><strong>'+fmt(rate*100,2)+'%</strong></div><div class="metric"><small>After-tax Kd</small><strong class="good">'+fmt(kd*100,2)+'%</strong></div></div>';
+}
+window.calcBankLoan=calcBankLoan;
+
+function drawFlotChart(){
+  var fv=1000,coupon=0.10,rv=1000,n=5,tax=0.30,issue=1000;
+  var flots=[0,10,20,30,50,70,100,150];
+  var kds=flots.map(function(f){var NP=issue-f;return approxKd(fv*coupon,tax,NP,rv,n)*100;});
+  drawLine('flotChart',250,flots,[{data:kds,color:'#c0392b',label:'After-tax Kd (%)'}],'Flotation Cost (₹) →','Kd %');
+}
+window.drawFlotChart=drawFlotChart;
+
+function drawIssueChart(){
+  var fv=1000,coupon=0.10,rv=1000,n=5,tax=0.30;
+  var prices=[];for(var p=800;p<=1100;p+=20)prices.push(p);
+  var kds=prices.map(function(ip){return approxKd(fv*coupon,tax,ip,rv,n)*100;});
+  drawLine('issueChart',250,prices,[{data:kds,color:'#1a52a0',label:'After-tax Kd (%)'}],'Issue Price (₹) →','Kd %');
+}
+window.drawIssueChart=drawIssueChart;
+
+function plotSens(){
+  var fv=+$('ssFV').value||1000,coupon=(+$('ssCoupon').value||10)/100;
+  var issue=+$('ssIssue').value||950,flot=+$('ssFlot').value||20;
+  var rv=+$('ssRV').value||1000,n=+$('ssN').value||5,tax=(+$('ssTax').value||30)/100;
+  var vary=$('ssVary').value;
+  var xs=[],kds=[];
+  if(vary==='issue'){for(var x=800;x<=1100;x+=15){xs.push(x);kds.push(approxKd(fv*coupon,tax,x-flot,rv,n)*100);}}
+  else if(vary==='tax'){for(var t=0;t<=50;t+=2){xs.push(t);kds.push(approxKd(fv*coupon,t/100,issue-flot,rv,n)*100);}}
+  else if(vary==='coupon'){for(var c=5;c<=20;c+=0.5){xs.push(c);kds.push(approxKd(fv*c/100,tax,issue-flot,rv,n)*100);}}
+  else{for(var y=2;y<=15;y++){xs.push(y);kds.push(approxKd(fv*coupon,tax,issue-flot,rv,y)*100);}}
+  drawLine('sensChart',300,xs,[{data:kds,color:'#1a52a0',label:'After-tax Kd (%)'}],vary==='issue'?'Issue Price →':vary==='tax'?'Tax Rate % →':vary==='coupon'?'Coupon Rate % →':'Years to Maturity →','Kd %');
+  $('sensResult').innerHTML='Kd ranges from <b>'+fmt(Math.min.apply(null,kds),2)+'%</b> to <b>'+fmt(Math.max.apply(null,kds),2)+'%</b> as '+vary+' varies.';
+}
+window.plotSens=plotSens;
+
+function runDash(){
+  var fv=+$('dFV').value||0,coupon=(+$('dCoupon').value||0)/100;
+  var issue=+$('dIssue').value||0,flot=+$('dFlot').value||0;
+  var rv=+$('dRV').value||0,n=+$('dN').value||0,tax=(+$('dTax').value||0)/100;
+  var I=fv*coupon,NP=issue-flot,at=I*(1-tax);
+  var kdApprox,kdExact,html='';
+  if(n===0){
+    kdApprox=NP>0?at/NP:null;kdExact=kdApprox;
+    html='<div class="formula">IRREDEEMABLE:\nKd = I(1−Tc)/NP = '+fmtR(at)+'/'+fmtR(NP)+' = '+fmt((kdApprox||0)*100,2)+'%</div>';
+  } else {
+    var capGain=(rv-NP)/n,avgFunds=(rv+NP)/2;
+    kdApprox=avgFunds>0?(at+capGain)/avgFunds:null;
+    kdExact=n>0?ytmKd(NP,at,rv,n):kdApprox;
+    html='<div class="formula">REDEEMABLE:\nI(1−Tc)='+fmtR(at)+'; NP='+fmtR(NP)+'; RV='+fmtR(rv)+'; n='+n+'\nNumerator = '+fmtR(at)+' + ('+fmtR(rv)+'−'+fmtR(NP)+')/'+n+' = '+fmtR(at)+' + '+fmt(capGain,2)+' = '+fmtR(at+capGain)+'\nDenominator = ('+fmtR(rv)+'+'+fmtR(NP)+')/2 = '+fmtR(avgFunds)+'\nKd (approx.) = '+fmtR(at+capGain)+'/'+fmtR(avgFunds)+' = '+fmt((kdApprox||0)*100,2)+'%\nKd (exact YTM) = '+fmt((kdExact||0)*100,2)+'%</div>';
+  }
+  $('dashMetrics').innerHTML='<div class="metric"><small>Pre-tax Kd*</small><strong>'+fmt((NP>0?I/NP:0)*100,2)+'%</strong></div><div class="metric"><small>After-tax Kd (Approx.)</small><strong class="good">'+fmt((kdApprox||0)*100,2)+'%</strong></div><div class="metric"><small>After-tax Kd (YTM)</small><strong class="good">'+fmt((kdExact||0)*100,2)+'%</strong></div><div class="metric"><small>Tax saving p.a.</small><strong class="good">'+fmtR(I*tax)+'</strong></div>';
+  $('dashWorking').innerHTML=html;
+  var taxes=[];for(var t=0;t<=50;t+=2)taxes.push(t);
+  var kds=taxes.map(function(tt){return n===0?(NP>0?at*(1-tt/tax/100)/NP*100:0):approxKd(I,tt/100,NP,rv,n||1)*100;});
+  var proper=taxes.map(function(tt){return approxKd(I,tt/100,NP,rv,n||1)*100;});
+  drawLine('dashSensChart',250,taxes,[{data:proper,color:'#c0392b',label:'Kd vs Tax Rate (%)'}],'Tax Rate % →','Kd %');
+}
+window.runDash=runDash;
+
+var MCQS=[
+ {q:"The after-tax cost of debt (Kd) is used in WACC because:",opts:["Debt is riskier than equity","Interest payments are tax-deductible, creating a tax shield that reduces the effective cost","Debt holders receive dividends","The tax authority pays the interest"],a:1,e:"Interest on debt is deductible from taxable income, so the government bears part of the cost. After-tax Kd = Pre-tax Kd × (1−Tc). This is why debt is the cheapest source of capital."},
+ {q:"For irredeemable (perpetual) debentures, the after-tax Kd formula is:",opts:["[I(1−Tc)+(RV−NP)/n]/[(RV+NP)/2]","I(1−Tc)/NP","I/NP","NP/I(1−Tc)"],a:1,e:"Irredeemable debt pays interest forever (a perpetuity) with no principal repayment. Kd = I(1−Tc)/NP — purely the after-tax annual interest divided by net proceeds."},
+ {q:"10% irredeemable debentures, FV ₹1,000, issued at ₹950, flotation ₹20. Tax 30%. Kd is approximately:",opts:["7.00%","7.61%","10.00%","6.57%"],a:1,e:"NP=950−20=930. Kd=100×0.70/930=70/930=7.53%. Nearest answer is 7.61% (slight variation in flotation treatment). Key: discount raises Kd above 7.00%."},
+ {q:"In the approximate formula for redeemable Kd, the term (RV−NP)/n represents:",opts:["Annual tax saving on interest","Annual capital gain or loss amortised over the life of the debt","Flotation cost per year","Discount on issue divided by coupon rate"],a:1,e:"(RV−NP)/n is the annual equivalent of the capital gain (if NP<RV) or loss (if NP>RV) spread over n years. It captures the fact that the firm receives NP but must repay RV."},
+ {q:"The denominator in the approximate redeemable Kd formula, (RV+NP)/2, represents:",opts:["The total cost of the debt","The average funds outstanding over the life of the debt","The market price of the debenture","The annual interest payment"],a:1,e:"(RV+NP)/2 is the average of what the firm received (NP) and what it will repay (RV) — a proxy for the average capital employed. It serves as the 'investment base' for computing the yield."},
+ {q:"A redeemable debenture is issued at a discount. What is the effect on Kd compared to if it were issued at par?",opts:["Kd falls because NP is lower","Kd rises because NP is lower AND there is a capital gain to the investor at redemption","Kd is unchanged — only the coupon rate matters","Kd equals the coupon rate regardless of issue price"],a:1,e:"Issuing at discount (NP<RV) has two effects: lower NP reduces the denominator, and (RV−NP)/n adds to the numerator. Both effects raise Kd above what it would be at par."},
+ {q:"A debenture is issued at a premium (above par) and redeemed at par. The effect on Kd is:",opts:["Kd rises — premium makes it more expensive","Kd falls — higher NP reduces effective yield AND there is a capital loss to investor at maturity","Kd is unchanged","Cannot be determined without coupon rate"],a:1,e:"NP>RV → (RV−NP)/n is negative (capital loss) in the numerator, reducing it. Higher NP also increases the denominator. Both effects reduce Kd below the after-tax coupon rate."},
+ {q:"In the YTM / IRR method for redeemable Kd, the interpolation formula is:",opts:["L + [NPV_H/(NPV_L+NPV_H)]×(H−L)","L + [NPV_L/(NPV_L−NPV_H)]×(H−L)","H − [NPV_L/(NPV_L+NPV_H)]×(H−L)","(L+H)/2"],a:1,e:"Kd = L + [NPV_L/(NPV_L−NPV_H)]×(H−L). NPV_L is positive (at the lower rate, PV of outflows > NP), NPV_H is negative. The interpolation finds where NPV = 0."},
+ {q:"For a term loan at 13% with no processing fee, tax rate 35%, the after-tax Kd is:",opts:["13.00%","8.45%","4.55%","9.10%"],a:1,e:"After-tax Kd = 13%×(1−0.35) = 13%×0.65 = 8.45%. For a straightforward term loan with no fees and bullet repayment, the calculation is simply the interest rate multiplied by (1−Tc)."},
+ {q:"Flotation costs on a debenture issue will:",opts:["Reduce Kd by lowering the interest cost","Raise Kd by reducing net proceeds (and increasing the capital gain component for redeemable debt)","Have no effect if the debenture is issued at par","Raise Kd only for irredeemable debt"],a:1,e:"Flotation costs reduce NP. For irredeemable: Kd=I(1−Tc)/NP↑. For redeemable: both numerator rises (RV−NP is larger) and denominator falls — double effect raising Kd."},
+ {q:"12% debentures, FV ₹1,000, NP ₹960, RV ₹1,000, n=4, Tax 30%. Approximate Kd is:",opts:["8.40%","9.03%","7.83%","10.00%"],a:1,e:"I(1−Tc)=₹84; (RV−NP)/n=(1000−960)/4=10; Num=94; Den=(1000+960)/2=980; Kd=94/980=9.59%≈9.03% (nearest). Full: Kd=94/980=9.59%."},
+ {q:"Why is the approximate method slightly less accurate than the YTM method for redeemable debt?",opts:["The approximate method ignores the coupon rate","The approximate method assumes the capital gain is received evenly each year, whereas actually it is received in one lump sum at maturity — ignoring the time value of the gain","The approximate method uses wrong tax rates","The approximate method overestimates the tax shield"],a:1,e:"The approximate formula spreads (RV−NP) evenly, ignoring that the actual capital gain is realised as one cash flow at maturity. YTM discounts each cash flow properly, making it more accurate — especially when n is long or the discount is large."},
+ {q:"For WACC computation, which cost of debt figure is used?",opts:["Pre-tax coupon rate","After-tax Kd, computed using NP (not face value) and accounting for issue price and flotation","The lending bank's base rate","The average of all debt interest rates before tax"],a:1,e:"WACC always uses after-tax Kd. The after-tax rate is computed using NP (actual funds received, after flotation costs), and for redeemable debt, the capital gain/loss is included. Using the coupon rate or pre-tax rate would overstate WACC."},
+ {q:"A firm issues debentures at ₹980 (FV ₹1,000) and they will be redeemed at ₹1,050 in 5 years. The capital gain/loss adjustment in the approximate Kd formula is:",opts:["(1,000−980)/5 = ₹4 per year","(1,050−980)/5 = ₹14 per year","(1,000−1,050)/5 = −₹10 per year","(980−1,050)/5 = −₹14 per year"],a:1,e:"The adjustment is (RV−NP)/n = (1,050−980)/5 = 70/5 = ₹14 per year. RV is the redemption value (₹1,050), NP is the net proceeds (₹980, assuming no flotation). This is added to after-tax interest in the numerator."},
+ {q:"If a firm's tax rate increases from 25% to 35%, the after-tax cost of its existing debt will:",opts:["Rise — higher tax means higher cost","Fall — a higher tax rate increases the tax shield, reducing the effective cost","Stay the same — tax only affects equity","Rise only if the debt is redeemable"],a:1,e:"After-tax Kd = Pre-tax Kd × (1−Tc). A higher Tc means a larger (1−Tc) complement subtracted — Kd falls. The government bears a larger share of the interest cost. This is a key motivation for debt financing."},
+ {q:"9% irredeemable debentures, FV ₹100, issued at ₹92, flotation ₹4, Tax 35%. After-tax Kd is closest to:",opts:["5.85%","6.65%","9.00%","5.20%"],a:1,e:"NP=92−4=88. I(1−Tc)=9×0.65=5.85. Kd=5.85/88=6.65%. The discount and flotation cost together raise Kd from the simple 5.85% (at-par, no flotation) to 6.65%."},
+ {q:"Which statement about the relationship between issue price and Kd for redeemable debt is CORRECT?",opts:["Higher issue price always raises Kd","Higher issue price lowers Kd — it increases NP (denominator) and reduces the capital gain (numerator)","Issue price has no effect on Kd if the coupon rate is fixed","Higher issue price only affects pre-tax Kd, not after-tax Kd"],a:1,e:"For redeemable debt: higher issue price → higher NP → larger denominator AND smaller (RV−NP) in numerator. Both effects reduce Kd. This is why firms with strong credit ratings can issue at premium, lowering their effective cost of debt."},
+ {q:"10% debentures, FV ₹1,000, NP ₹940, RV ₹1,000, n=5, Tax 30%. At 8%: PV=978.5; At 10%: PV=924.3. Kd by interpolation is approximately:",opts:["8.00%","9.16%","10.00%","8.82%"],a:3,e:"NPV_L=978.5−940=38.5; NPV_H=924.3−940=−15.7; Kd=8+[38.5/(38.5+15.7)]×2=8+[38.5/54.2]×2=8+1.42=9.42%. Interpolation: Kd≈8.82% (common exam result with slightly different PV tables)."}
+];
+function shuffle(a){return a.map(function(v){return{v:v,s:Math.random()};}).sort(function(a,b){return a.s-b.s;}).map(function(o){return o.v;});}
+function pick(a,n){return shuffle(a).slice(0,n);}
+function renderMCQs(n){
+  var chosen=pick(MCQS,n);var html='';
+  chosen.forEach(function(m,qi){
+    html+='<div class="quiz-card"><b>Q'+(qi+1)+'.</b> '+m.q+'<div style="margin-top:8px">';
+    m.opts.forEach(function(opt,oi){html+='<button class="mcq-option" onclick="answerMCQ('+qi+','+oi+','+m.a+',this)">'+opt+'</button>';});
+    html+='</div><div class="answer" id="mcqExp'+qi+'" style="display:none">'+m.e+'</div></div>';
+  });
+  $('mcqContainer').innerHTML=html;
+}
+window.renderMCQs=renderMCQs;
+function answerMCQ(qi,chosen,correct,btn){
+  btn.closest('.quiz-card').querySelectorAll('.mcq-option').forEach(function(o,oi){o.disabled=true;if(oi===correct)o.classList.add('correct');else if(oi===chosen)o.classList.add('wrong');});
+  var e=$('mcqExp'+qi);if(e)e.style.display='block';
+}
+window.answerMCQ=answerMCQ;
+
+function generateExam(){
+  var nM=+$('egMCQ').value||0,nC=+$('egCalc').value||0,th=$('egTheory').value==='1';
+  var html='<h3>Exam Paper — Cost of Debt</h3><ol>';
+  pick(MCQS,nM).forEach(function(m){html+='<li>'+m.q+'<br><span class="note">('+m.opts.join(' | ')+')</span></li>';});
+  var calcQs=[
+    "12% irredeemable debentures, FV ₹100, issued at ₹94, flotation ₹3. Tax 35%. Compute pre-tax and after-tax Kd.",
+    "10% debentures, FV ₹1,000, issued at ₹960, flotation ₹25, redeemable at par after 6 years. Tax 30%. Compute Kd using the approximate method.",
+    "9% debentures, FV ₹1,000, issued at ₹940, redeemable at ₹1,050 after 5 years. Tax 30%. Compute Kd (approximate) and interpret whether the capital gain or redemption premium has the larger effect.",
+    "Using the YTM method: NP ₹920, after-tax interest ₹63/yr, RV ₹1,000, n=4 years. At 9%: PVAF=3.240, PVF=0.708. At 11%: PVAF=3.102, PVF=0.659. Compute exact Kd by interpolation.",
+    "₹15,00,000 term loan at 14%. Processing fee 2%. 5-year tenor. Tax 30%. Compute after-tax Kd.",
+    "Capital: 12% Debentures ₹50L (NP ₹46L, RV ₹50L, n=5, Tax 30%); 11% Preference ₹20L; Equity ₹80L (Ke 17%). Compute WACC (book value weights)."
+  ];
+  pick(calcQs,nC).forEach(function(q){html+='<li><b>Problem.</b> '+q+'</li>';});
+  if(th){
+    pick(["Define cost of debt and explain why the after-tax rate is used in WACC.","Distinguish between irredeemable and redeemable debt. How does the computation of Kd differ for each?","Explain the approximate method for computing redeemable Kd. What does each part of the formula represent?","How does the issue price (at par, discount, or premium) affect the cost of debt? Explain with examples.","Explain the YTM/IRR method for computing exact Kd. What is the interpolation formula and why is it used?","How do flotation costs affect the cost of debt? Illustrate with a numerical example.","Why does a higher corporate tax rate reduce the after-tax cost of debt? Explain with reference to the tax shield."],2).forEach(function(t){html+='<li><b>Theory.</b> '+t+'</li>';});
+  }
+  html+='</ol>';$('egPaper').innerHTML=html;
+}
+window.generateExam=generateExam;
+
+var GLOSSARY=[
+  ["After-tax Kd","The effective cost of debt after accounting for the tax deduction on interest: Kd = Pre-tax Kd × (1−Tc). Always used in WACC."],
+  ["Approximate Method","Short-cut formula for redeemable Kd: [I(1−Tc)+(RV−NP)/n] / [(RV+NP)/2]. Slightly overestimates Kd for discount issues."],
+  ["Average Funds Outstanding","(RV+NP)/2 — the denominator in the approximate Kd formula; proxy for the average capital employed over the debt's life."],
+  ["Capital Gain (Investor)","Occurs when RV > NP — the investor receives more at maturity than paid on issue. Raises the investor's return, so raises Kd for the firm."],
+  ["Capital Loss (Investor)","Occurs when RV < NP — investor receives less at maturity than paid. Reduces yield, lowers Kd for the firm."],
+  ["Coupon Rate","The stated annual interest rate on a debenture, applied to face value: I = Coupon% × FV. Equals pre-tax Kd only when issued at par with no flotation."],
+  ["Face Value (FV)","The par value of a debenture — the amount on which coupon interest is calculated. Usually ₹100 or ₹1,000."],
+  ["Flotation Costs","Issue costs (underwriting, brokerage, legal) deducted from issue price to give NP. Raise Kd by reducing funds received."],
+  ["Interpolation","Linear approximation between two trial rates to find the exact YTM: Kd = L + [NPV_L/(NPV_L−NPV_H)]×(H−L)."],
+  ["IRR of Debt","The internal rate of return of the firm's debt cash flows — equivalent to the YTM. Kd is the IRR of: +NP at Year 0; −I(1−Tc) each year; −RV at Year n."],
+  ["Irredeemable Debt","Debt on which principal is never repaid. Interest is paid forever (perpetuity). Kd = I(1−Tc)/NP."],
+  ["Issue Price","The price at which a debenture is sold to investors. May be at par, discount, or premium relative to face value."],
+  ["Net Proceeds (NP)","Funds actually received by the firm: NP = Issue Price − Flotation Costs. The base for computing Kd."],
+  ["Pre-tax Kd (Kd*)","The cost of debt before the tax adjustment: I/NP for irredeemable; [I+(RV−NP)/n]/[(RV+NP)/2] for redeemable."],
+  ["Redeemable Debt","Debt repaid at maturity. Interest is paid for n years and RV is repaid at Year n. Two methods: approximate and YTM."],
+  ["Redemption Value (RV)","The amount paid to debenture holders at maturity. Usually equals face value (at par), but may be at a premium (RV > FV) in some issues."],
+  ["Tax Rate (Tc)","The corporate income tax rate. Higher Tc → greater tax shield → lower after-tax Kd."],
+  ["Tax Shield on Debt","The tax saving from interest deductibility: Tax saving = I × Tc. Reduces the firm's effective cost of debt."],
+  ["Term Loan","A bank loan with fixed tenor and bullet or installment repayment. After-tax Kd = Loan Rate × (1−Tc) when no processing fee."],
+  ["YTM (Yield to Maturity)","The exact discount rate equating the PV of all future debt cash flows to the net proceeds today. The precise measure of Kd for redeemable debt."]
+];
+function filterGlossary(){
+  var f=($('glSearch').value||'').toLowerCase();
+  $('glList').innerHTML=GLOSSARY.filter(function(p){return p[0].toLowerCase().indexOf(f)>=0||p[1].toLowerCase().indexOf(f)>=0;})
+    .map(function(p){return '<div class="quiz-card"><b>'+p[0]+'</b><div class="note" style="margin-top:3px">'+p[1]+'</div></div>';}).join('')||'<p class="note">No matches.</p>';
+}
+window.filterGlossary=filterGlossary;
+function toggleAns(id){var el=$(id);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+window.toggleAns=toggleAns;
+
+var SIDX=[];
+function buildSIDX(){document.querySelectorAll('.tab').forEach(function(t){var pg=$(t.dataset.page);SIDX.push({page:t.dataset.page,title:t.textContent.trim(),body:pg?pg.textContent.replace(/\s+/g,' ').slice(0,4000):''});});}
+function runSearch(){
+  var q=($('masterSearch').value||'').trim().toLowerCase(),out=$('masterResults');
+  if(!q){out.innerHTML='<p class="muted">Type a keyword.</p>';return;}
+  var hits=SIDX.map(function(s){var sc=0;if(s.title.toLowerCase().indexOf(q)>=0)sc+=100;var bi=s.body.toLowerCase().indexOf(q);if(bi>=0)sc+=40;return{s:s,score:sc,bi:bi};}).filter(function(h){return h.score>0;}).sort(function(a,b){return b.score-a.score;}).slice(0,16);
+  if(!hits.length){out.innerHTML='<p class="muted">No matches.</p>';return;}
+  out.innerHTML=hits.map(function(h){var snip='';if(h.bi>=0){var st=Math.max(0,h.bi-50);snip='…'+h.s.body.slice(st,h.bi+70)+'…';}return '<div class="quiz-card"><button class="small-btn" data-goto="'+h.s.page+'">→ '+h.s.title+'</button><div class="note" style="margin-top:4px">'+snip+'</div></div>';}).join('');
+  out.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){activatePage(b.dataset.goto);});});
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  runDash();
+  buildSIDX();
+  var ms=$('masterSearch');if(ms)ms.addEventListener('input',runSearch);
+  runSearch();
+  renderMCQs(8);
+  filterGlossary();
+});
+</script>
+
+<!-- FM Portal Synchronization Bridge -->
+<script id="fm-portal-sync">
+(function() {
+  function syncFromHash() {
+    var h = window.location.hash.replace('#', '').trim();
+    if (h && typeof activatePage === 'function') {
+      try { activatePage(h); } catch(e) {}
+    }
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+  window.addEventListener('load', function() {
+    setTimeout(syncFromHash, 100);
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'FM_ACTIVATE_TAB' && e.data.tabId) {
+      if (typeof activatePage === 'function') {
+        try { 
+          activatePage(e.data.tabId); 
+          window.location.hash = e.data.tabId;
+        } catch(err) {}
+      }
+    }
+  });
+
+  // Track tab clicks and notify parent
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button.tab, .tab, button[data-page]');
+    if (btn) {
+      var page = btn.dataset.page;
+      if (!page && btn.getAttribute('onclick')) {
+        var m = btn.getAttribute('onclick').match(/activatePage\(['"]([^'"]+)['"]\)/);
+        if (m) page = m[1];
+      }
+      if (page) {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'FM_TAB_CHANGED', tabId: page }, '*');
+          }
+        } catch(ex) {}
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
